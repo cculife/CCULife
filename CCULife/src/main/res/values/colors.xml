@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="Red_Course_Warring">#AAFF0000</color>
+    <color name="DrakBrown">#FF754C24</color>
+    <color name="White">#FFF</color>
+    <color name="Gray">#FFADADAD</color>
+    <color name="DarkGray">#FF4A4A4A</color>
+    <color name="Black">#FF000000</color>
+    <color name="LightSkyBlue">#33A1D8E6</color>
+
+    <color name="CC1">#10754C24</color>
+    <color name="ScoreCate">@color/CC1</color>
+    <color name="Today">@color/CC1</color>
+    <color name="Unread">@color/CC1</color>
+</resources>

@@ -1,0 +1,34 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.5.+'
+    }
+}
+apply plugin: 'android'
+
+repositories {
+    mavenCentral()
+}
+
+android {
+    compileSdkVersion 17
+    buildToolsVersion "17.0.0"
+
+    defaultConfig {
+        minSdkVersion 7
+        targetSdkVersion 17
+        targetSdkVersion 17
+    }
+}
+
+tasks.withType(Compile) {
+    options.encoding = "UTF-8"
+}
+
+dependencies {
+    compile 'com.android.support:support-v4:13.0.+'
+    compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
+    compile files('libs/jsoup-1.7.2.jar')
+}

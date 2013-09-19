@@ -1,0 +1,6 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <Preference android:key="account_user" android:title="帳號"/>
+    <Preference android:key="account_log_in_out" android:title="登入"/>
+
+</PreferenceScreen>

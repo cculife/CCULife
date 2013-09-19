@@ -1,0 +1,25 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="Ecourse">
+        <CheckBoxPreference
+            android:title="自訂學期"
+            android:key="debug_ecourse_custom"
+            android:defaultValue="false" />
+
+        <EditTextPreference
+            android:dependency="debug_ecourse_custom"
+            android:inputType="numberDecimal"
+            android:title="學年"
+            android:key="debug_ecourse_year"/>
+
+        <EditTextPreference
+            android:dependency="debug_ecourse_custom"
+            android:inputType="numberDecimal"
+            android:title="學期"
+            android:dialogMessage="上學期 = 1 下學期 = 2"
+            android:key="debug_ecourse_term"/>
+    </PreferenceCategory>
+
+
+
+</PreferenceScreen>

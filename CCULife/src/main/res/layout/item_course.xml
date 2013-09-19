@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/course_name"
+            android:layout_centerVertical="true"
+            android:textSize="20sp"
+            android:textIsSelectable="false"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:text="Course Name"
+            android:layout_toRightOf="@+id/unread"/>
+
+    <TextView
+            android:layout_width="10dip"
+            android:layout_height="60dip"
+            android:id="@+id/warring"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"/>
+
+    <TextView
+            android:layout_width="60dip"
+            android:layout_height="60dip"
+            android:id="@+id/unread"
+            android:text="0"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:textColor="@color/Gray"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"/>
+</RelativeLayout>

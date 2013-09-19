@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="LessionView">
+        <attr name="ClassName" format="string" />
+        <attr name="TextColor" format="color" />
+        <attr name="BackgroundColor" format="color" />
+    </declare-styleable>
+</resources>

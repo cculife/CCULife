@@ -1,0 +1,12 @@
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".CourseListActivity">
+
+    <include layout="@layout/layout_error_panel" />
+
+    <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/courselist"
+            tools:listitem="@android:layout/simple_expandable_list_item_2"/>
+</merge>

@@ -1,0 +1,21 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- A 'parent' preference, which enables/disables child preferences (below)
+         when checked/unchecked. -->
+    <Preference
+        android:key="about_title"
+        android:title="@string/app_name"
+        android:summary="v1.0">
+    </Preference>
+    <Preference
+        android:key="about_author"
+        android:title="@string/author"
+        android:summary="Zankio">
+    </Preference>
+    <Preference
+        android:key="about"
+        android:title="@string/about">
+        <intent android:action="org.zankio.cculife.ui.AboutActivity"/>
+    </Preference>
+
+</PreferenceScreen>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--
+        BaseService application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+    <style name="AppBaseTheme" parent="@style/Theme.Sherlock.Light">
+        <item name="actionBarStyle">@style/AppBaseTheme.ActionBar</item>
+        <item name="actionBarSize">60dp</item>
+        <item name="actionBarTabTextStyle">@style/AppBaseTheme.ActionBar.TabBar.Text</item>
+        <item name="android:windowBackground">@drawable/app_background</item>
+    </style>
+
+    <style name="course_warring">
+        <item name="android:background">#AAFF0000</item>
+    </style>
+    <!-- Application theme. -->
+    <style
+        name="AppTheme"
+        parent="AppBaseTheme" >
+
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+    <style name="LoginFormContainer" >
+        <item name="android:layout_width">
+match_parent
+        </item>
+        <item name="android:layout_height">
+wrap_content
+        </item>
+        <item name="android:padding">
+16dp
+        </item>
+    </style>
+
+
+    <style name="AppBaseTheme.ActionBar.TabBar.Text" parent="@android:style/TextAppearance">
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="AppBaseTheme.ActionBar" parent="Widget.Sherlock.Light.ActionBar">
+        <item name="titleTextStyle">@style/AppBaseTheme.ActionBar.Text</item>
+        <item name="android:background">@drawable/action_bar_background</item>
+    </style>
+
+    <style name="AppBaseTheme.ActionBar.Text" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/DrakBrown</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+</resources>
