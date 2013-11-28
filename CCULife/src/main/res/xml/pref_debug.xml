@@ -19,6 +19,12 @@
             android:dialogMessage="上學期 = 1 下學期 = 2"
             android:key="debug_ecourse_term"/>
     </PreferenceCategory>
+    <PreferenceCategory android:title="Update">
+        <CheckBoxPreference
+            android:title="強制更新"
+            android:key="debug_force_update"
+            android:defaultValue="false" />
+    </PreferenceCategory>
 
 
 
