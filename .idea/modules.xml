@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/ActionBarSherlock/ActionBarSherlock.iml" filepath="$PROJECT_DIR$/ActionBarSherlock/ActionBarSherlock.iml" />
       <module fileurl="file://$PROJECT_DIR$/CCULife/CCULife.iml" filepath="$PROJECT_DIR$/CCULife/CCULife.iml" />
       <module fileurl="file://$PROJECT_DIR$/CCULifeProject.iml" filepath="$PROJECT_DIR$/CCULifeProject.iml" />
     </modules>
