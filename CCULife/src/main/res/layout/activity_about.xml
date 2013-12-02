@@ -23,7 +23,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="CCULife v1.0"
-                android:layout_below="@+id/scrollView"
                 android:textSize="25sp"
                 android:typeface="sans"
                 android:textColor="@color/DarkGray"
@@ -47,7 +46,71 @@
                 android:paddingRight="10dp"
                 android:paddingTop="20dp"
                 android:padding="20dp"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:autoLink="web" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Web"
+                android:layout_below="@+id/scrollView"
+                android:textSize="25sp"
+                android:typeface="sans"
+                android:textColor="@color/DarkGray"
+                android:background="@color/White"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="20dp"
+                android:padding="20dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/web"
+                android:layout_below="@+id/scrollView"
+                android:typeface="sans"
+                android:textColor="@color/DarkGray"
+                android:layout_marginBottom="15dp"
+                android:background="@color/White"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="20dp"
+                android:padding="20dp"
+                android:textSize="20sp"
+                android:autoLink="web"
+                android:id="@+id/textView" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Github"
+                android:layout_below="@+id/scrollView"
+                android:textSize="25sp"
+                android:typeface="sans"
+                android:textColor="@color/DarkGray"
+                android:background="@color/White"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="20dp"
+                android:padding="20dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/opensource"
+                android:layout_below="@+id/scrollView"
+                android:typeface="sans"
+                android:textColor="@color/DarkGray"
+                android:layout_marginBottom="15dp"
+                android:background="@color/White"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="20dp"
+                android:padding="20dp"
+                android:textSize="20sp"
+                android:autoLink="web" />
 
             <TextView
                 android:layout_width="fill_parent"

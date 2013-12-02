@@ -23,7 +23,9 @@
     <string name="title_activity_about">About</string>
     <string name="about">關於</string>
     <string name="author">作者</string>
-    <string name="author_say">暫時沒有東西…</string>
+    <string name="author_say">因為作者沒有信用卡所以沒有開發者帳號，暫時可能還不會在Google Play上架.</string>
+    <string name="opensource">https://github.com/Zankio/CCULife</string>
+    <string name="web">http://zankio.github.io/CCULife</string>
     <string name="third_party">ActionBarSherlock\n\nCopyright 2013 Jake Wharton\n\nLicensed under the Apache License, Version 2.0 (the "License");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an "AS IS" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.</string>
     <string name="open_in_browser">在瀏覽器中開啟</string>
     <string name="remeber_user_pass">記住帳號密碼</string>
