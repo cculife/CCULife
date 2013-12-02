@@ -21,8 +21,7 @@ public class Portal extends BaseService {
     public static final String SSO_ECOURSE = "0000";
     public static final String SSO_SCORE = "0007";
     private static final String SSO_ECOURSE_URL = "http://ecourse.elearning.ccu.edu.tw/php/getssoCcuRight.php";
-    //ToDo remove? HotFix 140.123.30.107 NoResponse
-    private static final String SSO_SCORE_URL = "http://kiki.ccu.edu.tw/~ccmisp06/cgi-bin/library/SSO/Query_grade/getssoCcuRight.php";
+    private static final String SSO_SCORE_URL = "http://140.123.30.106/~ccmisp06/cgi-bin/library/SSO/Query_grade/getssoCcuRight.php";
 
 
     static {

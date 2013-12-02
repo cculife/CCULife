@@ -37,7 +37,6 @@ public class ScoreQuery extends BaseService {
         Connection connection;
         Document document;
 
-        //ToDo remove? HotFix 140.123.30.107 NoResponse
         connection = Jsoup.connect("http://kiki.ccu.edu.tw/~ccmisp06/cgi-bin/Query/Query_grade.php")
                           .timeout(Net.CONNECT_TIMEOUT);
         connection.data("id", sessionManager.getUserName())
