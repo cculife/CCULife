@@ -30,14 +30,12 @@ public class ScoreQuery extends BaseService {
 
     @Override
     public boolean getSession() throws Exception {
-        SessionManager sessionManager;
-        sessionManager = new SessionManager(context);
+        SessionManager sessionManager = SessionManager.getInstance(context);
 
         if (!sessionManager.isLogined()) throw Exceptions.getNeedLoginException();
 
         Connection connection;
         Document document;
-        Elements grades, scores;
 
         //ToDo remove? HotFix 140.123.30.107 NoResponse
         connection = Jsoup.connect("http://kiki.ccu.edu.tw/~ccmisp06/cgi-bin/Query/Query_grade.php")
