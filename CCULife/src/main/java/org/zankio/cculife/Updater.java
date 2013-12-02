@@ -61,13 +61,14 @@ public class Updater {
     public void checkUpdate() {
         SharedPreferences preferences;
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        if (preferences.getBoolean("auto_check_update", true)) {
+            long latestCheck = preferences.getLong("update_latest_check", 0);
+            int updateInterval = preferences.getInt("update_interval", 7);
 
-        long latestCheck = preferences.getLong("update_latest_check", 0);
-        int updateInterval = preferences.getInt("update_interval", 7);
-
-        if ((System.currentTimeMillis() - latestCheck > updateInterval * 24 * 60 * 60 * 1000)
-                || (preferences.getBoolean("debug_force_update", false))) {
-            checkUpdate(true);
+            if ((System.currentTimeMillis() - latestCheck > updateInterval * 24 * 60 * 60 * 1000)
+                    || (preferences.getBoolean("debug_force_update", false))) {
+                checkUpdate(true);
+            }
         }
     }
 
