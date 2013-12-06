@@ -247,6 +247,10 @@ nav a {
 	#banner {
 		text-align: center;
 	}
+	a {
+		word-wrap: break-word;
+		word-break: break-word;
+	}
 }
 
 @media only screen and (min-width: 600px) {
