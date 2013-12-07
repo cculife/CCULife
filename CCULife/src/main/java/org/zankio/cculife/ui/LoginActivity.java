@@ -182,7 +182,8 @@ public class LoginActivity extends SherlockActivity {
             showProgress(false);
 
             if (success) {
-                SessionManager.getInstance().createLoginSession(mStudentId, mPassword, mRemeber);
+                SessionManager.getInstance(LoginActivity.this)
+                        .createLoginSession(mStudentId, mPassword, mRemeber);
                 setResult(RESULT_OK);
                 finish();
             } else {
