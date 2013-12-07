@@ -30,7 +30,8 @@ public class SessionManager {
 
     private static SessionManager Instance = null;
 
-    public static SessionManager getInstance(){
+    public static SessionManager getInstance() {
+        if(Instance == null) throw new IllegalArgumentException("SessionManager is Uninitialized");
         return Instance;
     }
 
