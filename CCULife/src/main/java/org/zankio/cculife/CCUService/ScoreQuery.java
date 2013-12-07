@@ -3,117 +3,42 @@ package org.zankio.cculife.CCUService;
 
 import android.content.Context;
 
-import org.jsoup.Connection;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
-import org.jsoup.select.Elements;
+import org.zankio.cculife.CCUService.Parser.ScoreQueryParser;
+import org.zankio.cculife.CCUService.Source.ScoreQueryRemoteSource;
+import org.zankio.cculife.CCUService.Source.ScoreQuerySource;
+import org.zankio.cculife.CCUService.SourceSwitcher.ISwitcher;
+import org.zankio.cculife.CCUService.SourceSwitcher.SingleSourceSwitcher;
 import org.zankio.cculife.SessionManager;
-import org.zankio.cculife.override.Exceptions;
-import org.zankio.cculife.override.Net;
-
-import java.io.IOException;
 
 
 // Data http://140.123.30.107/~ccmisp06/cgi-bin/Query/
-public class ScoreQuery extends BaseService {
+public class ScoreQuery {
 
-    private Context context;
+    private ISwitcher sourceSwitcher;
 
-    private Document data;
-    private Grade[] grades;
-
-    public ScoreQuery(Context context) {
-        this.context = context;
+    public ScoreQuery(Context context) throws Exception {
+        ScoreQueryRemoteSource scoreQueryRemoteSource;
+        scoreQueryRemoteSource = new ScoreQueryRemoteSource(new ScoreQueryParser());
+        scoreQueryRemoteSource.Authentication(SessionManager.getInstance(context));
+        sourceSwitcher = new SingleSourceSwitcher(scoreQueryRemoteSource);
     }
 
-    @Override
-    public boolean getSession() throws Exception {
-        SessionManager sessionManager = SessionManager.getInstance(context);
-
-        if (!sessionManager.isLogined()) throw Exceptions.getNeedLoginException();
-
-        Connection connection;
-        Document document;
-
-        connection = Jsoup.connect("http://kiki.ccu.edu.tw/~ccmisp06/cgi-bin/Query/Query_grade.php")
-                          .timeout(Net.CONNECT_TIMEOUT);
-        connection.data("id", sessionManager.getUserName())
-                  .data("password", sessionManager.getPassword());
-
-        try {
-            document = connection.post();
-            if (document.select("table").size() != 0) {
-                SESSIONID = connection.response().cookie("PHPSESSID");
-                data = document;
-                return true;
-            }
-
-            return false;
-        } catch (IOException e) {
-            throw Exceptions.getNetworkException(e);
-        }
-
-
+    private ScoreQuerySource getSource() {
+        return (ScoreQuerySource) sourceSwitcher.getSource();
     }
 
-    public Grade[] getGrades() {
-        if (grades != null) return grades;
-
-        if (data == null) {
-            if (SESSIONID == null || SESSIONID.equals("")) {
-                return null;
-            }
-        }
-
-        Elements grades, scores, fields;
-        Element scoreTable;
-        Node description;
-        Grade[] result = null;
-
-        grades = data.select("h3");
-        result = new Grade[grades.size()];
-
-        for (int i = 0; i < grades.size(); i++) {
-            result[i] = new Grade();
-            result[i].Grade = grades.get(i).text();
-
-            scoreTable = grades.get(i).nextElementSibling();
-            description = scoreTable.nextSibling();
-            result[i].Description = description.outerHtml();
-
-            if (scoreTable == null) continue;
-
-            scores = scoreTable.select("tr");
-            result[i].Scores = new Score[scores.size() - 1];
-
-            for (int j = 1; j < scores.size(); j++) {
-                fields = scores.get(j).select("td");
-
-                result[i].Scores[j - 1] = new Score();
-                result[i].Scores[j - 1].CoruseID = fields.get(0).text();
-                result[i].Scores[j - 1].ClassID = fields.get(1).text();
-                result[i].Scores[j - 1].CourseName = fields.get(2).text();
-                result[i].Scores[j - 1].CreditType = fields.get(3).text();
-                result[i].Scores[j - 1].Credit = fields.get(4).text();
-                result[i].Scores[j - 1].Score = fields.get(5).text();
-
-            }
-        }
-        this.grades = result;
-        return result;
-
+    public Grade[] getGrades() throws Exception {
+        return getSource().getGrades();
     }
 
-    public class Grade {
+    public static class Grade {
 
         public Score[] Scores;
         public String Grade;
         public String Description;
     }
 
-    public class Score {
+    public static class Score {
         public String CoruseID;
         public String ClassID;
         public String CourseName;

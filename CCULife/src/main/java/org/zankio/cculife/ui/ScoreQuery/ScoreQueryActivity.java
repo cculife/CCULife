@@ -37,7 +37,6 @@ public class ScoreQueryActivity extends BaseFragmentActivity {
 
         setMessageView(R.id.pager);
         setSSOService(new org.zankio.cculife.CCUService.PortalService.ScoreQuery());
-        scoreQuery = new ScoreQuery(this);
         new LoadGradeDataAsyncTask().execute();
     }
 
@@ -112,7 +111,7 @@ public class ScoreQueryActivity extends BaseFragmentActivity {
 
         @Override
         protected ScoreQuery.Grade[] _doInBackground(Void... params) throws Exception {
-            scoreQuery.init();
+            if(scoreQuery == null) scoreQuery = new ScoreQuery(ScoreQueryActivity.this);
             return scoreQuery.getGrades();
         }
 
