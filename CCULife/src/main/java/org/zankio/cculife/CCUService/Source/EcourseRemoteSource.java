@@ -7,6 +7,7 @@ import org.jsoup.select.Elements;
 import org.zankio.cculife.CCUService.Authentication.CookieAuth;
 import org.zankio.cculife.CCUService.Ecourse;
 import org.zankio.cculife.CCUService.Helper.ConnectionHelper;
+import org.zankio.cculife.CCUService.Kiki;
 import org.zankio.cculife.CCUService.Parser.EcourseParser;
 import org.zankio.cculife.CCUService.Parser.IParser;
 import org.zankio.cculife.SessionManager;
@@ -18,9 +19,10 @@ import java.util.ArrayList;
 public class EcourseRemoteSource extends EcourseSource {
 
     private Ecourse ecourse;
-    ConnectionHelper connectionHelper;
-    CookieAuth auth;
-    EcourseParser parser;
+    private ConnectionHelper connectionHelper;
+    private CookieAuth auth;
+    private EcourseParser parser;
+
     private final static String SESSION_FIELD_NAME = "PHPSESSID";
 
 
@@ -80,6 +82,37 @@ public class EcourseRemoteSource extends EcourseSource {
         connectionHelper.initConnection(connection);
 
         return  parser.parserCourses(ecourse, connection.get());
+    }
+
+    @Override
+    public Ecourse.Course[] getCourse(int year, int term, Kiki kiki) throws Exception {
+        checkAuth();
+
+        Ecourse.Course[] result;
+        Kiki.Course[] courses;
+
+        try {
+            courses = kiki.getCourseList(year, term);
+            result = new Ecourse.Course[courses.length];
+
+            for (int i = 0; i < courses.length; i++) {
+                result[i] = ecourse.new Course(ecourse);
+                result[i].setCourseid(courses[i].getEcourseID());
+                result[i].setName(courses[i].Name);
+                result[i].setId("");
+                result[i].setTeacher(courses[i].Teacher);
+                result[i].setNotice(0);
+                result[i].setHomework(0);
+                result[i].setExam(0);
+                result[i].setWarning(false);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw Exceptions.getNetworkException(e);
+        }
+
+        return result;
     }
 
     public Ecourse.Scores[] getScore() throws Exception {

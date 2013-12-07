@@ -1,6 +1,7 @@
 package org.zankio.cculife.CCUService.Source;
 
 import org.zankio.cculife.CCUService.Ecourse;
+import org.zankio.cculife.CCUService.Kiki;
 import org.zankio.cculife.SessionManager;
 
 public abstract class EcourseSource implements ISource {
@@ -21,4 +22,7 @@ public abstract class EcourseSource implements ISource {
 
     public abstract Ecourse.File[] getFiles(Ecourse.Course course) throws Exception ;
 
+    public Ecourse.Course[] getCourse(int year, int term, Kiki kiki) throws Exception {
+        return getCourse();
+    }
 }

@@ -40,12 +40,13 @@ public class Ecourse {
         return getSource().getCourse();
     }
 
-    public Course[] getCourses(int year, int term) throws Exception {
-        return getSource().getCourse();
+    //Todo impl debug mode
+    public Course[] getCourses(int year, int term, Kiki kiki) throws Exception {
+        return getSource().getCourse(year, term, kiki);
     }
 
 
-    public class Course{
+    public class Course {
         private String courseid;
         private String id;
         private String name;

@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.actionbarsherlock.view.Menu;
 
 import org.zankio.cculife.CCUService.Ecourse;
+import org.zankio.cculife.CCUService.Kiki;
 import org.zankio.cculife.Debug;
 import org.zankio.cculife.R;
 import org.zankio.cculife.override.AsyncTaskWithErrorHanding;
@@ -95,7 +96,7 @@ public class CourseListActivity extends BaseActivity {
                 int year, term;
                 year = Integer.parseInt(preferences.getString("debug_ecourse_year", "-1"));
                 term = Integer.parseInt(preferences.getString("debug_ecourse_term", "-1"));
-                return ecourse.getCourses(year, term);
+                return ecourse.getCourses(year, term, new Kiki(CourseListActivity.this));
             }
             return ecourse.getCourses();
         }
