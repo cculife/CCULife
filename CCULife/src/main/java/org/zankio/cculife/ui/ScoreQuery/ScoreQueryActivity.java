@@ -11,9 +11,8 @@ import android.view.ViewGroup;
 
 import com.actionbarsherlock.view.Menu;
 
-import org.zankio.cculife.CCUService.Portal;
-import org.zankio.cculife.R;
 import org.zankio.cculife.CCUService.ScoreQuery;
+import org.zankio.cculife.R;
 import org.zankio.cculife.override.AsyncTaskWithErrorHanding;
 import org.zankio.cculife.ui.Base.BaseFragmentActivity;
 

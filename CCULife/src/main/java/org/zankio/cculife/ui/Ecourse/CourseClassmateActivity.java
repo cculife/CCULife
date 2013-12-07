@@ -1,7 +1,6 @@
 package org.zankio.cculife.ui.Ecourse;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,13 +10,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 
 import org.zankio.cculife.CCUService.Ecourse;
 import org.zankio.cculife.R;
 import org.zankio.cculife.override.AsyncTaskWithErrorHanding;
 import org.zankio.cculife.ui.Base.BaseActivity;
-import org.zankio.cculife.ui.SettingsActivity;
 
 public class CourseClassmateActivity extends BaseActivity {
 

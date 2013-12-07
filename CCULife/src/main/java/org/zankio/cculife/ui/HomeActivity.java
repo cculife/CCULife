@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 
-import org.zankio.cculife.CCUSchedule;
 import org.zankio.cculife.R;
 import org.zankio.cculife.SessionManager;
 import org.zankio.cculife.Updater;

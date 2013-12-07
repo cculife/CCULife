@@ -7,8 +7,8 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.zankio.cculife.R;
 import org.zankio.cculife.CCUService.ScoreQuery;
+import org.zankio.cculife.R;
 import org.zankio.cculife.ui.Base.BasePage;
 import org.zankio.cculife.ui.Base.onDataLoadListener;
 
