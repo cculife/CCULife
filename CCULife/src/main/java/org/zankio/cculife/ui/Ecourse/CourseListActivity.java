@@ -30,7 +30,7 @@ public class CourseListActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_courselist);
-        ecourse = new Ecourse(this);
+
         adapter = new CourseAdapter();
 
         ListView courselist = (ListView)findViewById(R.id.courselist);
@@ -52,6 +52,7 @@ public class CourseListActivity extends BaseActivity {
         setMessageView(R.id.courselist);
         setSSOService(new org.zankio.cculife.CCUService.PortalService.Ecourse());
         new LoadDataAsyncTask().execute();
+
     }
 
 
@@ -85,10 +86,10 @@ public class CourseListActivity extends BaseActivity {
             hideMessage();
         }
 
-
         @Override
         protected Ecourse.Course[] _doInBackground(Void... params) throws Exception {
-            ecourse.init();
+            if(ecourse == null) ecourse = new Ecourse(CourseListActivity.this);
+
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(CourseListActivity.this);
             if (Debug.debug && preferences.getBoolean("debug_ecourse_custom", false)) {
                 int year, term;
