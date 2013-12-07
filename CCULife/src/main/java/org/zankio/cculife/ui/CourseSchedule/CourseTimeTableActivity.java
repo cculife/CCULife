@@ -47,7 +47,6 @@ public class CourseTimeTableActivity extends BaseFragmentActivity implements Act
 
         setMessageView(R.id.container);
 
-        courseTimeTable = new Kiki(this);
         new LoadTimeTableDataAsyncTask().execute();
     }
 
@@ -131,7 +130,7 @@ public class CourseTimeTableActivity extends BaseFragmentActivity implements Act
 
         @Override
         protected Kiki.TimeTable _doInBackground(Void... params) throws Exception{
-            courseTimeTable.init();
+            if(courseTimeTable == null) courseTimeTable = new Kiki(CourseTimeTableActivity.this);
             return courseTimeTable.getTimeTable();
         }
 
