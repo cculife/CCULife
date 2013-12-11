@@ -58,6 +58,8 @@ public class CourseActivity extends BaseFragmentActivity implements ActionBar.Ta
                             .setText(mSectionsPagerAdapter.getPageTitle(i))
                             .setTabListener(this));
         }
+
+        setSSOService(new org.zankio.cculife.CCUService.PortalService.Ecourse().setCourseID(course.getCourseid()));
     }
 
     @Override

@@ -50,8 +50,8 @@ public class CourseListActivity extends BaseActivity {
             }
         });
 
-        setSSOID(Portal.SSO_ECOURSE);
         setMessageView(R.id.courselist);
+        setSSOService(new org.zankio.cculife.CCUService.PortalService.Ecourse());
         new LoadDataAsyncTask().execute();
     }
 

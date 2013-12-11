@@ -36,8 +36,8 @@ public class ScoreQueryActivity extends BaseFragmentActivity {
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        setSSOID(Portal.SSO_SCORE);
         setMessageView(R.id.pager);
+        setSSOService(new org.zankio.cculife.CCUService.PortalService.ScoreQuery());
         scoreQuery = new ScoreQuery(this);
         new LoadGradeDataAsyncTask().execute();
     }

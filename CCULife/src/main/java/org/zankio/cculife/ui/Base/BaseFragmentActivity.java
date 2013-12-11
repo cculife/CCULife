@@ -12,6 +12,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 
 import org.zankio.cculife.CCUService.Portal;
+import org.zankio.cculife.CCUService.PortalService.BasePortal;
 import org.zankio.cculife.R;
 import org.zankio.cculife.override.AsyncTaskWithErrorHanding;
 import org.zankio.cculife.ui.SettingsActivity;
@@ -23,6 +24,7 @@ public class BaseFragmentActivity extends SherlockFragmentActivity {
     protected TextView messageView;
     protected ProgressBar messageLoaging;
     protected ImageView messageIcon;
+    protected BasePortal ssoService = null;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -34,15 +36,15 @@ public class BaseFragmentActivity extends SherlockFragmentActivity {
                 startActivity(intent);
                 return true;
             case R.id.action_show_in_browser:
-                if (ssoID != null) showInBrowser(ssoID);
+                if (ssoService != null) showInBrowser(ssoService);
                 return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    public void setSSOID (String id) {
-        this.ssoID = id;
+    public void setSSOService (BasePortal Service) {
+        this.ssoService = Service;
     }
 
     public void setMessageView(){
@@ -124,16 +126,16 @@ public class BaseFragmentActivity extends SherlockFragmentActivity {
         return toast;
     }
 
-    public void showInBrowser(final String ssoID) {
-        new showInBrowserAsyncTask(ssoID).execute();
+    public void showInBrowser(final BasePortal ssoService) {
+        new showInBrowserAsyncTask(ssoService).execute();
     }
 
     public class showInBrowserAsyncTask extends AsyncTaskWithErrorHanding<Void, Void, Void> {
-        private String ssoID;
+        private BasePortal ssoService;
         private Toast toast;
 
-        public showInBrowserAsyncTask(String id) {
-            this.ssoID = id;
+        public showInBrowserAsyncTask(BasePortal ssoService) {
+            this.ssoService = ssoService;
         }
 
         @Override
@@ -150,19 +152,20 @@ public class BaseFragmentActivity extends SherlockFragmentActivity {
         @Override
         protected Void _doInBackground(Void... params) throws Exception {
             Portal portal;
-            String launchURL;
+            String launchURL[];
 
             portal = new Portal(BaseFragmentActivity.this);
             portal.init();
-            launchURL = portal.getSSOPortal(ssoID);
+            launchURL = portal.getSSOPortal(ssoService);
 
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(launchURL)));
+            if (launchURL == null) throw new Exception();
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(launchURL[0])));
 
-            //Todo remove? Hotfix 140.123.30.107 NoResponse
-            if (launchURL.startsWith("http://kiki.ccu.edu.tw/~ccmisp06/cgi-bin/library/SSO/Query_grade/")) {
+            for (int i = 1; i < launchURL.length; i++) {
                 Thread.sleep(500);
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://kiki.ccu.edu.tw/~ccmisp06/cgi-bin/Query/Query_grade.php")));
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(launchURL[i])));
             }
+
             return null;
         }
 

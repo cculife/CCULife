@@ -5,6 +5,7 @@ import android.content.Context;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.zankio.cculife.CCUService.PortalService.BasePortal;
 import org.zankio.cculife.SessionManager;
 import org.zankio.cculife.override.Exceptions;
 
@@ -66,14 +67,12 @@ public class Portal extends BaseService {
         }
     }
 
-
-    public String getSSOPortal(String serviceID, String... params) throws Exception {
+    public String[] getSSOPortal(BasePortal portal) throws Exception {
         if (SESSIONID == null) throw new Exception("登入錯誤");
 
         Connection connection;
 
-        String seviceURL = SSO_URL.get(serviceID);
-        String ssoURL = String.format(SSO_URL_BASE, seviceURL, serviceID);
+        String ssoURL = portal.getSSOPortalURL();
         String location;
 
         connection = Jsoup.connect(ssoURL);
@@ -86,10 +85,7 @@ public class Portal extends BaseService {
             location = connection.response().header("Location");
 
             if (location != null) {
-                //ToDo remove? HotFix 140.123.30.107 NoResponse
-                if (serviceID.equals(SSO_SCORE)) location = location.replace("140.123.30.107", "kiki.ccu.edu.tw");
-
-                return location;
+                return portal.onPostExcute(location);
             }
 
         } catch (IOException e) {
