@@ -264,7 +264,7 @@ public class Ecourse {
 
     public class Scores {
         public Score[] scores;
-        public String Ｎame;
+        public String Name;
         public String Score;
         public String Rank;
     }

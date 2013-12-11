@@ -60,7 +60,7 @@ public class EcourseParser extends BaseParser {
                 }
 
                 mScores = ecourse.new Scores();
-                mScores.Ｎame = fields.get(0).text().replace("(名稱)", "");
+                mScores.Name = fields.get(0).text().replace("(名稱)", "");
                 score = new ArrayList<Ecourse.Score>();
                 continue;
             }
@@ -82,7 +82,7 @@ public class EcourseParser extends BaseParser {
         }
 
         mScores = ecourse.new Scores();
-        mScores.Ｎame = "總分";
+        mScores.Name = "總分";
         scores = document.select("tr[bgcolor=#B0BFC3]");
         if (scores.size() >= 2) {
             fields = scores.get(0).select("th");
@@ -210,7 +210,7 @@ public class EcourseParser extends BaseParser {
         return url;
     }
 
-    public String parserAnnounceContent(Document document){
+    public String parserAnnounceContent(Document document) throws Exception{
         Elements rows;
 
         rows = document.select("td[bgcolor=#E8E8E8]");
@@ -218,7 +218,7 @@ public class EcourseParser extends BaseParser {
         if (rows.size() > 2 )
             return rows.get(2).html();
         else
-            return "讀取資料錯誤";
+            throw new Exception("讀取資料錯誤");
 
     }
 }

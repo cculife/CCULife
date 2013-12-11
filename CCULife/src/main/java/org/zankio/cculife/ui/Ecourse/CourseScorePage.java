@@ -142,7 +142,7 @@ public class CourseScorePage extends BasePage {
                 view = convertView;
             }
             view.setBackgroundColor(inflater.getContext().getResources().getColor(R.color.ScoreCate));
-            ((TextView)view.findViewById(R.id.Name)).setText(score.Ｎame);
+            ((TextView)view.findViewById(R.id.Name)).setText(score.Name);
             ((TextView)view.findViewById(R.id.Score)).setText(score.Score);
             ((TextView)view.findViewById(R.id.Rank)).setText(score.Rank);
             return view;
