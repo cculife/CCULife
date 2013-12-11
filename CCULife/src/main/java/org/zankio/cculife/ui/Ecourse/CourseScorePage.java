@@ -23,6 +23,7 @@ public class CourseScorePage extends BasePage {
     public CourseScorePage(LayoutInflater inflater, Ecourse.Course course) {
         super(inflater);
         this.course = course;
+
     }
 
     @Override
@@ -54,18 +55,25 @@ public class CourseScorePage extends BasePage {
 
         @Override
         protected Ecourse.Scores[] _doInBackground(Void... params) throws Exception {
+            if(course == null) throw new Exception("請重試...");
             return course.getScore();
         }
 
         @Override
         protected void onError(String msg) {
-            showErrorMessage(msg);
+            showMessage(msg);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showMessage("讀取中...", true);
         }
 
         @Override
         protected void _onPostExecute(Ecourse.Scores[] result){
             if (result == null || result.length == 0) {
-                showErrorMessage("沒有成績");
+                showMessage("沒有成績");
                 return;
             }
 
@@ -74,7 +82,7 @@ public class CourseScorePage extends BasePage {
             for (int i = 0; i < adapter.getGroupCount(); i++) {
                 list.expandGroup(i);
             }
-            hideErrorMessage();
+            hideMessage();
         }
     }
 

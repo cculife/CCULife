@@ -90,7 +90,13 @@ public class CourseAnnouncePage extends BasePage implements AdapterView.OnItemCl
 
         @Override
         protected void onError(String msg) {
-            showErrorMessage(msg);
+            showMessage(msg);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showMessage("讀取中...", true);
         }
 
         @Override
@@ -101,12 +107,12 @@ public class CourseAnnouncePage extends BasePage implements AdapterView.OnItemCl
         @Override
         protected void _onPostExecute(Ecourse.Announce[] result){
             if(result == null || result.length == 0) {
-                showErrorMessage("沒有公告");
+                showMessage("沒有公告");
                 return;
             }
 
             adapter.setAnnounces(result);
-            hideErrorMessage();
+            hideMessage();
         }
     }
 

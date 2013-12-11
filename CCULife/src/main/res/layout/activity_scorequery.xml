@@ -2,7 +2,7 @@
        xmlns:tools="http://schemas.android.com/tools"
        tools:context=".ScoreActivity">
 
-    <include layout="@layout/layout_error_panel" />
+    <include layout="@layout/layout_msg_panel" />
 
     <android.support.v4.view.ViewPager
             android:id="@+id/pager"

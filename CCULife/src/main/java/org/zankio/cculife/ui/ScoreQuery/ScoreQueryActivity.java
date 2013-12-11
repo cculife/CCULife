@@ -36,8 +36,8 @@ public class ScoreQueryActivity extends BaseFragmentActivity {
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        setErrorView(R.id.pager);
         setSSOID(Portal.SSO_SCORE);
+        setMessageView(R.id.pager);
         scoreQuery = new ScoreQuery(this);
         new LoadGradeDataAsyncTask().execute();
     }
@@ -102,7 +102,13 @@ public class ScoreQueryActivity extends BaseFragmentActivity {
 
         @Override
         protected void onError(String msg) {
-            showErrorMessage(msg);
+            showMessage(msg);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showMessage("讀取中...", true);
         }
 
         @Override
@@ -114,13 +120,14 @@ public class ScoreQueryActivity extends BaseFragmentActivity {
         @Override
         protected void _onPostExecute(ScoreQuery.Grade[] grades) {
             if(grades == null || grades.length == 0) {
-                showErrorMessage("沒有成績");
+                showMessage("沒有成績");
                 return;
             }
 
             ScoreQueryActivity.this.grades = grades;
             ScoreQueryActivity.this.gradePages = new GradePage[grades.length];
             onDataLoad();
+            hideMessage();
         }
     }
 

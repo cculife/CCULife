@@ -51,8 +51,8 @@ public class CourseListActivity extends BaseActivity {
             }
         });
 
-        setErrorView(R.id.courselist);
         setSSOID(Portal.SSO_ECOURSE);
+        setMessageView(R.id.courselist);
         new LoadDataAsyncTask().execute();
     }
 
@@ -67,17 +67,24 @@ public class CourseListActivity extends BaseActivity {
 
         @Override
         protected void onError(String msg) {
-            showErrorMessage(msg);
+            showMessage(msg);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showMessage("讀取中...", true);
         }
 
         @Override
         protected void _onPostExecute(Ecourse.Course[] result) {
             if(result == null || result.length == 0) {
-                showErrorMessage("沒有課程");
+                showMessage("沒有課程");
                 return;
             }
 
             adapter.setCourses(result);
+            hideMessage();
         }
 
 

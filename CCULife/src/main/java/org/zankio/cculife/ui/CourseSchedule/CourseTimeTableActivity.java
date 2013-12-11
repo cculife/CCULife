@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
@@ -46,7 +45,7 @@ public class CourseTimeTableActivity extends BaseFragmentActivity implements Act
                 this);
 
 
-        setErrorView(R.id.container);
+        setMessageView(R.id.container);
 
         courseTimeTable = new Kiki(this);
         new LoadTimeTableDataAsyncTask().execute();
@@ -121,7 +120,13 @@ public class CourseTimeTableActivity extends BaseFragmentActivity implements Act
 
         @Override
         protected void onError(String msg) {
-            showErrorMessage(msg);
+            showMessage(msg);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showMessage("讀取中...", true);
         }
 
         @Override
@@ -133,11 +138,12 @@ public class CourseTimeTableActivity extends BaseFragmentActivity implements Act
         @Override
         protected void _onPostExecute(Kiki.TimeTable timeTable) {
             if (timeTable == null) {
-                showErrorMessage("沒有課表");
+                showMessage("沒有課表");
                 return;
             }
             CourseTimeTableActivity.this.timeTable = timeTable;
             onDataLoad();
+            hideMessage();
         }
     }
 

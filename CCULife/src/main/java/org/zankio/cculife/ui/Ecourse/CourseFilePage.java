@@ -76,25 +76,31 @@ public class CourseFilePage extends BasePage {
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showMessage("讀取中...", true);
+        }
+
+        @Override
         protected Ecourse.File[] _doInBackground(Void... params) throws Exception {
-            Log.e("", "getFiles");
+            if(course == null) throw new Exception("請重試...");
             return course.getFiles();
         }
 
         @Override
         protected void onError(String msg) {
-            showErrorMessage(msg);
+            showMessage(msg);
         }
 
         @Override
         protected void _onPostExecute(Ecourse.File[] result){
             if (result == null || result.length == 0) {
-                showErrorMessage("沒有檔案");
+                showMessage("沒有檔案");
                 return;
             }
 
             adapter.setFiles(result);
-            hideErrorMessage();
+            hideMessage();
         }
     }
 

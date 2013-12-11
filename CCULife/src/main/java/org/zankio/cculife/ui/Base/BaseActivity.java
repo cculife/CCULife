@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,9 +20,10 @@ import org.zankio.cculife.ui.SettingsActivity;
 public abstract class BaseActivity extends SherlockActivity {
 
     protected View MainView;
-    protected View errorPanel;
-    protected TextView errorMsg;
-    protected String ssoID = null;
+    protected View messagePanel;
+    protected TextView messageView;
+    protected ProgressBar messageLoaging;
+    protected ImageView messageIcon;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -43,35 +46,66 @@ public abstract class BaseActivity extends SherlockActivity {
         this.ssoID = id;
     }
 
-    public void setErrorView(){
+    public void setMessageView(){
         this.MainView = findViewById(R.id.content);
-        this.errorPanel = findViewById(R.id.error_panel);
-        errorMsg = (TextView) findViewById(R.id.error_message);
+        this.messagePanel = findViewById(R.id.message_panel);
+        messageView = (TextView) findViewById(R.id.message);
+        messageLoaging = (ProgressBar) findViewById(R.id.loading);
+        messageIcon = (ImageView) findViewById(R.id.icon);
     }
 
-    public void setErrorView(int mainview){
+    public void setMessageView(int mainview){
         this.MainView = findViewById(mainview);
-        this.errorPanel = findViewById(R.id.error_panel);
-        errorMsg = (TextView) findViewById(R.id.error_message);
+        this.messagePanel = findViewById(R.id.message_panel);
+        messageView = (TextView) findViewById(R.id.message);
+        messageLoaging = (ProgressBar) findViewById(R.id.loading);
+        messageIcon = (ImageView) findViewById(R.id.icon);
     }
 
-    public void setErrorView(View MainView, View errorPanel){
+    public void setMessageView(View MainView, View messagePanel){
 
         this.MainView = MainView;
-        this.errorPanel = errorPanel;
-        if (errorPanel != null) errorMsg = (TextView) errorPanel.findViewById(R.id.error_message);
+        this.messagePanel = messagePanel;
+        if (messagePanel != null) {
+            messageView = (TextView) messagePanel.findViewById(R.id.message);
+            messageLoaging = (ProgressBar) messagePanel.findViewById(R.id.loading);
+            messageIcon = (ImageView) messagePanel.findViewById(R.id.icon);
+        }
     }
 
-    public void hideErrorMessage() {
+    public void hideMessage() {
         if (MainView != null) MainView.setVisibility(View.VISIBLE);
 
-        if (errorPanel != null) errorPanel.setVisibility(View.GONE);
+        if (messagePanel != null) messagePanel.setVisibility(View.GONE);
     }
 
-    public void showErrorMessage(String msg) {
-        if (MainView != null && errorPanel != null && errorMsg != null) {
-            errorMsg.setText(msg);
-            errorPanel.setVisibility(View.VISIBLE);
+    public void showMessage(String msg) {
+        if (MainView != null && messagePanel != null && messageView != null) {
+            messageLoaging.setVisibility(View.GONE);
+            messageIcon.setVisibility(View.GONE);
+            messageView.setText(msg);
+            messagePanel.setVisibility(View.VISIBLE);
+            MainView.setVisibility(View.GONE);
+        }
+    }
+
+    public void showMessage(String msg, boolean loading) {
+        if (MainView != null && messagePanel != null && messageView != null) {
+            messageLoaging.setVisibility(loading ? View.VISIBLE : View.GONE);
+            messageIcon.setVisibility(loading ? View.GONE : View.VISIBLE);
+            messageView.setText(msg);
+            messagePanel.setVisibility(View.VISIBLE);
+            MainView.setVisibility(View.GONE);
+        }
+    }
+
+    public void showMessage(String msg, int resId) {
+        if (MainView != null && messagePanel != null && messageView != null) {
+            messageLoaging.setVisibility(View.GONE);
+            messageIcon.setVisibility(View.VISIBLE);
+            messageIcon.setImageResource(resId);
+            messageView.setText(msg);
+            messagePanel.setVisibility(View.VISIBLE);
             MainView.setVisibility(View.GONE);
         }
     }

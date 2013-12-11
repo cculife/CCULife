@@ -50,18 +50,18 @@ public class CCUScheduleActivity extends BaseActivity {
 
         @Override
         protected void onError(String msg) {
-            showErrorMessage(msg);
+            showMessage(msg);
         }
 
         @Override
         protected void _onPostExecute(CCUSchedule.Schedule[] result) {
             if(result == null || result.length == 0) {
-                showErrorMessage("沒有日程");
+                showMessage("沒有日程");
                 return;
             }
 
             adapter.setItems(result[0].list);
-            hideErrorMessage();
+            hideMessage();
 
             scrollToNow(result[0].list);
         }

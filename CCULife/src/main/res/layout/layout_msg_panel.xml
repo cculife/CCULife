@@ -7,13 +7,21 @@
               android:layout_gravity="center"
               android:gravity="center_horizontal"
               android:orientation="vertical"
-              android:id="@+id/error_panel">
+              android:id="@+id/message_panel">
+
+    <ProgressBar style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone"
+        android:id="@+id/loading"/>
 
     <ImageView android:layout_width="wrap_content"
                android:layout_height="wrap_content"
-               android:layout_marginBottom="8dp" />
+               android:layout_marginBottom="8dp"
+               android:id="@+id/icon"/>
     <TextView
-            android:id="@+id/error_message"
+            android:id="@+id/message"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/Gray"
             android:fontFamily="sans-serif-light"

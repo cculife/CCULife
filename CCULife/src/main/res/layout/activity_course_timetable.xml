@@ -1,7 +1,7 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
        xmlns:tools="http://schemas.android.com/tools">
 
-    <include android:id="@+id/error_panel" layout="@layout/layout_error_panel" />
+    <include android:id="@+id/message_panel" layout="@layout/layout_msg_panel" />
 
     <FrameLayout
             android:id="@+id/container"
