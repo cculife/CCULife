@@ -36,6 +36,7 @@ public class HomeActivity extends BaseActivity {
           , new CCUService(CourseTimeTableActivity.class, "課表", R.drawable.schedule, true)
           , new CCUService(ScoreQueryActivity.class, "成績查詢", R.drawable.score, true)
           , new CCUService(CCUScheduleActivity.class, "行事曆", R.drawable.ccuschedule)
+          //, new CCUService(null, "飲食", null)
           //, new CCUService(null, "選課", null, true)
           //, new CCUService(null, "工讀生", null, true)
           //, new CCUService(null, "Wifi 自動連線", null)

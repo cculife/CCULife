@@ -51,7 +51,7 @@
             android:label="@string/title_activity_score" >
         </activity>
         <activity
-            android:name=".ui.CCUSchedule.CCUScheduleActivity"
+            android:name="org.zankio.cculife.ui.CCUSchedule.CCUScheduleActivity"
             android:label="@string/title_activity_ccuschedule" >
         </activity>
         <activity
@@ -63,6 +63,7 @@
             android:label="@string/title_activity_about" >
             <intent-filter>
                 <action android:name="org.zankio.cculife.ui.AboutActivity" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
