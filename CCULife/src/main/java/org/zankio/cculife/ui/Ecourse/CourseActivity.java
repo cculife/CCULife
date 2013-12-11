@@ -1,5 +1,6 @@
 package org.zankio.cculife.ui.Ecourse;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,23 +13,28 @@ import android.view.ViewGroup;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 
 import org.zankio.cculife.CCUService.Ecourse;
 import org.zankio.cculife.R;
 import org.zankio.cculife.ui.Base.BaseFragmentActivity;
+import org.zankio.cculife.ui.SettingsActivity;
 
 import java.util.Locale;
 
 public class CourseActivity extends BaseFragmentActivity implements ActionBar.TabListener {
 
     SectionsPagerAdapter mSectionsPagerAdapter;
-    private Ecourse.Course course = CourseListActivity.ecourse.nowCourse;
+    protected Ecourse.Course course;
     ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course);
+
+        if (CourseListActivity.ecourse == null) {finish(); return;}
+        course = CourseListActivity.ecourse.nowCourse;
 
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -58,6 +64,21 @@ public class CourseActivity extends BaseFragmentActivity implements ActionBar.Ta
     public boolean onCreateOptionsMenu(Menu menu) {
         getSupportMenuInflater().inflate(R.menu.course, menu);
         return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
+
+        switch (item.getItemId()){
+            case R.id.action_classmate:
+                intent = new Intent(this, CourseClassmateActivity.class);
+                startActivity(intent);
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

@@ -24,7 +24,6 @@ import org.zankio.cculife.ui.Base.BaseActivity;
 
 public class CourseListActivity extends BaseActivity {
 
-    private Ecourse.Course[] courses = null;
     public static Ecourse ecourse = null;
     private CourseAdapter adapter = null;
 

@@ -8,6 +8,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.zankio.cculife.Debug;
 import org.zankio.cculife.SessionManager;
 import org.zankio.cculife.override.Exceptions;
 
@@ -259,6 +260,42 @@ public class Ecourse extends BaseService{
             }
         }
 
+        public Classmate[] getClassmate() throws Exception {
+            if (SESSIONID == null) throw Exceptions.getLoginErrorException();
+
+            Connection connection;
+            Document document;
+            Elements list, field;
+
+            Classmate[] result;
+
+            try {
+                connection = Jsoup.connect("http://ecourse.elearning.ccu.edu.tw/php/Learner_Profile/SSQueryFrame1.php");
+                connection.cookie(SESSIONFIELDNAME, SESSIONID);
+
+                document = connection.get();
+                list = document.select("tr[bgcolor=#F0FFEE], tr[bgcolor=#E6FFFC]");
+
+                Log.e("", "field" + list.html());
+                result = new Classmate[list.size()];
+
+                for (int i = 0; i < list.size(); i++) {
+                    field = list.get(i).select("td");
+
+                    result[i] = new Classmate();
+                    result[i].Name = field.get(3).text();
+                    result[i].Department = field.get(1).text();
+                    result[i].Gender = field.get(5).text();
+                    result[i].StudentId = field.get(2).text();
+
+                }
+
+                return result;
+
+            } catch (IOException e) {
+                throw Exceptions.getNetworkException(e);
+            }
+        }
 
         public Announce[] getAnnounces() throws Exception {
             if (this.announces != null) return this.announces;
@@ -538,6 +575,14 @@ public class Ecourse extends BaseService{
             return Content;
         }
     }
+
+    public class Classmate {
+        public String Name;
+        public String StudentId;
+        public String Department;
+        public String Gender;
+    }
+
 
     public class Scores {
         public Score[] scores;
