@@ -129,7 +129,6 @@ public class CourseActivity extends BaseFragmentActivity implements ActionBar.Ta
                 Bundle savedInstanceState) {
             int layout = getArguments().getInt(ARG_PAGE_VIEW);
 
-            Log.e("", "layout : " + layout);
             switch (layout) {
                 case R.layout.fragment_course_announce:
                     return new CourseAnnouncePage(inflater, course).getView();

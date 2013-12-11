@@ -2,7 +2,6 @@ package org.zankio.cculife.ui.Base;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;

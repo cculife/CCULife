@@ -66,8 +66,6 @@ public class HomeActivity extends BaseActivity {
                 }
             }
         });
-
-        new CCUSchedule(this).getScheduleList();
     }
 
     @Override

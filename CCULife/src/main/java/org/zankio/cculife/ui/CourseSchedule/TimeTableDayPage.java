@@ -46,10 +46,8 @@ public class TimeTableDayPage extends BasePage implements onDataLoadListener<Kik
     @Override
     public void initViews() {
 
-        //mSectionsPagerAdapter = new SectionsPagerAdapter(fm);
         mSectionsPagerAdapter = new SectionsPagerAdapter();
 
-        // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) PageView.findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         updateTimeTable();
@@ -129,67 +127,6 @@ public class TimeTableDayPage extends BasePage implements onDataLoadListener<Kik
             return null;
         }
     }
-
-
-    /*
-    public class _SectionsPagerAdapter extends FragmentPagerAdapter {
-
-        public _SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            Fragment fragment = new DummySectionFragment();
-            Bundle args = new Bundle();
-            args.putInt(DummySectionFragment.ARG_POSITION, position);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        @Override
-        public int getCount() {
-            return 5;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "星期一";
-                case 1:
-                    return "星期二";
-                case 2:
-                    return "星期三";
-                case 3:
-                    return "星期四";
-                case 4:
-                    return "星期五";
-            }
-            return null;
-        }
-    }
-
-    public class DummySectionFragment extends Fragment {
-        public static final String ARG_POSITION = "position";
-
-        public DummySectionFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-
-            int week = getArguments().getInt(ARG_POSITION) + 1;
-            View view = inflater.inflate(R.layout.fragment_course_timetable_day, null);
-
-            adapter[week] = new TimeTableAdapter(getWeekClasses(week));
-            list[week] = (ListView) view.findViewById(R.id.list);
-            list[week].setAdapter(adapter[week]);
-            return view;
-        }
-    }
-    */
 
     public class TimeTableAdapter extends BaseAdapter {
 
