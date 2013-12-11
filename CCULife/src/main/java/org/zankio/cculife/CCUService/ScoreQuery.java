@@ -11,6 +11,7 @@ import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 import org.zankio.cculife.SessionManager;
 import org.zankio.cculife.override.Exceptions;
+import org.zankio.cculife.override.Net;
 
 import java.io.IOException;
 
@@ -39,7 +40,8 @@ public class ScoreQuery extends BaseService {
         Elements grades, scores;
 
         //ToDo remove? HotFix 140.123.30.107 NoResponse
-        connection = Jsoup.connect("http://kiki.ccu.edu.tw/~ccmisp06/cgi-bin/Query/Query_grade.php");
+        connection = Jsoup.connect("http://kiki.ccu.edu.tw/~ccmisp06/cgi-bin/Query/Query_grade.php")
+                          .timeout(Net.CONNECT_TIMEOUT);
         connection.data("id", sessionManager.getUserName())
                   .data("password", sessionManager.getPassword());
 

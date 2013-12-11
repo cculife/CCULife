@@ -8,6 +8,7 @@ import org.jsoup.nodes.Document;
 import org.zankio.cculife.CCUService.PortalService.BasePortal;
 import org.zankio.cculife.SessionManager;
 import org.zankio.cculife.override.Exceptions;
+import org.zankio.cculife.override.Net;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -42,7 +43,7 @@ public class Portal extends BaseService {
         String location;
         String cookie;
         try {
-            connection = Jsoup.connect("http://portal.ccu.edu.tw/");
+            connection = Jsoup.connect("http://portal.ccu.edu.tw/").timeout(Net.CONNECT_TIMEOUT);
             connection.get();
             cookie = connection.response().cookies().get("ccuSSO");
             connection.cookie("ccuSSO", cookie)
@@ -75,7 +76,7 @@ public class Portal extends BaseService {
         String ssoURL = portal.getSSOPortalURL();
         String location;
 
-        connection = Jsoup.connect(ssoURL);
+        connection = Jsoup.connect(ssoURL).timeout(Net.CONNECT_TIMEOUT);
 
         connection.followRedirects(false)
                 .cookie("ccuSSO", SESSIONID);

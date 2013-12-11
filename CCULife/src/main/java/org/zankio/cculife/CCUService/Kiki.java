@@ -10,6 +10,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.zankio.cculife.SessionManager;
 import org.zankio.cculife.override.Exceptions;
+import org.zankio.cculife.override.Net;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -48,7 +49,8 @@ public class Kiki extends BaseService{
         Connection connection;
         Document document;
         Elements logout;
-        connection = Jsoup.connect("http://kiki.ccu.edu.tw/~ccmisp06/cgi-bin/class_new/bookmark.php");
+        connection = Jsoup.connect("http://kiki.ccu.edu.tw/~ccmisp06/cgi-bin/class_new/bookmark.php")
+                          .timeout(Net.CONNECT_TIMEOUT);
         connection.data("id", sessionManager.getUserName())
                 .data("password", sessionManager.getPassword())
                 .data("term", "on");
@@ -94,7 +96,8 @@ public class Kiki extends BaseService{
 
         int classColor;
 
-        connection = Jsoup.connect("http://kiki.ccu.edu.tw/~ccmisp06/cgi-bin/class_new/Selected_View00.cgi?session_id=" + SESSIONID);
+        connection = Jsoup.connect("http://kiki.ccu.edu.tw/~ccmisp06/cgi-bin/class_new/Selected_View00.cgi?session_id=" + SESSIONID)
+                          .timeout(Net.CONNECT_TIMEOUT);
 
         try {
 
@@ -319,7 +322,7 @@ public class Kiki extends BaseService{
             Connection connection;
             String location, result;
 
-            connection = Jsoup.connect(OutlineLink);
+            connection = Jsoup.connect(OutlineLink).timeout(Net.CONNECT_TIMEOUT);
             connection.followRedirects(false);
 
 
@@ -372,7 +375,8 @@ public class Kiki extends BaseService{
         for (int i = 0; i < SELECTED_FIELD_LENGTH; i++) classIndex[i] = -1;
 
         connection = Jsoup.connect("http://kiki.ccu.edu.tw/~ccmisp06/cgi-bin/class_new/Selected_View00.cgi?"+
-                (year > 0 && term > 0 ? ("year=" + year +"&term=" + term + "&") : "") + "session_id=" + SESSIONID);
+                (year > 0 && term > 0 ? ("year=" + year +"&term=" + term + "&") : "") + "session_id=" + SESSIONID)
+                .timeout(Net.CONNECT_TIMEOUT);
 
         Log.e("", "URL : http://kiki.ccu.edu.tw/~ccmisp06/cgi-bin/class_new/Selected_View00.cgi?"+
                 (year > 0 && term > 0 ? ("year=" + year +"&term=" + term + "&") : "") + "session_id=" + SESSIONID);

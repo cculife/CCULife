@@ -21,6 +21,7 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.zankio.cculife.R;
 import org.zankio.cculife.SessionManager;
+import org.zankio.cculife.override.Net;
 
 import java.io.IOException;
 
@@ -151,7 +152,7 @@ public class LoginActivity extends SherlockActivity {
 
             try {
 
-                Connection cnt = Jsoup.connect("http://portal.ccu.edu.tw/");
+                Connection cnt = Jsoup.connect("http://portal.ccu.edu.tw/").timeout(Net.CONNECT_TIMEOUT);
                 cnt.get();
                 cookie = cnt.response().cookies().get("ccuSSO");
 

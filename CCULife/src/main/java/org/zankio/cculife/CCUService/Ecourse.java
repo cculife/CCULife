@@ -1,16 +1,15 @@
 package org.zankio.cculife.CCUService;
 
 import android.content.Context;
-import android.util.Log;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.zankio.cculife.Debug;
 import org.zankio.cculife.SessionManager;
 import org.zankio.cculife.override.Exceptions;
+import org.zankio.cculife.override.Net;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -27,6 +26,7 @@ public class Ecourse extends BaseService{
     public Course nowCourse = null;
 
     public Ecourse(Context context){
+
         this.context = context;
         this.SESSIONFIELDNAME = "PHPSESSID";
     }
@@ -36,6 +36,7 @@ public class Ecourse extends BaseService{
             nowCourse = course;
             try {
                 Jsoup.connect("http://ecourse.elearning.ccu.edu.tw/php/login_s.php?courseid=" + course.getCourseid())
+                        .timeout(Net.CONNECT_TIMEOUT)
                         .cookie(SESSIONFIELDNAME, SESSIONID).get();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -56,7 +57,8 @@ public class Ecourse extends BaseService{
 
         String user = sessionManager.getUserName();
         String pass = sessionManager.getPassword();
-        Connection connection = Jsoup.connect("http://ecourse.elearning.ccu.edu.tw/php/index_login.php");
+        Connection connection = Jsoup.connect("http://ecourse.elearning.ccu.edu.tw/php/index_login.php")
+                                     .timeout(Net.CONNECT_TIMEOUT);
         connection.followRedirects(false)
                 .data("id", user)
                 .data("pass", pass)
@@ -85,7 +87,8 @@ public class Ecourse extends BaseService{
         Elements courses, fields;
 
         connection = Jsoup.connect("http://ecourse.elearning.ccu.edu.tw/php/Courses_Admin/take_course.php?frame=1")
-                     .cookie(SESSIONFIELDNAME, SESSIONID);
+                          .timeout(Net.CONNECT_TIMEOUT)
+                          .cookie(SESSIONFIELDNAME, SESSIONID);
 
         try {
             /*
@@ -200,6 +203,7 @@ public class Ecourse extends BaseService{
             try {
                 connection = Jsoup.connect("http://ecourse.elearning.ccu.edu.tw/php/Trackin/SGQueryFrame1.php")
                                   .cookie(SESSIONFIELDNAME, SESSIONID)
+                                  .timeout(Net.CONNECT_TIMEOUT)
                                   .method(Connection.Method.GET);
 
                 //去避免亂碼問題
@@ -270,13 +274,13 @@ public class Ecourse extends BaseService{
             Classmate[] result;
 
             try {
-                connection = Jsoup.connect("http://ecourse.elearning.ccu.edu.tw/php/Learner_Profile/SSQueryFrame1.php");
+                connection = Jsoup.connect("http://ecourse.elearning.ccu.edu.tw/php/Learner_Profile/SSQueryFrame1.php")
+                                  .timeout(Net.CONNECT_TIMEOUT);
                 connection.cookie(SESSIONFIELDNAME, SESSIONID);
 
                 document = connection.get();
                 list = document.select("tr[bgcolor=#F0FFEE], tr[bgcolor=#E6FFFC]");
 
-                Log.e("", "field" + list.html());
                 result = new Classmate[list.size()];
 
                 for (int i = 0; i < list.size(); i++) {
@@ -308,7 +312,8 @@ public class Ecourse extends BaseService{
             getEcourse().switchCourse(this);
             try {
                 connection = Jsoup.connect("http://ecourse.elearning.ccu.edu.tw/php/news/news.php")
-                                  .cookie(SESSIONFIELDNAME, SESSIONID);
+                                  .cookie(SESSIONFIELDNAME, SESSIONID)
+                                  .timeout(Net.CONNECT_TIMEOUT);
 
                 document = connection.get();
 
@@ -351,6 +356,7 @@ public class Ecourse extends BaseService{
             Elements lists;
 
             connection = Jsoup.connect("http://ecourse.elearning.ccu.edu.tw/php/textbook/course_menu.php?list=1")
+                              .timeout(Net.CONNECT_TIMEOUT)
                               .cookie(SESSIONFIELDNAME, SESSIONID);
             try {
                 document = connection.get();
@@ -375,7 +381,8 @@ public class Ecourse extends BaseService{
             String baseurl, nodeHref;
             boolean standFileTemplate = false;
 
-            connection = Jsoup.connect("http://ecourse.elearning.ccu.edu.tw/php/textbook/" + href);
+            connection = Jsoup.connect("http://ecourse.elearning.ccu.edu.tw/php/textbook/" + href)
+                              .timeout(Net.CONNECT_TIMEOUT);
             connection.cookie(SESSIONFIELDNAME, SESSIONID)
                       .method(Connection.Method.GET);
 
@@ -557,6 +564,7 @@ public class Ecourse extends BaseService{
             Elements rows;
             ecourse.switchCourse(course);
             connection = Jsoup.connect("http://ecourse.elearning.ccu.edu.tw/php/news/" + url)
+                              .timeout(Net.CONNECT_TIMEOUT)
                               .cookie(SESSIONFIELDNAME, SESSIONID);
             try {
                 document = connection.get();
