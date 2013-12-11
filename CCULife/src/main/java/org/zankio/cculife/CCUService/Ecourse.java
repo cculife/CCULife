@@ -27,6 +27,7 @@ public class Ecourse extends BaseService{
 
     public Ecourse(Context context){
         this.context = context;
+        this.SESSIONFIELDNAME = "PHPSESSID";
     }
 
     public void switchCourse(Course course) {
@@ -34,7 +35,7 @@ public class Ecourse extends BaseService{
             nowCourse = course;
             try {
                 Jsoup.connect("http://ecourse.elearning.ccu.edu.tw/php/login_s.php?courseid=" + course.getCourseid())
-                        .cookie("PHPSESSID", SESSIONID).get();
+                        .cookie(SESSIONFIELDNAME, SESSIONID).get();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -63,7 +64,7 @@ public class Ecourse extends BaseService{
             connection.post();
             String Location = connection.response().header("Location");
             if (Location != null && Location.contains("take_course")) {
-                SESSIONID = connection.response().cookie("PHPSESSID");
+                SESSIONID = connection.response().cookie(SESSIONFIELDNAME);
                 return true;
             }
             return false;
@@ -83,7 +84,7 @@ public class Ecourse extends BaseService{
         Elements courses, fields;
 
         connection = Jsoup.connect("http://ecourse.elearning.ccu.edu.tw/php/Courses_Admin/take_course.php?frame=1")
-                     .cookie("PHPSESSID", SESSIONID);
+                     .cookie(SESSIONFIELDNAME, SESSIONID);
 
         try {
             /*
@@ -197,7 +198,7 @@ public class Ecourse extends BaseService{
 
             try {
                 connection = Jsoup.connect("http://ecourse.elearning.ccu.edu.tw/php/Trackin/SGQueryFrame1.php")
-                                  .cookie("PHPSESSID", SESSIONID)
+                                  .cookie(SESSIONFIELDNAME, SESSIONID)
                                   .method(Connection.Method.GET);
 
                 //去避免亂碼問題
@@ -270,7 +271,7 @@ public class Ecourse extends BaseService{
             getEcourse().switchCourse(this);
             try {
                 connection = Jsoup.connect("http://ecourse.elearning.ccu.edu.tw/php/news/news.php")
-                                  .cookie("PHPSESSID", SESSIONID);
+                                  .cookie(SESSIONFIELDNAME, SESSIONID);
 
                 document = connection.get();
 
@@ -313,7 +314,7 @@ public class Ecourse extends BaseService{
             Elements lists;
 
             connection = Jsoup.connect("http://ecourse.elearning.ccu.edu.tw/php/textbook/course_menu.php?list=1")
-                              .cookie("PHPSESSID", SESSIONID);
+                              .cookie(SESSIONFIELDNAME, SESSIONID);
             try {
                 document = connection.get();
                 lists = document.select("a[href^=course_menu.php]");
@@ -338,7 +339,7 @@ public class Ecourse extends BaseService{
             boolean standFileTemplate = false;
 
             connection = Jsoup.connect("http://ecourse.elearning.ccu.edu.tw/php/textbook/" + href);
-            connection.cookie("PHPSESSID", SESSIONID)
+            connection.cookie(SESSIONFIELDNAME, SESSIONID)
                       .method(Connection.Method.GET);
 
             try {
@@ -406,6 +407,7 @@ public class Ecourse extends BaseService{
 
             return url;
         }
+
         public String getCourseid() {
             return courseid;
         }
@@ -518,7 +520,7 @@ public class Ecourse extends BaseService{
             Elements rows;
             ecourse.switchCourse(course);
             connection = Jsoup.connect("http://ecourse.elearning.ccu.edu.tw/php/news/" + url)
-                              .cookie("PHPSESSID", SESSIONID);
+                              .cookie(SESSIONFIELDNAME, SESSIONID);
             try {
                 document = connection.get();
                 rows = document.select("td[bgcolor=#E8E8E8]");
