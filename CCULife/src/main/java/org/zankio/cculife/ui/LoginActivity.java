@@ -144,6 +144,7 @@ public class LoginActivity extends SherlockActivity {
     }
 
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+        public String message = null;
         @Override
         protected Boolean doInBackground(Void... params) {
             String cookie;
@@ -153,6 +154,8 @@ public class LoginActivity extends SherlockActivity {
                 Connection cnt = Jsoup.connect("http://portal.ccu.edu.tw/");
                 cnt.get();
                 cookie = cnt.response().cookies().get("ccuSSO");
+
+                if (cookie == null) { message = "程式錯誤!!"; return false; }
                 cnt.cookie("ccuSSO", cookie)
                    .url("http://portal.ccu.edu.tw/login_check.php")
                    .data("acc", mStudentId)
@@ -166,8 +169,10 @@ public class LoginActivity extends SherlockActivity {
                     return true;
                 }
             } catch (IOException e) {
+                message = "網路問題";
                 return false;
             }
+            message = getString(R.string.error_incorrect_password);
             return false;
         }
 
@@ -181,7 +186,7 @@ public class LoginActivity extends SherlockActivity {
                 setResult(RESULT_OK);
                 finish();
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
+                mPasswordView.setError(message);
                 mPasswordView.requestFocus();
             }
         }

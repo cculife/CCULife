@@ -551,7 +551,7 @@ public class Ecourse extends BaseService{
         public Announce(Ecourse ecourse, Course course) {this.ecourse = ecourse; this.course = course;}
 
         public String getContent() {
-            if (Content != null) return Content;
+            if (Content != null && !"資料讀取錯誤".equals(Content)) return Content;
             Connection connection;
             Document document;
             Elements rows;
@@ -565,7 +565,7 @@ public class Ecourse extends BaseService{
                 if (rows.size() > 2 )
                     Content = rows.get(2).html();
                 else
-                    Content = "資料讀取錯誤";
+                    Content = "讀取資料錯誤";
 
             } catch (IOException e) {
                 e.printStackTrace();
