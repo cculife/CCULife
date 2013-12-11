@@ -1,5 +1,6 @@
 package org.zankio.cculife.override;
 
+import java.io.IOException;
 import java.net.SocketTimeoutException;
 
 public class Exceptions {
@@ -29,9 +30,9 @@ public class Exceptions {
 
     public static Exception getNetworkException(Throwable throwable){
         if (throwable instanceof SocketTimeoutException)
-            return new Exception(getTimeoutMessage(), throwable);
+            return new IOException(getTimeoutMessage(), throwable);
         else
-            return new Exception(getNetworkErrorMessage(), throwable);
+            return new IOException(getNetworkErrorMessage(), throwable);
     }
 
     public static Exception getLoginErrorException(){

@@ -6,15 +6,15 @@ import org.zankio.cculife.SessionManager;
 
 public abstract class EcourseSource implements ISource {
 
-    public abstract boolean Authentication(SessionManager sessionManager) throws Exception;
+    public boolean Authentication(SessionManager sessionManager) throws Exception { return true; };
 
     public abstract void switchCourse(Ecourse.Course course);
 
     public abstract Ecourse.Course[] getCourse() throws Exception;
 
-    public abstract Ecourse.Scores[] getScore() throws Exception;
+    public abstract Ecourse.Scores[] getScore(Ecourse.Course course) throws Exception;
 
-    public abstract Ecourse.Classmate[] getClassmate() throws Exception;
+    public abstract Ecourse.Classmate[] getClassmate(Ecourse.Course course) throws Exception;
 
     public abstract Ecourse.Announce[] getAnnounces(Ecourse.Course course) throws Exception;
 

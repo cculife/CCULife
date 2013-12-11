@@ -85,7 +85,7 @@ public class Ecourse {
 
             getEcourse().switchCourse(this);
             try {
-                this.scores = ecourseSource.getScore();
+                this.scores = ecourseSource.getScore(this);
             } catch (IOException e) {
                 throw Exceptions.getNetworkException(e);
             }
@@ -100,7 +100,7 @@ public class Ecourse {
             getEcourse().switchCourse(this);
 
             try {
-                return ecourseSource.getClassmate();
+                return ecourseSource.getClassmate(this);
             } catch (IOException e) {
                 throw Exceptions.getNetworkException(e);
             }
@@ -236,21 +236,24 @@ public class Ecourse {
 
         public Announce(Ecourse ecourse, Course course) {this.ecourse = ecourse; this.course = course;}
 
-        public String getContent() {
-            if (Content != null && !"資料讀取錯誤".equals(Content)) return Content;
+        public String getCourseID() {
+            return this.course.getCourseid();
+        }
 
+        public String getContent() {
+            if (this.Content != null) return this.Content;
             EcourseSource ecourseSource;
             ecourseSource = getSource();
             ecourse.switchCourse(course);
 
             try {
-                Content = ecourseSource.getAnnounceContent(this);
+                this.Content = ecourseSource.getAnnounceContent(this);
             } catch (Exception e) {
                 e.printStackTrace();
-                Content = e.getMessage();
+                return e.getMessage();
             }
 
-            return Content;
+            return this.Content;
         }
     }
 
@@ -263,6 +266,7 @@ public class Ecourse {
 
 
     public class Scores {
+        public String courseid;
         public Score[] scores;
         public String Name;
         public String Score;
@@ -270,6 +274,7 @@ public class Ecourse {
     }
 
     public class Score {
+        public String courseid;
         public String Name;
         public String Score;
         public String Rank;
