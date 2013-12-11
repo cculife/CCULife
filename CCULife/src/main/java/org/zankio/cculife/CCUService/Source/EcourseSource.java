@@ -4,7 +4,7 @@ import org.zankio.cculife.CCUService.Ecourse;
 import org.zankio.cculife.CCUService.Kiki;
 import org.zankio.cculife.SessionManager;
 
-public abstract class EcourseSource implements ISource {
+public abstract class EcourseSource extends BaseSource {
 
     public boolean Authentication(SessionManager sessionManager) throws Exception { return true; };
 

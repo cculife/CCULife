@@ -1,10 +1,15 @@
 package org.zankio.cculife.CCUService;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.util.Log;
 
 import org.zankio.cculife.CCUService.Parser.EcourseParser;
+import org.zankio.cculife.CCUService.Source.EcourseLocalSource;
 import org.zankio.cculife.CCUService.Source.EcourseRemoteSource;
 import org.zankio.cculife.CCUService.Source.EcourseSource;
+import org.zankio.cculife.CCUService.SourceSwitcher.AutoNetworkSourceSwitcher;
 import org.zankio.cculife.CCUService.SourceSwitcher.ISwitcher;
 import org.zankio.cculife.CCUService.SourceSwitcher.SingleSourceSwitcher;
 import org.zankio.cculife.SessionManager;
@@ -13,22 +18,70 @@ import org.zankio.cculife.override.Exceptions;
 import java.io.IOException;
 
 public class Ecourse {
-    public ISwitcher sourceSwitcher;
+    private ISwitcher sourceSwitcher;
 
     public Course nowCourse = null;
+    public int OFFLINE_MODE = 0;
 
     public Ecourse(Context context) throws Exception {
         EcourseRemoteSource ecourseRemoteSource;
-        ecourseRemoteSource = new EcourseRemoteSource(this, new EcourseParser());
-        ecourseRemoteSource.Authentication(SessionManager.getInstance(context));
-        sourceSwitcher = new SingleSourceSwitcher(ecourseRemoteSource);
+        EcourseLocalSource ecourseLocalSource;
+        SharedPreferences preferences;
 
+        preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        OFFLINE_MODE = preferences.getBoolean("offline_enable", true) ? Integer.valueOf(preferences.getString("offline_mode", "1")) : -1;
+
+        ecourseRemoteSource = new EcourseRemoteSource(this, new EcourseParser());
+
+        try {
+            ecourseRemoteSource.Authentication(SessionManager.getInstance(context));
+            // if(OFFLINE_MODE == 0) syncAll();
+        } catch (IOException e) {
+            ecourseRemoteSource.setSessionManager(SessionManager.getInstance(context));
+        }
+
+        if (OFFLINE_MODE < 0) {
+            sourceSwitcher = new SingleSourceSwitcher(ecourseRemoteSource);
+        } else {
+            ecourseLocalSource = new EcourseLocalSource(this, context);
+            ecourseRemoteSource.setLocalStorage(ecourseLocalSource);
+            sourceSwitcher = new AutoNetworkSourceSwitcher(context, ecourseLocalSource, ecourseRemoteSource);
+        }
+
+    }
+
+    public void openSource() {
+        sourceSwitcher.openSource();
+    }
+
+    public void closeSource() {
+        sourceSwitcher.closeSource();
     }
 
     public void switchCourse(Course course) {
         if(nowCourse == null || !course.getCourseid().equals(nowCourse.getCourseid())) {
             nowCourse = course;
             getSource().switchCourse(course);
+        }
+    }
+
+    public void syncAll() {
+        if (OFFLINE_MODE < 0) return;
+
+        Course[] courses;
+        Announce[] announces;
+        try {
+            courses = getCourses();
+            for(Course course: courses) {
+                announces = course.getAnnounces();
+                for(Announce announce : announces) {
+                    announce.getContent();
+                }
+                //course.getFiles();
+                course.getScore();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -115,9 +168,20 @@ public class Ecourse {
 
             try {
                 this.announces = ecourseSource.getAnnounces(this);
+                if(OFFLINE_MODE == 1) syncAnnounceContent(this.announces);
                 return this.announces;
             } catch (IOException e) {
                 throw Exceptions.getNetworkException();
+            }
+        }
+
+        private void syncAnnounceContent(Announce[] announces) {
+            if(!(sourceSwitcher instanceof AutoNetworkSourceSwitcher)) return;
+            EcourseLocalSource ecourseLocalSource = (EcourseLocalSource) ((AutoNetworkSourceSwitcher)sourceSwitcher).getLocalSource();
+
+            for (Announce announce : announces) {
+                if(ecourseLocalSource.hasAnnounceContent(announce));
+                announce.getContent();
             }
         }
 

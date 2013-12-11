@@ -22,6 +22,8 @@ public class EcourseRemoteSource extends EcourseSource {
     private ConnectionHelper connectionHelper;
     private CookieAuth auth;
     private EcourseParser parser;
+    private EcourseLocalSource ecourseLocalSource;
+    private SessionManager sessionManager;
 
     private final static String SESSION_FIELD_NAME = "PHPSESSID";
 
@@ -33,11 +35,16 @@ public class EcourseRemoteSource extends EcourseSource {
         this.connectionHelper = new ConnectionHelper(auth);
     }
 
+    public void setLocalStorage(EcourseLocalSource ecourseLocalSource) {
+        this.ecourseLocalSource = ecourseLocalSource;
+    }
+
     private void checkAuth() throws Exception {
         if(auth.getCookie(SESSION_FIELD_NAME) == null)
             throw Exceptions.getNeedLoginException();
     }
 
+    @Override
     public boolean Authentication(SessionManager sessionManager) throws Exception {
         if (!sessionManager.isLogined()) throw Exceptions.getNeedLoginException();
 
@@ -81,7 +88,12 @@ public class EcourseRemoteSource extends EcourseSource {
         connection = Jsoup.connect("http://ecourse.elearning.ccu.edu.tw/php/Courses_Admin/take_course.php?frame=1");
         connectionHelper.initConnection(connection);
 
-        return  parser.parserCourses(ecourse, connection.get());
+        Ecourse.Course[] result = parser.parserCourses(ecourse, connection.get());
+        if(ecourseLocalSource != null) {
+            ecourseLocalSource.storeCourse(result);
+        }
+
+        return result;
     }
 
     @Override
@@ -115,7 +127,7 @@ public class EcourseRemoteSource extends EcourseSource {
         return result;
     }
 
-    public Ecourse.Scores[] getScore() throws Exception {
+    public Ecourse.Scores[] getScore(Ecourse.Course course) throws Exception {
         checkAuth();
 
         Connection connection;
@@ -126,7 +138,12 @@ public class EcourseRemoteSource extends EcourseSource {
 
         try {
             //去避免亂碼問題
-            return parser.parserScore(ecourse, Jsoup.parse(new String(connection.execute().bodyAsBytes(), "big5")));
+            Ecourse.Scores[] result = parser.parserScore(ecourse, Jsoup.parse(new String(connection.execute().bodyAsBytes(), "big5")));
+            if(ecourseLocalSource != null) {
+                ecourseLocalSource.storeScores(result, course);
+            }
+
+            return result;
         } catch (IOException e) {
             e.printStackTrace();
             throw Exceptions.getNetworkException(e);
@@ -135,7 +152,7 @@ public class EcourseRemoteSource extends EcourseSource {
    }
 
 
-    public Ecourse.Classmate[] getClassmate() throws Exception {
+    public Ecourse.Classmate[] getClassmate(Ecourse.Course course) throws Exception {
         checkAuth();
 
         Connection connection;
@@ -158,7 +175,12 @@ public class EcourseRemoteSource extends EcourseSource {
         connectionHelper.initConnection(connection);
 
         try {
-            return parser.parserAnnounce(course, connection.get());
+            Ecourse.Announce[] result = parser.parserAnnounce(course, connection.get());
+            if(ecourseLocalSource != null) {
+                ecourseLocalSource.storeAnnounce(result, course);
+            }
+
+            return result;
         } catch (IOException e) {
             e.printStackTrace();
             throw Exceptions.getNetworkException(e);
@@ -205,7 +227,6 @@ public class EcourseRemoteSource extends EcourseSource {
         connectionHelper.initConnection(connection)
                 .method(Connection.Method.GET);
 
-
         try {
             connection.execute();
             parser.parserFilesListFiles(
@@ -226,7 +247,12 @@ public class EcourseRemoteSource extends EcourseSource {
         connectionHelper.initConnection(connection);
 
         try {
-            return parser.parserAnnounceContent(connection.get());
+            String result = parser.parserAnnounceContent(connection.get());
+            if(ecourseLocalSource != null) {
+                ecourseLocalSource.storeAnnounceContent(result, announce);
+            }
+
+            return result;
         } catch (IOException e) {
             e.printStackTrace();
             throw Exceptions.getNetworkException(e);
@@ -234,4 +260,7 @@ public class EcourseRemoteSource extends EcourseSource {
 
     }
 
+    public void setSessionManager(SessionManager sessionManager) {
+        this.sessionManager = sessionManager;
+    }
 }

@@ -24,6 +24,7 @@ public class CourseActivity extends BaseFragmentActivity implements ActionBar.Ta
 
     SectionsPagerAdapter mSectionsPagerAdapter;
     protected Ecourse.Course course;
+    protected Ecourse ecourse;
     ViewPager mViewPager;
 
     @Override
@@ -33,6 +34,7 @@ public class CourseActivity extends BaseFragmentActivity implements ActionBar.Ta
 
         if (CourseListActivity.ecourse == null) {finish(); return;}
         course = CourseListActivity.ecourse.nowCourse;
+        ecourse = course.getEcourse();
 
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -58,6 +60,18 @@ public class CourseActivity extends BaseFragmentActivity implements ActionBar.Ta
         }
 
         setSSOService(new org.zankio.cculife.CCUService.PortalService.Ecourse().setCourseID(course.getCourseid()));
+    }
+
+    @Override
+    protected void onPause() {
+        if(ecourse != null) ecourse.closeSource();
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        if(ecourse != null) ecourse.openSource();
+        super.onResume();
     }
 
     @Override
