@@ -48,6 +48,13 @@ public class SettingsActivity extends PreferenceActivity implements SessionManag
         addPreferencesFromResource(R.xml.pref_account);
 
         fakeHeader = new PreferenceCategory(this);
+        fakeHeader.setTitle(R.string.perf_header_offline);
+        getPreferenceScreen().addPreference(fakeHeader);
+        addPreferencesFromResource(R.xml.pref_offline);
+        bindPreferenceSummaryToValue(findPreference("offline_mode"));
+
+
+        fakeHeader = new PreferenceCategory(this);
         fakeHeader.setTitle(R.string.pref_header_about);
         getPreferenceScreen().addPreference(fakeHeader);
         addPreferencesFromResource(R.xml.pref_about);
@@ -196,6 +203,14 @@ public class SettingsActivity extends PreferenceActivity implements SessionManag
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_about);
+        }
+    }
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public static class OfflinePreferenceFragment extends PreferenceFragment {
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.pref_offline);
         }
     }
 
