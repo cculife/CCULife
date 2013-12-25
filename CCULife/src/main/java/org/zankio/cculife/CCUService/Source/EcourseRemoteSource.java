@@ -45,15 +45,14 @@ public class EcourseRemoteSource extends EcourseSource {
         String pass = sessionManager.getPassword();
         Connection connection = Jsoup.connect("http://ecourse.elearning.ccu.edu.tw/php/index_login.php");
         ConnectionHelper.initTimeout(connection)
-                .followRedirects(false)
                 .data("id", user)
                 .data("pass", pass)
                 .data("ver", "C");
 
         try {
             connection.post();
-            String Location = connection.response().header("Location");
-            if (Location != null && Location.contains("take_course")) {
+            String url = connection.response().url().toString();
+            if (url.contains("take_course")) {
                 auth.setCookie(connection, SESSION_FIELD_NAME);
                 return true;
             }
