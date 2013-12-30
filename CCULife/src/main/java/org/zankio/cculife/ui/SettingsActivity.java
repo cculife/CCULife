@@ -17,6 +17,7 @@ import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.text.TextUtils;
 
+import org.zankio.cculife.CCUService.Source.EcourseLocalSource;
 import org.zankio.cculife.Debug;
 import org.zankio.cculife.R;
 import org.zankio.cculife.SessionManager;
@@ -130,13 +131,17 @@ public class SettingsActivity extends PreferenceActivity implements SessionManag
         }
     }
 
-    private static Preference.OnPreferenceClickListener onPreferenceClickListener = new Preference.OnPreferenceClickListener() {
+    private Preference.OnPreferenceClickListener onPreferenceClickListener = new Preference.OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(Preference preference) {
             String key = preference.getKey();
             if(key == null || key.equals("")) return false;
             else if ("account_log_in_out".equals(key)) {
                 sessionManager.toggleLogin();
+                EcourseLocalSource ecourseLocalSource;
+
+                ecourseLocalSource = new EcourseLocalSource(null, SettingsActivity.this);
+                ecourseLocalSource.clearData();
             }
 
             return false;

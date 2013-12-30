@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
-
 import org.zankio.cculife.CCUService.Ecourse;
 import org.zankio.cculife.database.EcourseDatabaseHelper;
 
@@ -64,6 +63,13 @@ public class EcourseLocalSource extends EcourseSource {
     @Override
     public void closeSource() {
         databaseHelper.close();
+    }
+
+    public void clearData() {
+        database.delete(EcourseDatabaseHelper.TABLE_ECOURSE_ANNOUNCE, null, null);
+        database.delete(EcourseDatabaseHelper.TABLE_ECOURSE_SCORE, null, null);
+        database.delete(EcourseDatabaseHelper.TABLE_ECOURSE, null, null);
+        database.delete(EcourseDatabaseHelper.TABLE_ECOURSE_CLASSMATE, null, null);
     }
 
     @Override

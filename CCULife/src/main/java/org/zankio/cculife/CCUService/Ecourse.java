@@ -26,17 +26,20 @@ public class Ecourse {
         EcourseRemoteSource ecourseRemoteSource;
         EcourseLocalSource ecourseLocalSource;
         SharedPreferences preferences;
+        SessionManager sessionManager = SessionManager.getInstance(context);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        OFFLINE_MODE = preferences.getBoolean("offline_enable", true) ? Integer.valueOf(preferences.getString("offline_mode", "1")) : -1;
+        OFFLINE_MODE = sessionManager.isSave() &&
+                preferences.getBoolean("offline_enable", true)
+                ? Integer.valueOf(preferences.getString("offline_mode", "1")) : -1;
 
         ecourseRemoteSource = new EcourseRemoteSource(this, new EcourseParser());
 
         try {
-            ecourseRemoteSource.Authentication(SessionManager.getInstance(context));
+            ecourseRemoteSource.Authentication(sessionManager);
             // if(OFFLINE_MODE == 0) syncAll();
         } catch (IOException e) {
-            ecourseRemoteSource.setSessionManager(SessionManager.getInstance(context));
+            ecourseRemoteSource.setSessionManager(sessionManager);
         }
 
         if (OFFLINE_MODE < 0) {

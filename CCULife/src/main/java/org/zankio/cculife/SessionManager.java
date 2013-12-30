@@ -128,6 +128,10 @@ public class SessionManager {
         return save ? preferences.getBoolean(KEY_ISLOGIN, false) : isLogined;
     }
 
+    public boolean isSave() {
+        return save;
+    }
+
     public SessionManager.onLoginStateChangedListener getOnLoginStateChangedListener() {
         return onLoginStateChangedListener;
     }
