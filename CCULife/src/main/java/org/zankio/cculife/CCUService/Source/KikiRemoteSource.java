@@ -62,9 +62,11 @@ public class KikiRemoteSource extends KikiSource {
         int term;
 
 
-        if(month >= 7 || month <= 1) {
+        if(month >= 7) {
             term = 1;
             year++;
+        } else if(month <= 1) {
+            term = 1;
         }
         else term = 2;
         return getTimeTable(year, term);
