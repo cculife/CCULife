@@ -168,7 +168,17 @@ public class Ecourse {
 
             try {
                 this.announces = ecourseSource.getAnnounces(this);
-                if(OFFLINE_MODE == 1) syncAnnounceContent(this.announces);
+                if(OFFLINE_MODE == 1) {
+
+                    final Announce[] sync = this.announces;
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            syncAnnounceContent(sync);
+                        }
+                    }).start();
+
+                }
                 return this.announces;
             } catch (IOException e) {
                 throw Exceptions.getNetworkException();
@@ -180,8 +190,8 @@ public class Ecourse {
             EcourseLocalSource ecourseLocalSource = (EcourseLocalSource) ((AutoNetworkSourceSwitcher)sourceSwitcher).getLocalSource();
 
             for (Announce announce : announces) {
-                if(ecourseLocalSource.hasAnnounceContent(announce));
-                announce.getContent();
+                if(!ecourseLocalSource.hasAnnounceContent(announce))
+                    announce.getContent();
             }
         }
 
@@ -312,6 +322,7 @@ public class Ecourse {
 
             try {
                 this.Content = ecourseSource.getAnnounceContent(this);
+
             } catch (Exception e) {
                 e.printStackTrace();
                 return e.getMessage();
