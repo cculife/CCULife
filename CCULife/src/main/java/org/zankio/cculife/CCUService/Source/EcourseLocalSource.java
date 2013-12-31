@@ -11,6 +11,8 @@ import org.zankio.cculife.database.EcourseDatabaseHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class EcourseLocalSource extends EcourseSource {
 
@@ -223,7 +225,7 @@ public class EcourseLocalSource extends EcourseSource {
 
     @Override
     public Ecourse.Classmate[] getClassmate(Ecourse.Course course) throws Exception {
-        throw new Exception("尚未支援離線資料");
+        throw new Exception("未支援離線資料");
         //return new Ecourse.Classmate[0];
     }
 
@@ -243,7 +245,8 @@ public class EcourseLocalSource extends EcourseSource {
                 EcourseDatabaseHelper.TABLE_ECOURSE_ANNOUNCE,
                 new String[] {EcourseDatabaseHelper.ANNOUNCE_COLUMN_CONTENT},
                 EcourseDatabaseHelper.ANNOUNCE_COLUMN_COURSEID + "=\"" + announce.getCourseID() + "\" AND " +
-                        EcourseDatabaseHelper.ANNOUNCE_COLUMN_URL + " =\"" + DatabaseUtils.sqlEscapeString(announce.url) + "\"",
+                        EcourseDatabaseHelper.ANNOUNCE_COLUMN_URL + " = " + DatabaseUtils.sqlEscapeString(removeUrlPHPSESSID(announce.url)) + " AND " +
+                        EcourseDatabaseHelper.ANNOUNCE_COLUMN_CONTENT + " NOT NULL",
                 null, null, null, null
         );
 
@@ -293,22 +296,44 @@ public class EcourseLocalSource extends EcourseSource {
 
         database.delete(
                 EcourseDatabaseHelper.TABLE_ECOURSE_ANNOUNCE,
-                EcourseDatabaseHelper.ANNOUNCE_COLUMN_COURSEID + "=\"" + course.getCourseid() + "\"",
+                EcourseDatabaseHelper.ANNOUNCE_COLUMN_COURSEID + "=\"" + course.getCourseid() + "\"" +
+                        " AND " + EcourseDatabaseHelper.ANNOUNCE_COLUMN_CONTENT + " IS NULL OR " +
+                        "trim(" + EcourseDatabaseHelper.ANNOUNCE_COLUMN_CONTENT + ") = \"\"",
                 null
         );
+
+        Cursor cursor;
 
         ContentValues values = new ContentValues();
         for(Ecourse.Announce announce : announces) {
             values.clear();
             values.put(EcourseDatabaseHelper.ANNOUNCE_COLUMN_TITLE, announce.Title);
             values.put(EcourseDatabaseHelper.ANNOUNCE_COLUMN_BROWSECOUNT, announce.browseCount);
-            values.put(EcourseDatabaseHelper.ANNOUNCE_COLUMN_CONTENT, announce.Content);
             values.put(EcourseDatabaseHelper.ANNOUNCE_COLUMN_COURSEID, course.getCourseid());
             values.put(EcourseDatabaseHelper.ANNOUNCE_COLUMN_DATE, announce.Date);
             values.put(EcourseDatabaseHelper.ANNOUNCE_COLUMN_IMPORTANT, announce.important);
             values.put(EcourseDatabaseHelper.ANNOUNCE_COLUMN_NEW, announce.isnew ? 1 : 0);
-            values.put(EcourseDatabaseHelper.ANNOUNCE_COLUMN_URL, announce.url);
-            database.insert(EcourseDatabaseHelper.TABLE_ECOURSE_ANNOUNCE, null, values);
+            values.put(EcourseDatabaseHelper.ANNOUNCE_COLUMN_URL, removeUrlPHPSESSID(announce.url));
+            if(announce.Content != null) values.put(EcourseDatabaseHelper.ANNOUNCE_COLUMN_CONTENT, announce.Content);
+
+            cursor = database.query(
+                    EcourseDatabaseHelper.TABLE_ECOURSE_ANNOUNCE,
+                    new String[]{ EcourseDatabaseHelper.ANNOUNCE_COLUMN_URL },
+                    EcourseDatabaseHelper.ANNOUNCE_COLUMN_COURSEID + "=\"" + course.getCourseid() + "\" AND " +
+                            EcourseDatabaseHelper.ANNOUNCE_COLUMN_URL + "=" + DatabaseUtils.sqlEscapeString(removeUrlPHPSESSID(announce.url)) + "",
+                    null, null, null, null
+            );
+
+            if(cursor.getCount() > 0) {
+                database.update(EcourseDatabaseHelper.TABLE_ECOURSE_ANNOUNCE, values,
+                        EcourseDatabaseHelper.ANNOUNCE_COLUMN_COURSEID + "=\"" + course.getCourseid() + "\" AND " +
+                                EcourseDatabaseHelper.ANNOUNCE_COLUMN_URL + "=" + DatabaseUtils.sqlEscapeString(removeUrlPHPSESSID(announce.url)) + "", null);
+            } else {
+                database.insert(EcourseDatabaseHelper.TABLE_ECOURSE_ANNOUNCE, null, values);
+            }
+
+            cursor.close();
+
         }
 
         return announces;
@@ -327,9 +352,17 @@ public class EcourseLocalSource extends EcourseSource {
                 EcourseDatabaseHelper.TABLE_ECOURSE_ANNOUNCE,
                 values,
                 EcourseDatabaseHelper.ANNOUNCE_COLUMN_COURSEID + "=\"" + announce.getCourseID() + "\" AND " +
-                    EcourseDatabaseHelper.ANNOUNCE_COLUMN_URL + "=\"" + DatabaseUtils.sqlEscapeString(announce.url) + "\"",
+                    EcourseDatabaseHelper.ANNOUNCE_COLUMN_URL + "=" + DatabaseUtils.sqlEscapeString(removeUrlPHPSESSID(announce.url)) + "",
                 null
         );
+
+        Cursor cursor = database.query(EcourseDatabaseHelper.TABLE_ECOURSE_ANNOUNCE,
+                announceColumns,
+                EcourseDatabaseHelper.ANNOUNCE_COLUMN_COURSEID + "=\"" + announce.getCourseID() + "\" AND " +
+                        EcourseDatabaseHelper.ANNOUNCE_COLUMN_URL + "=" + DatabaseUtils.sqlEscapeString(removeUrlPHPSESSID(announce.url)),
+                null, null, null, null);
+
+        cursor.moveToFirst();
         return content;
     }
 
@@ -337,8 +370,67 @@ public class EcourseLocalSource extends EcourseSource {
 
     @Override
     public Ecourse.File[] getFiles(Ecourse.Course course) throws Exception {
-        throw new Exception("尚未支援離線資料");
+        throw new Exception("未支援離線資料");
         //return new Ecourse.File[0];
     }
 
+
+    private String removeUrlPHPSESSID(String url) {
+        return replaceAll(url, "((\\?|&)PHPSESSID=[^&]+&|(\\?|&)PHPSESSID=[^&]+$)", "$2");
+    }
+
+    private String replaceAll(String input, String regex, String replacement) {
+        // Process substitution string to replace group references with groups
+        int cursor = 0;
+        Matcher matcher = Pattern.compile(regex).matcher(input);
+        if(!matcher.find()) return input;
+
+        StringBuilder result = new StringBuilder();
+
+        while (cursor < replacement.length()) {
+            char nextChar = replacement.charAt(cursor);
+            if (nextChar == '\\') {
+                cursor++;
+                nextChar = replacement.charAt(cursor);
+                result.append(nextChar);
+                cursor++;
+            } else if (nextChar == '$') {
+                // Skip past $
+                cursor++;
+                // The first number is always a group
+                int refNum = (int)replacement.charAt(cursor) - '0';
+                if ((refNum < 0)||(refNum > 9))
+                    throw new IllegalArgumentException(
+                            "Illegal group reference");
+                cursor++;
+
+                // Capture the largest legal group string
+                boolean done = false;
+                while (!done) {
+                    if (cursor >= replacement.length()) {
+                        break;
+                    }
+                    int nextDigit = replacement.charAt(cursor) - '0';
+                    if ((nextDigit < 0)||(nextDigit > 9)) { // not a number
+                        break;
+                    }
+                    int newRefNum = (refNum * 10) + nextDigit;
+                    if (matcher.groupCount() < newRefNum) {
+                        done = true;
+                    } else {
+                        refNum = newRefNum;
+                        cursor++;
+                    }
+                }
+                // Append group
+                if (matcher.group(refNum) != null)
+                    result.append(matcher.group(refNum));
+            } else {
+                result.append(nextChar);
+                cursor++;
+            }
+        }
+
+        return matcher.replaceAll(result.toString());
+    }
 }
