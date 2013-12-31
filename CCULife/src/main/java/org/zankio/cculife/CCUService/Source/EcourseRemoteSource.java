@@ -41,7 +41,10 @@ public class EcourseRemoteSource extends EcourseSource {
 
     private void checkAuth() throws Exception {
         if(auth.getCookie(SESSION_FIELD_NAME) == null)
-            throw Exceptions.getNeedLoginException();
+            if(sessionManager != null && !Authentication(sessionManager)) {
+                throw Exceptions.getLoginErrorException();
+            };
+
     }
 
     @Override
