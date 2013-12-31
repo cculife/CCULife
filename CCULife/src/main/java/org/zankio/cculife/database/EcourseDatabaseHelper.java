@@ -9,6 +9,7 @@ public class EcourseDatabaseHelper extends SQLiteOpenHelper{
     public static final String TABLE_ECOURSE = "courselist";
     public static final String TABLE_ECOURSE_ANNOUNCE = "announce";
     public static final String TABLE_ECOURSE_SCORE = "score";
+    public static final String TABLE_ECOURSE_CLASSMATE = "classmate";
 
     public static final String LIST_COLUMN_ID = "_id";
     public static final String LIST_COLUMN_NAME = "name";
@@ -36,6 +37,11 @@ public class EcourseDatabaseHelper extends SQLiteOpenHelper{
     public static final String SCORE_COLUMN_RANK = "rank";
     public static final String SCORE_COLUMN_HEADER = "header";
 
+    public static final String CLASSMATE_COLUMN_ID = "_id";
+    public static final String CLASSMATE_COLUMN_NAME = "name";
+    public static final String CLASSMATE_COLUMN_STUDENTID = "studentid";
+    public static final String CLASSMATE_COLUMN_GENDER = "gender";
+    public static final String CLASSMATE_COLUMN_DEPAREMENT = "department";
 
     public static final String SCORE_COLUMN_PERCENT = "percent";
     public static final String DATABASE_NAME = "ecourse.db";
@@ -78,6 +84,14 @@ public class EcourseDatabaseHelper extends SQLiteOpenHelper{
                 SCORE_COLUMN_PERCENT + " text, " +
                 SCORE_COLUMN_RANK + " text, " +
                 SCORE_COLUMN_SCORE + " text);";
+
+        db.execSQL(DATABASE_CREATE);
+        DATABASE_CREATE =  "create table " + TABLE_ECOURSE_CLASSMATE + " (" +
+                CLASSMATE_COLUMN_ID + " integer primary key autoincrement, " +
+                CLASSMATE_COLUMN_STUDENTID + " text not null, " +
+                CLASSMATE_COLUMN_DEPAREMENT + " text not null, " +
+                CLASSMATE_COLUMN_GENDER + " text not null, " +
+                CLASSMATE_COLUMN_NAME + " text not null);";
 
         db.execSQL(DATABASE_CREATE);
     }
