@@ -31,5 +31,6 @@
     <string name="remeber_user_pass">記住帳號密碼</string>
     <string name="title_activity_course_classmate">修課同學</string>
     <string name="action_classmatelist">修課同學</string>
+    <string name="pref_header_custom">自訂</string>
 
 </resources>

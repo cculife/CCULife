@@ -128,18 +128,21 @@ public class CourseListActivity extends BaseActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(CourseListActivity.this);
             LayoutInflater inflater = (LayoutInflater) CourseListActivity.this
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View view = convertView;
-            if(view == null)
+            if(view == null) {
                 view = inflater.inflate(R.layout.item_course, null);
+            }
 
             Ecourse.Course course = courses[position];
             ((TextView) (view.findViewById(R.id.course_name))).setText(course.getName() + "");
 
             ((TextView)view.findViewById(R.id.unread)).setText(course.getNotice() + course.getHomework() + course.getExam() + "");
-            view.findViewById(R.id.warring).setBackgroundColor( course.isWarning() ? getResources().getColor(R.color.Red_Course_Warring) : 0);
-
+            if (!preferences.getBoolean("ignore_ecourse_warnning", false)) {
+                view.findViewById(R.id.warring).setBackgroundColor( course.isWarning() ? getResources().getColor(R.color.Red_Course_Warring) : 0);
+            }
             return view;
         }
     }
