@@ -35,9 +35,6 @@ public class AutoNetworkSourceSwitcher implements ISwitcher {
 
     @Override
     public ISource getSource() {
-
-        Log.e("", "getSource");
-        new Exception().printStackTrace();
         return ckeckNetworkConnection() ? remoteSource : localSource;
     }
 

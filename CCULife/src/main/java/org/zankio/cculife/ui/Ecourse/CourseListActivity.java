@@ -31,7 +31,6 @@ public class CourseListActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.e("", "onCreate");
 
         setContentView(R.layout.activity_courselist);
 

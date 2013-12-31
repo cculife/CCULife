@@ -3,7 +3,6 @@ package org.zankio.cculife.CCUService;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import org.zankio.cculife.CCUService.Parser.EcourseParser;
 import org.zankio.cculife.CCUService.Source.EcourseLocalSource;
