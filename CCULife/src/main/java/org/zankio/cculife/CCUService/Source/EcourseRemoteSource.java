@@ -80,7 +80,12 @@ public class EcourseRemoteSource extends EcourseSource {
         connection = Jsoup.connect("http://ecourse.elearning.ccu.edu.tw/php/Courses_Admin/take_course.php?frame=1");
         connectionHelper.initConnection(connection);
 
-        return  parser.parserCourses(ecourse, connection.get());
+        try {
+            return  parser.parserCourses(ecourse, connection.get());
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw Exceptions.getNetworkException(e);
+        }
     }
 
     @Override
