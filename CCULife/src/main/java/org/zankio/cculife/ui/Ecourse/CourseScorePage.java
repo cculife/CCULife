@@ -20,10 +20,21 @@ public class CourseScorePage extends BasePage {
     private ExpandableListView list;
     private ScoreAdapter adapter;
 
+    private static Ecourse.Course _course;
+    private static Ecourse.Scores[] _score;
+    private static LoadScoreDataAsyncTask _scoreTask;
+
     public CourseScorePage(LayoutInflater inflater, Ecourse.Course course) {
         super(inflater);
         this.course = course;
 
+        if (_course != course) {
+            if(_scoreTask != null) _scoreTask.cancel(false);
+            _scoreTask = null;
+            _score = null;
+
+            _course = course;
+        }
     }
 
     @Override
@@ -56,7 +67,9 @@ public class CourseScorePage extends BasePage {
         @Override
         protected Ecourse.Scores[] _doInBackground(Void... params) throws Exception {
             if(course == null) throw new Exception("請重試...");
-            return course.getScore();
+            return _score == null ?
+                    _score = course.getScore() :
+                    _score;
         }
 
         @Override
@@ -67,7 +80,9 @@ public class CourseScorePage extends BasePage {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            showMessage("讀取中...", true);
+
+            if(_score == null)
+                showMessage("讀取中...", true);
         }
 
         @Override

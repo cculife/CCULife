@@ -21,10 +21,25 @@ public class CourseAnnouncePage extends BasePage implements AdapterView.OnItemCl
 
     private Ecourse.Course course;
 
+    private static Ecourse.Course _course;
+    private static Ecourse.Announce[] _announces;
+    private static LoadAnnounceDataAsyncTask _announceTask;
+
     public CourseAnnouncePage(LayoutInflater inflater, Ecourse.Course course) {
         super(inflater);
         this.course = course;
+
+        if(_course != course) {
+            if(_announceTask != null) _announceTask.cancel(false);
+
+            _announces = null;
+            _announceTask = null;
+            _course = course;
+        }
+
     }
+
+
 
     @Override
     protected View createView() {
@@ -96,12 +111,16 @@ public class CourseAnnouncePage extends BasePage implements AdapterView.OnItemCl
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            showMessage("讀取中...", true);
+
+            if(_announces == null)
+                showMessage("讀取中...", true);
         }
 
         @Override
         protected Ecourse.Announce[] _doInBackground(Void... params) throws Exception {
-            return course.getAnnounces();
+            return _announces == null ?
+                    _announces = course.getAnnounces() :
+                    _announces;
         }
 
         @Override

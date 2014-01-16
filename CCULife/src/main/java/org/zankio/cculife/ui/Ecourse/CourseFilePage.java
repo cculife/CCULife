@@ -26,9 +26,21 @@ public class CourseFilePage extends BasePage {
     private ListView list;
     private FileAdapter adapter;
 
+    private static Ecourse.File[] _file;
+    private static Ecourse.Course _course;
+    private static LoadFileDataAsyncTask _fileTask;
+
     public CourseFilePage(LayoutInflater inflater, Ecourse.Course course) {
         super(inflater);
         this.course = course;
+
+        if(_course != course) {
+            if (_fileTask != null) _fileTask.cancel(false);
+            _fileTask = null;
+            _file = null;
+
+            _course = course;
+        }
     }
 
     @Override
@@ -77,13 +89,17 @@ public class CourseFilePage extends BasePage {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            showMessage("讀取中...", true);
+
+            if(_file == null)
+                showMessage("讀取中...", true);
         }
 
         @Override
         protected Ecourse.File[] _doInBackground(Void... params) throws Exception {
             if(course == null) throw new Exception("請重試...");
-            return course.getFiles();
+            return _file == null ?
+                    _file = course.getFiles() :
+                    _file;
         }
 
         @Override
