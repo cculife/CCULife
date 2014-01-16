@@ -159,8 +159,8 @@ public class LoginActivity extends SherlockActivity {
                 cnt.cookie("ccuSSO", cookie)
                    .url("http://portal.ccu.edu.tw/login_check.php")
                    .data("acc", mStudentId)
-                   .data("pass", mPassword)
-                   .data("authcode", "請輸入右邊文字");
+                   .data("pass", mPassword);
+                   //.data("authcode", "請輸入右邊文字");
                 cnt.followRedirects(false);
                 cnt.post();
 
