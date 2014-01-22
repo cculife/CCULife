@@ -54,22 +54,15 @@ public class CourseScorePage extends BasePage {
         list = (ExpandableListView) PageView.findViewById(R.id.list);
         list.setAdapter(adapter);
         list.setGroupIndicator(null);
-        new LoadScoreDataAsyncTask(adapter).execute();
+        getData();
     }
 
     public class LoadScoreDataAsyncTask extends AsyncTaskWithErrorHanding<Void, Void, Ecourse.Scores[]> {
-        private ScoreAdapter adapter;
-
-        public LoadScoreDataAsyncTask(ScoreAdapter adapter){
-            this.adapter = adapter;
-        }
 
         @Override
         protected Ecourse.Scores[] _doInBackground(Void... params) throws Exception {
             if(course == null) throw new Exception("請重試...");
-            return _score == null ?
-                    _score = course.getScore() :
-                    _score;
+            return course.getScore();
         }
 
         @Override
@@ -80,25 +73,38 @@ public class CourseScorePage extends BasePage {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
-            if(_score == null)
-                showMessage("讀取中...", true);
+            showMessage("讀取中...", true);
         }
 
         @Override
         protected void _onPostExecute(Ecourse.Scores[] result){
-            if (result == null || result.length == 0) {
-                showMessage("沒有成績");
-                return;
-            }
-
-            adapter.setScores(result);
-
-            for (int i = 0; i < adapter.getGroupCount(); i++) {
-                list.expandGroup(i);
-            }
-            hideMessage();
+            onDataLoaded(result);
         }
+    }
+
+    private void getData() {
+        if(_score == null) {
+            new LoadScoreDataAsyncTask().execute();
+        } else {
+            onDataLoaded(_score);
+        }
+    }
+
+    private void onDataLoaded(Ecourse.Scores[] score) {
+
+        if (score == null || score.length == 0) {
+            showMessage("沒有成績");
+            return;
+        }
+
+        _score = score;
+
+        adapter.setScores(score);
+
+        for (int i = 0; i < adapter.getGroupCount(); i++) {
+            list.expandGroup(i);
+        }
+        hideMessage();
     }
 
     public class ScoreAdapter extends BaseExpandableListAdapter {

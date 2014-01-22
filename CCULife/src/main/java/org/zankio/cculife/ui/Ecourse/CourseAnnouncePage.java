@@ -24,6 +24,7 @@ public class CourseAnnouncePage extends BasePage implements AdapterView.OnItemCl
     private static Ecourse.Course _course;
     private static Ecourse.Announce[] _announces;
     private static LoadAnnounceDataAsyncTask _announceTask;
+    private AnnounceAdapter adapter;
 
     public CourseAnnouncePage(LayoutInflater inflater, Ecourse.Course course) {
         super(inflater);
@@ -53,12 +54,13 @@ public class CourseAnnouncePage extends BasePage implements AdapterView.OnItemCl
 
     @Override
     public void initViews() {
-        AnnounceAdapter adapter = new AnnounceAdapter();
+
+        adapter = new AnnounceAdapter();
 
         ListView list = (ListView) PageView.findViewById(R.id.list);
         list.setAdapter(adapter);
         list.setOnItemClickListener(this);
-        new LoadAnnounceDataAsyncTask(adapter).execute();
+        getData();
     }
 
     @Override
@@ -98,10 +100,6 @@ public class CourseAnnouncePage extends BasePage implements AdapterView.OnItemCl
     }
 
     public class LoadAnnounceDataAsyncTask extends AsyncTaskWithErrorHanding<Void, Void, Ecourse.Announce[]> {
-        private AnnounceAdapter adapter;
-        public LoadAnnounceDataAsyncTask(AnnounceAdapter adapter){
-            this.adapter = adapter;
-        }
 
         @Override
         protected void onError(String msg) {
@@ -112,30 +110,38 @@ public class CourseAnnouncePage extends BasePage implements AdapterView.OnItemCl
         protected void onPreExecute() {
             super.onPreExecute();
 
-            if(_announces == null)
-                showMessage("讀取中...", true);
+            showMessage("讀取中...", true);
         }
 
         @Override
         protected Ecourse.Announce[] _doInBackground(Void... params) throws Exception {
-            return _announces == null ?
-                    _announces = course.getAnnounces() :
-                    _announces;
+            return course.getAnnounces();
         }
 
         @Override
         protected void _onPostExecute(Ecourse.Announce[] result){
-            if(result == null || result.length == 0) {
-                showMessage("沒有公告");
-                return;
-            }
-
-            adapter.setAnnounces(result);
-            hideMessage();
+            onDataLoaded(result);
         }
     }
 
+    private void getData() {
+        if (_announces == null) {
+            new LoadAnnounceDataAsyncTask().execute();
+        } else {
+            onDataLoaded(_announces);
+        }
+    }
 
+    private void onDataLoaded(Ecourse.Announce[] announces) {
+        if(announces == null || announces.length == 0) {
+            showMessage("沒有公告");
+            return;
+        }
+        _announces = announces;
+
+        adapter.setAnnounces(announces);
+        hideMessage();
+    }
 
 
     public class AnnounceAdapter extends BaseAdapter {

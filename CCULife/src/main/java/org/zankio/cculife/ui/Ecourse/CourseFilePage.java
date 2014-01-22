@@ -76,30 +76,22 @@ public class CourseFilePage extends BasePage {
                 manager.enqueue(request);
             }
         });
-        new LoadFileDataAsyncTask(adapter).execute();
+
+        getData();
     }
 
     public class LoadFileDataAsyncTask extends AsyncTaskWithErrorHanding<Void, Void, Ecourse.File[]> {
-        private FileAdapter adapter;
-
-        public LoadFileDataAsyncTask(FileAdapter adapter){
-            this.adapter = adapter;
-        }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
-            if(_file == null)
-                showMessage("讀取中...", true);
+            showMessage("讀取中...", true);
         }
 
         @Override
         protected Ecourse.File[] _doInBackground(Void... params) throws Exception {
             if(course == null) throw new Exception("請重試...");
-            return _file == null ?
-                    _file = course.getFiles() :
-                    _file;
+            return course.getFiles();
         }
 
         @Override
@@ -109,14 +101,28 @@ public class CourseFilePage extends BasePage {
 
         @Override
         protected void _onPostExecute(Ecourse.File[] result){
-            if (result == null || result.length == 0) {
-                showMessage("沒有檔案");
-                return;
-            }
-
-            adapter.setFiles(result);
-            hideMessage();
+            onDataLoaded(result);
         }
+    }
+
+    private void getData() {
+        if(_file == null) {
+            new LoadFileDataAsyncTask().execute();
+        } else {
+            onDataLoaded(_file);
+        }
+    }
+
+    private void onDataLoaded(Ecourse.File[] files) {
+        if (files == null || files.length == 0) {
+            showMessage("沒有檔案");
+            return;
+        }
+
+        _file = files;
+
+        adapter.setFiles(files);
+        hideMessage();
     }
 
     public class FileAdapter extends BaseAdapter {
