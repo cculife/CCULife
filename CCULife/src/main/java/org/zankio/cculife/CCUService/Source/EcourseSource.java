@@ -6,7 +6,7 @@ import org.zankio.cculife.SessionManager;
 
 public abstract class EcourseSource implements ISource {
 
-    public abstract boolean Authentication(SessionManager sessionManager) throws Exception;
+    public abstract boolean Authenticate(SessionManager sessionManager) throws Exception;
 
     public abstract void switchCourse(Ecourse.Course course);
 

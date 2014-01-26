@@ -20,7 +20,7 @@ public class Ecourse {
     public Ecourse(Context context) throws Exception {
         EcourseRemoteSource ecourseRemoteSource;
         ecourseRemoteSource = new EcourseRemoteSource(this, new EcourseParser());
-        ecourseRemoteSource.Authentication(SessionManager.getInstance(context));
+        ecourseRemoteSource.Authenticate(SessionManager.getInstance(context));
         sourceSwitcher = new SingleSourceSwitcher(ecourseRemoteSource);
 
     }

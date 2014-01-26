@@ -12,6 +12,7 @@ import org.zankio.cculife.CCUService.Parser.EcourseParser;
 import org.zankio.cculife.CCUService.Parser.IParser;
 import org.zankio.cculife.SessionManager;
 import org.zankio.cculife.override.Exceptions;
+import org.zankio.cculife.override.LoginErrorException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,11 +39,8 @@ public class EcourseRemoteSource extends EcourseSource {
             throw Exceptions.getNeedLoginException();
     }
 
-    public boolean Authentication(SessionManager sessionManager) throws Exception {
-        if (!sessionManager.isLogined()) throw Exceptions.getNeedLoginException();
+    public boolean Authenticate(String user, String pass) throws Exception{
 
-        String user = sessionManager.getUserName();
-        String pass = sessionManager.getPassword();
         Connection connection = Jsoup.connect("http://ecourse.elearning.ccu.edu.tw/php/index_login.php");
         ConnectionHelper.initTimeout(connection)
                 .data("id", user)
@@ -52,14 +50,29 @@ public class EcourseRemoteSource extends EcourseSource {
         try {
             connection.post();
             String url = connection.response().url().toString();
-            if (url.contains("take_course")) {
+            String body = connection.response().body();
+
+            if (url.startsWith("http://ecourse.elearning.ccu.edu.tw/php/Courses_Admin/take_course.php")) {
                 auth.setCookie(connection, SESSION_FIELD_NAME);
                 return true;
+            } else if (url.startsWith("http://ecourse.elearning.ccu.edu.tw/php/index_login.php")) {
+                if (body != null) {
+                    if (body.contains("帳號或密碼錯誤")) {
+                        throw new LoginErrorException("帳號或密碼錯誤");
+                    }
+                }
+                return false;
             }
         } catch (IOException e) {
             throw Exceptions.getNetworkException(e);
         }
         return false;
+    }
+
+    public boolean Authenticate(SessionManager sessionManager) throws Exception {
+        if (!sessionManager.isLogined()) throw Exceptions.getNeedLoginException();
+
+        return Authenticate(sessionManager.getUserName(), sessionManager.getPassword());
     }
 
     public void switchCourse(Ecourse.Course course) {

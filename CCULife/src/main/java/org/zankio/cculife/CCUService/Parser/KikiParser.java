@@ -31,6 +31,18 @@ public class KikiParser extends BaseParser{
         return logout.attr("href").replace("logout.php?session_id=", "");
     }
 
+    public String parserError(Document document) {
+        String message = null;
+        Elements textNode;
+
+        textNode = document.select("font");
+        if (textNode.size() < 2) {
+            message = textNode.get(2).text();
+        }
+
+        return message;
+    }
+
     public Kiki.TimeTable parserTimeTable(Kiki kiki, Document document) {
         Elements classes, fields, table;
         String fieldText, className = "", classTime = "", classRoom = "", classTeacher = "";
