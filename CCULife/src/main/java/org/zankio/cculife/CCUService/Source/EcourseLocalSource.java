@@ -79,6 +79,8 @@ public class EcourseLocalSource extends EcourseSource {
 
     @Override
     public Ecourse.Course[] getCourse() throws Exception {
+        if(database == null || !database.isOpen()) return null;
+
         List<Ecourse.Course> result = new ArrayList<Ecourse.Course>();
 
         Cursor cursor = database.query(
@@ -110,6 +112,7 @@ public class EcourseLocalSource extends EcourseSource {
     }
 
     public Ecourse.Course[] storeCourse(Ecourse.Course[] courses) {
+        if(database == null || !database.isOpen() || database.isReadOnly()) return courses;
 
         database.delete(EcourseDatabaseHelper.TABLE_ECOURSE, null, null);
 
@@ -131,6 +134,8 @@ public class EcourseLocalSource extends EcourseSource {
 
     @Override
     public Ecourse.Scores[] getScore(Ecourse.Course course) throws Exception {
+        if(database == null || !database.isOpen()) return null;
+
         List<Ecourse.Scores> Scores = new ArrayList<Ecourse.Scores>();
         List<Ecourse.Score> Score;
         Cursor cursorHeader, cursorScore;
@@ -176,6 +181,8 @@ public class EcourseLocalSource extends EcourseSource {
     }
 
     public Ecourse.Scores[] storeScores(Ecourse.Scores[] scores, Ecourse.Course course) {
+        if(database == null || !database.isOpen() || database.isReadOnly()) return scores;
+
         int i = 1;
 
         database.delete(
@@ -245,6 +252,8 @@ public class EcourseLocalSource extends EcourseSource {
     }*/
 
     public boolean hasAnnounceContent(Ecourse.Announce announce) {
+        if(database == null || !database.isOpen()) return true;
+
         int result;
 
         Cursor cursor = database.query(
@@ -264,6 +273,8 @@ public class EcourseLocalSource extends EcourseSource {
 
     @Override
     public Ecourse.Announce[] getAnnounces(Ecourse.Course course) throws Exception {
+        if(database == null || !database.isOpen()) return null;
+
         List<Ecourse.Announce> result = new ArrayList<Ecourse.Announce>();
 
         Cursor cursor = database.query(
@@ -299,6 +310,7 @@ public class EcourseLocalSource extends EcourseSource {
     }
 
     public Ecourse.Announce[] storeAnnounce(Ecourse.Announce[] announces, Ecourse.Course course) {
+        if(database == null || !database.isOpen() || database.isReadOnly()) return announces;
 
         database.delete(
                 EcourseDatabaseHelper.TABLE_ECOURSE_ANNOUNCE,
@@ -351,6 +363,8 @@ public class EcourseLocalSource extends EcourseSource {
     }
 
     public String storeAnnounceContent(String content, Ecourse.Announce announce) {
+        if(database == null || !database.isOpen() || database.isReadOnly()) return content;
+
         ContentValues values = new ContentValues();
         values.put(EcourseDatabaseHelper.ANNOUNCE_COLUMN_CONTENT, content);
 
