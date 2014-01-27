@@ -8,6 +8,18 @@ import org.zankio.cculife.CCUService.ScoreQuery;
 
 public class ScoreQueryParser extends BaseParser {
 
+    public String parserError(Document document) {
+        String message = null;
+        Elements textNode;
+
+        textNode = document.select("font");
+        if (textNode.size() < 2) {
+            message = textNode.get(2).text();
+        }
+
+        return message;
+    }
+
     public ScoreQuery.Grade[] parserGrade(Document document) {
         Elements grades, scores, fields;
         Element scoreTable;

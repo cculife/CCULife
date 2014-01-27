@@ -36,7 +36,7 @@ public class Ecourse {
         ecourseRemoteSource = new EcourseRemoteSource(this, new EcourseParser());
 
         try {
-            ecourseRemoteSource.Authentication(sessionManager);
+            ecourseRemoteSource.Authenticate(sessionManager);
             // if(OFFLINE_MODE == 0) syncAll();
         } catch (IOException e) {
             ecourseRemoteSource.setSessionManager(sessionManager);

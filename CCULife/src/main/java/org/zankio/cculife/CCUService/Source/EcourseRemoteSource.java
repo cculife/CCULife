@@ -12,6 +12,7 @@ import org.zankio.cculife.CCUService.Parser.EcourseParser;
 import org.zankio.cculife.CCUService.Parser.IParser;
 import org.zankio.cculife.SessionManager;
 import org.zankio.cculife.override.Exceptions;
+import org.zankio.cculife.override.LoginErrorException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,36 +42,47 @@ public class EcourseRemoteSource extends EcourseSource {
 
     private void checkAuth() throws Exception {
         if(auth.getCookie(SESSION_FIELD_NAME) == null)
-            if(sessionManager != null && !Authentication(sessionManager)) {
+            if(sessionManager != null && !Authenticate(sessionManager)) {
                 throw Exceptions.getLoginErrorException();
             };
 
     }
 
-    @Override
-    public boolean Authentication(SessionManager sessionManager) throws Exception {
-        if (!sessionManager.isLogined()) throw Exceptions.getNeedLoginException();
-
-        String user = sessionManager.getUserName();
-        String pass = sessionManager.getPassword();
+    public boolean Authenticate(String user, String pass) throws Exception{
+        
         Connection connection = Jsoup.connect("http://ecourse.elearning.ccu.edu.tw/php/index_login.php");
         ConnectionHelper.initTimeout(connection)
-                .followRedirects(false)
                 .data("id", user)
                 .data("pass", pass)
                 .data("ver", "C");
 
         try {
             connection.post();
-            String Location = connection.response().header("Location");
-            if (Location != null && Location.contains("take_course")) {
+            String url = connection.response().url().toString();
+            String body = connection.response().body();
+
+            if (url.startsWith("http://ecourse.elearning.ccu.edu.tw/php/Courses_Admin/take_course.php")) {
                 auth.setCookie(connection, SESSION_FIELD_NAME);
                 return true;
+            } else if (url.startsWith("http://ecourse.elearning.ccu.edu.tw/php/index_login.php")) {
+                if (body != null) {
+                    if (body.contains("帳號或密碼錯誤")) {
+                        throw new LoginErrorException("帳號或密碼錯誤");
+                    }
+                }
+                return false;
             }
         } catch (IOException e) {
             throw Exceptions.getNetworkException(e);
         }
         return false;
+    }
+
+    @Override
+    public boolean Authenticate(SessionManager sessionManager) throws Exception {
+        if (!sessionManager.isLogined()) throw Exceptions.getNeedLoginException();
+
+        return Authenticate(sessionManager.getUserName(), sessionManager.getPassword());
     }
 
     public void switchCourse(Ecourse.Course course) {
@@ -91,12 +103,17 @@ public class EcourseRemoteSource extends EcourseSource {
         connection = Jsoup.connect("http://ecourse.elearning.ccu.edu.tw/php/Courses_Admin/take_course.php?frame=1");
         connectionHelper.initConnection(connection);
 
-        Ecourse.Course[] result = parser.parserCourses(ecourse, connection.get());
-        if(ecourseLocalSource != null) {
-            ecourseLocalSource.storeCourse(result);
-        }
+        try {
+            Ecourse.Course[] result = parser.parserCourses(ecourse, connection.get());
+            if(ecourseLocalSource != null) {
+                ecourseLocalSource.storeCourse(result);
+            }
 
-        return result;
+            return result;
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw Exceptions.getNetworkException(e);
+        }
     }
 
     @Override

@@ -20,10 +20,21 @@ public class CourseScorePage extends BasePage {
     private ExpandableListView list;
     private ScoreAdapter adapter;
 
+    private static Ecourse.Course _course;
+    private static Ecourse.Scores[] _score;
+    private static LoadScoreDataAsyncTask _scoreTask;
+
     public CourseScorePage(LayoutInflater inflater, Ecourse.Course course) {
         super(inflater);
         this.course = course;
 
+        if (_course != course) {
+            if(_scoreTask != null) _scoreTask.cancel(false);
+            _scoreTask = null;
+            _score = null;
+
+            _course = course;
+        }
     }
 
     @Override
@@ -43,15 +54,10 @@ public class CourseScorePage extends BasePage {
         list = (ExpandableListView) PageView.findViewById(R.id.list);
         list.setAdapter(adapter);
         list.setGroupIndicator(null);
-        new LoadScoreDataAsyncTask(adapter).execute();
+        getData();
     }
 
     public class LoadScoreDataAsyncTask extends AsyncTaskWithErrorHanding<Void, Void, Ecourse.Scores[]> {
-        private ScoreAdapter adapter;
-
-        public LoadScoreDataAsyncTask(ScoreAdapter adapter){
-            this.adapter = adapter;
-        }
 
         @Override
         protected Ecourse.Scores[] _doInBackground(Void... params) throws Exception {
@@ -72,18 +78,33 @@ public class CourseScorePage extends BasePage {
 
         @Override
         protected void _onPostExecute(Ecourse.Scores[] result){
-            if (result == null || result.length == 0) {
-                showMessage("沒有成績");
-                return;
-            }
-
-            adapter.setScores(result);
-
-            for (int i = 0; i < adapter.getGroupCount(); i++) {
-                list.expandGroup(i);
-            }
-            hideMessage();
+            onDataLoaded(result);
         }
+    }
+
+    private void getData() {
+        if(_score == null) {
+            new LoadScoreDataAsyncTask().execute();
+        } else {
+            onDataLoaded(_score);
+        }
+    }
+
+    private void onDataLoaded(Ecourse.Scores[] score) {
+
+        if (score == null || score.length == 0) {
+            showMessage("沒有成績");
+            return;
+        }
+
+        _score = score;
+
+        adapter.setScores(score);
+
+        for (int i = 0; i < adapter.getGroupCount(); i++) {
+            list.expandGroup(i);
+        }
+        hideMessage();
     }
 
     public class ScoreAdapter extends BaseExpandableListAdapter {

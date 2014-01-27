@@ -32,7 +32,7 @@ public abstract class BasePage {
         if(PageView == null) {
             PageView = createView();
             MainView = getMainView();
-            initViews();
+
 
             if(PageView != null) {
                 messagePanel = PageView.findViewById(R.id.message_panel);
@@ -41,6 +41,7 @@ public abstract class BasePage {
                 messageIcon = (ImageView) PageView.findViewById(R.id.icon);
             }
 
+            initViews();
         }
         return PageView;
     }

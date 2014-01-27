@@ -30,9 +30,9 @@ public class Exceptions {
 
     public static Exception getNetworkException(Throwable throwable){
         if (throwable instanceof SocketTimeoutException)
-            return new IOException(getTimeoutMessage(), throwable);
+            return new NetworkErrorException(getTimeoutMessage(), throwable);
         else
-            return new IOException(getNetworkErrorMessage(), throwable);
+            return new NetworkErrorException(getNetworkErrorMessage(), throwable);
     }
 
     public static Exception getLoginErrorException(){

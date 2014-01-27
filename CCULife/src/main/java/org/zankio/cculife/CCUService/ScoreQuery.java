@@ -19,7 +19,7 @@ public class ScoreQuery {
     public ScoreQuery(Context context) throws Exception {
         ScoreQueryRemoteSource scoreQueryRemoteSource;
         scoreQueryRemoteSource = new ScoreQueryRemoteSource(new ScoreQueryParser());
-        scoreQueryRemoteSource.Authentication(SessionManager.getInstance(context));
+        scoreQueryRemoteSource.Authenticate(SessionManager.getInstance(context));
         sourceSwitcher = new SingleSourceSwitcher(scoreQueryRemoteSource);
     }
 

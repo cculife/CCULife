@@ -25,7 +25,7 @@ public class Kiki {
 
     public Kiki(Context context) throws Exception {
         KikiRemoteSource kikiRemoteSource = new KikiRemoteSource(this, new KikiParser());
-        kikiRemoteSource.Authentication(SessionManager.getInstance(context));
+        kikiRemoteSource.Authenticate(SessionManager.getInstance(context));
         sourceSwitcher = new SingleSourceSwitcher(kikiRemoteSource);
 
     }

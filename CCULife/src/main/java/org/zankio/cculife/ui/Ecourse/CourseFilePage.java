@@ -26,9 +26,21 @@ public class CourseFilePage extends BasePage {
     private ListView list;
     private FileAdapter adapter;
 
+    private static Ecourse.File[] _file;
+    private static Ecourse.Course _course;
+    private static LoadFileDataAsyncTask _fileTask;
+
     public CourseFilePage(LayoutInflater inflater, Ecourse.Course course) {
         super(inflater);
         this.course = course;
+
+        if(_course != course) {
+            if (_fileTask != null) _fileTask.cancel(false);
+            _fileTask = null;
+            _file = null;
+
+            _course = course;
+        }
     }
 
     @Override
@@ -64,15 +76,11 @@ public class CourseFilePage extends BasePage {
                 manager.enqueue(request);
             }
         });
-        new LoadFileDataAsyncTask(adapter).execute();
+
+        getData();
     }
 
     public class LoadFileDataAsyncTask extends AsyncTaskWithErrorHanding<Void, Void, Ecourse.File[]> {
-        private FileAdapter adapter;
-
-        public LoadFileDataAsyncTask(FileAdapter adapter){
-            this.adapter = adapter;
-        }
 
         @Override
         protected void onPreExecute() {
@@ -93,14 +101,28 @@ public class CourseFilePage extends BasePage {
 
         @Override
         protected void _onPostExecute(Ecourse.File[] result){
-            if (result == null || result.length == 0) {
-                showMessage("沒有檔案");
-                return;
-            }
-
-            adapter.setFiles(result);
-            hideMessage();
+            onDataLoaded(result);
         }
+    }
+
+    private void getData() {
+        if(_file == null) {
+            new LoadFileDataAsyncTask().execute();
+        } else {
+            onDataLoaded(_file);
+        }
+    }
+
+    private void onDataLoaded(Ecourse.File[] files) {
+        if (files == null || files.length == 0) {
+            showMessage("沒有檔案");
+            return;
+        }
+
+        _file = files;
+
+        adapter.setFiles(files);
+        hideMessage();
     }
 
     public class FileAdapter extends BaseAdapter {

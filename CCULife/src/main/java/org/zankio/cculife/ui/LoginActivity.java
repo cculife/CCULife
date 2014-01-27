@@ -19,9 +19,13 @@ import com.actionbarsherlock.app.SherlockActivity;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.zankio.cculife.CCUService.Source.EcourseLocalSource;
+import org.zankio.cculife.CCUService.Portal;
 import org.zankio.cculife.R;
 import org.zankio.cculife.SessionManager;
+import org.zankio.cculife.override.Exceptions;
+import org.zankio.cculife.override.LoginErrorException;
 import org.zankio.cculife.override.Net;
+import org.zankio.cculife.override.NetworkErrorException;
 
 import java.io.IOException;
 
@@ -148,33 +152,22 @@ public class LoginActivity extends SherlockActivity {
         public String message = null;
         @Override
         protected Boolean doInBackground(Void... params) {
-            String cookie;
-
+            Portal portal;
             try {
+                portal = new Portal(LoginActivity.this);
+                return portal.getSession(mStudentId, mPassword);
 
-                Connection cnt = Jsoup.connect("http://portal.ccu.edu.tw/").timeout(Net.CONNECT_TIMEOUT);
-                cnt.get();
-                cookie = cnt.response().cookies().get("ccuSSO");
-
-                if (cookie == null) { message = "程式錯誤!!"; return false; }
-                cnt.cookie("ccuSSO", cookie)
-                   .url("http://portal.ccu.edu.tw/login_check.php")
-                   .data("acc", mStudentId)
-                   .data("pass", mPassword)
-                   .data("authcode", "請輸入右邊文字");
-                cnt.followRedirects(false);
-                cnt.post();
-
-                String location = cnt.response().header("Location");
-                if (location != null && location.equals("http://portal.ccu.edu.tw/sso_index.php")) {
-                    return true;
-                }
-            } catch (IOException e) {
-                message = "網路問題";
+            } catch (NetworkErrorException e) {
+                message = e.getMessage();
+                return false;
+            } catch (LoginErrorException e) {
+                message = e.getMessage();
+                return false;
+            } catch (Exception e) {
+                message = "未知錯誤";
+                e.printStackTrace();
                 return false;
             }
-            message = getString(R.string.error_incorrect_password);
-            return false;
         }
 
         @Override
