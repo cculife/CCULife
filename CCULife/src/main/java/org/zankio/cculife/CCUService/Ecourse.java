@@ -190,11 +190,16 @@ public class Ecourse {
 
         private void syncAnnounceContent(Announce[] announces) {
             if(!(sourceSwitcher instanceof AutoNetworkSourceSwitcher)) return;
-            EcourseLocalSource ecourseLocalSource = (EcourseLocalSource) ((AutoNetworkSourceSwitcher)sourceSwitcher).getLocalSource();
+            EcourseLocalSource ecourseLocalSource;
+            ecourseLocalSource = (EcourseLocalSource) ((AutoNetworkSourceSwitcher)sourceSwitcher).getLocalSource();
 
-            for (Announce announce : announces) {
-                if(!ecourseLocalSource.hasAnnounceContent(announce))
-                    announce.getContent();
+            if(ecourseLocalSource == null || ecourseLocalSource.equals(getSource())) return;
+
+            if(announces != null) {
+                for (Announce announce : announces) {
+                    if(!ecourseLocalSource.hasAnnounceContent(announce))
+                        announce.getContent();
+                }
             }
         }
 

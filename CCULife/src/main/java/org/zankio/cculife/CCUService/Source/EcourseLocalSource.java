@@ -96,7 +96,9 @@ public class EcourseLocalSource extends EcourseSource {
         }
         cursor.close();
 
-        return result.toArray(new Ecourse.Course[result.size()]);
+        return result.size() > 0 ?
+                result.toArray(new Ecourse.Course[result.size()]) :
+                null;
     }
 
     private Ecourse.Course cursorToCourse(Cursor cursor) {
@@ -177,7 +179,9 @@ public class EcourseLocalSource extends EcourseSource {
         }
         cursorHeader.close();
 
-        return Scores.toArray(new Ecourse.Scores[Scores.size()]);
+        return Scores.size() > 0 ?
+                Scores.toArray(new Ecourse.Scores[Scores.size()]) :
+                null;
     }
 
     public Ecourse.Scores[] storeScores(Ecourse.Scores[] scores, Ecourse.Course course) {
@@ -291,7 +295,9 @@ public class EcourseLocalSource extends EcourseSource {
         }
         cursor.close();
 
-        return result.toArray(new Ecourse.Announce[result.size()]);
+        return result.size() > 0 ?
+                result.toArray(new Ecourse.Announce[result.size()]) :
+                null;
     }
 
     private Ecourse.Announce cursorToAnnounce(Cursor cursor) {
