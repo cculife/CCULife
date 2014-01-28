@@ -13,6 +13,7 @@ import org.zankio.cculife.CCUService.SourceSwitcher.ISwitcher;
 import org.zankio.cculife.CCUService.SourceSwitcher.SingleSourceSwitcher;
 import org.zankio.cculife.SessionManager;
 import org.zankio.cculife.override.Exceptions;
+import org.zankio.cculife.override.NetworkErrorException;
 
 import java.io.IOException;
 
@@ -38,7 +39,7 @@ public class Ecourse {
         try {
             ecourseRemoteSource.Authenticate(sessionManager);
             // if(OFFLINE_MODE == 0) syncAll();
-        } catch (IOException e) {
+        } catch (NetworkErrorException e) {
             ecourseRemoteSource.setSessionManager(sessionManager);
         }
 
