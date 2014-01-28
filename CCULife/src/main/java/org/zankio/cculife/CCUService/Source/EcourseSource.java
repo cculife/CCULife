@@ -6,9 +6,9 @@ import org.zankio.cculife.SessionManager;
 
 public abstract class EcourseSource extends BaseSource {
 
-    public boolean Authenticate(SessionManager sessionManager) throws Exception { return true; };
+    public boolean Authenticate(SessionManager sessionManager) throws Exception { return true; }
 
-    public abstract void switchCourse(Ecourse.Course course);
+    public void switchCourse(Ecourse.Course course) {}
 
     public abstract Ecourse.Course[] getCourse() throws Exception;
 

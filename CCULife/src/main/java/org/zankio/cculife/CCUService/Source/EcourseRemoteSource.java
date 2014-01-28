@@ -20,6 +20,7 @@ import java.util.ArrayList;
 public class EcourseRemoteSource extends EcourseSource {
 
     private Ecourse ecourse;
+    private Ecourse.Course currentCourse;
     private ConnectionHelper connectionHelper;
     private CookieAuth auth;
     private EcourseParser parser;
@@ -85,11 +86,19 @@ public class EcourseRemoteSource extends EcourseSource {
         return Authenticate(sessionManager.getUserName(), sessionManager.getPassword());
     }
 
+    public boolean needSwitchCourse(Ecourse.Course course) {
+        return currentCourse == null || (course != null && course.getCourseid() != null && !course.getCourseid().equals(currentCourse.getCourseid()));
+    }
+
+    @Override
     public void switchCourse(Ecourse.Course course) {
+        if(!needSwitchCourse(course)) return;
+
         Connection connection;
         try {
             connection = Jsoup.connect("http://ecourse.elearning.ccu.edu.tw/php/login_s.php?courseid=" + course.getCourseid());
             connectionHelper.initConnection(connection).get();
+            currentCourse = course;
         } catch (IOException e) {
             e.printStackTrace();
         }

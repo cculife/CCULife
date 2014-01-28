@@ -62,10 +62,12 @@ public class Ecourse {
     }
 
     public void switchCourse(Course course) {
-        if(nowCourse == null || !course.getCourseid().equals(nowCourse.getCourseid())) {
-            nowCourse = course;
-            getSource().switchCourse(course);
-        }
+        EcourseSource source = getSource();
+
+        if(source == null) return;
+
+        source.switchCourse(course);
+        nowCourse = course;
     }
 
     public void syncAll() {

@@ -18,7 +18,6 @@ public class EcourseLocalSource extends EcourseSource {
     private Ecourse ecourse;
     private EcourseDatabaseHelper databaseHelper;
     private SQLiteDatabase database;
-    private Ecourse.Course currentCourse;
 
     private String[] ecourseColumns = {
             EcourseDatabaseHelper.LIST_COLUMN_COURSEID,
@@ -70,11 +69,6 @@ public class EcourseLocalSource extends EcourseSource {
         database.delete(EcourseDatabaseHelper.TABLE_ECOURSE_SCORE, null, null);
         database.delete(EcourseDatabaseHelper.TABLE_ECOURSE, null, null);
         database.delete(EcourseDatabaseHelper.TABLE_ECOURSE_CLASSMATE, null, null);
-    }
-
-    @Override
-    public void switchCourse(Ecourse.Course course) {
-        currentCourse = course;
     }
 
     @Override
