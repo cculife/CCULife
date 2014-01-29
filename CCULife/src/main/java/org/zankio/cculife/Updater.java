@@ -134,10 +134,19 @@ public class Updater {
         protected void onPostExecute(Version version) {
             super.onPostExecute(version);
 
+            SharedPreferences preferences;
+            SharedPreferences.Editor editor;
+
             //AlertDialog dialog;
             AlertDialog.Builder builder;
 
             Updater.this.version = version;
+
+
+            preferences = PreferenceManager.getDefaultSharedPreferences(context);
+            editor = preferences.edit();
+            editor.putLong("update_latest_check", System.currentTimeMillis());
+            editor.commit();
 
             if(version != null) {
                 builder = new AlertDialog.Builder(context);
@@ -182,15 +191,6 @@ public class Updater {
             if (result != null)
                 Toast.makeText(context, "Download error: " + result, Toast.LENGTH_LONG).show();
             else {
-                SharedPreferences preferences;
-                SharedPreferences.Editor editor;
-
-                preferences = PreferenceManager.getDefaultSharedPreferences(context);
-                editor = preferences.edit();
-                editor.putLong("update_latest_check", System.currentTimeMillis());
-                editor.commit();
-
-
                 Toast.makeText(context, "File downloaded", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setDataAndType(Uri.fromFile(new File(DOWNLOAD_FULLPATH)), "application/vnd.android.package-archive");
