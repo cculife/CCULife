@@ -8,8 +8,7 @@
         android:defaultValue="true" />
     <Preference
         android:key="about_title"
-        android:title="@string/app_name"
-        android:summary="v1.0">
+        android:title="@string/app_name">
     </Preference>
     <Preference
         android:key="about_author"

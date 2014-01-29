@@ -1,7 +1,10 @@
 package org.zankio.cculife.ui;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
@@ -22,7 +25,26 @@ public class AboutActivity extends BaseActivity {
         findViewById(R.id.dbg_c).setOnClickListener(dbg_click);
         findViewById(R.id.dbg_c2).setOnClickListener(dbg_click);
         findViewById(R.id.dbg_u).setOnClickListener(dbg_click);
+        ((TextView)findViewById(R.id.title)).setText("CCULife " + getVersionName());
     }
+
+    private String getVersionName() {
+        PackageManager pm = null;
+        PackageInfo pinfo = null;
+
+        try {
+            pm = getPackageManager();
+            if(pm != null) {
+                pinfo = pm.getPackageInfo(getPackageName(), 0);
+                return "v" + pinfo.versionName;
+            }
+
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
     public View.OnClickListener dbg_click = new View.OnClickListener() {
         @Override
         public void onClick(View v) {

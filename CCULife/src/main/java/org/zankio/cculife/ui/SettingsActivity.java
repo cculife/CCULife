@@ -2,6 +2,8 @@ package org.zankio.cculife.ui;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -63,6 +65,7 @@ public class SettingsActivity extends PreferenceActivity implements SessionManag
         fakeHeader.setTitle(R.string.pref_header_about);
         getPreferenceScreen().addPreference(fakeHeader);
         addPreferencesFromResource(R.xml.pref_about);
+        findPreference("about_title").setSummary(getVersionName());
 
         if (Debug.debug) {
             fakeHeader = new PreferenceCategory(this);
@@ -230,6 +233,23 @@ public class SettingsActivity extends PreferenceActivity implements SessionManag
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_custom);
         }
+    }
+
+    private String getVersionName() {
+        PackageManager pm = null;
+        PackageInfo pinfo = null;
+
+        try {
+            pm = getPackageManager();
+            if(pm != null) {
+                pinfo = pm.getPackageInfo(getPackageName(), 0);
+                return "v" + pinfo.versionName;
+            }
+
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
 }
