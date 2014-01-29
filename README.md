@@ -42,6 +42,15 @@ Just enjoy!
 
 ##Release Notes
 
+###v1.1
+
+Feb 29, 2014
+
+* (新增) Ecourse 離線瀏覽
+* (新增) 隱藏預警標示
+* (修正) 顯示當學期課表
+* (修正) Ecourse 部分顯示不正常
+
 ###v1.0
 
 Nov 11, 2013
