@@ -15,6 +15,10 @@
         android:title="@string/pref_header_data_sync" />
     -->
     <header
+        android:fragment="org.zankio.cculife.ui.SettingsActivity$OfflinePreferenceFragment"
+        android:title="@string/perf_header_offline" />
+
+    <header
         android:fragment="org.zankio.cculife.ui.SettingsActivity$CustomPreferenceFragment"
         android:title="@string/pref_header_custom" />
 

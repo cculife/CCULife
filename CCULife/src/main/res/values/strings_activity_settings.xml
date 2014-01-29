@@ -8,6 +8,19 @@
     <string name="pref_header_account">帳號設定</string>
     <string name="pref_header_about">關於</string>
     <string name="pref_header_debug">Debug Mode</string>
+    <string name="perf_header_offline">離線瀏覽</string>
+
+    <string name="perf_title_offline_mode">離線資料範圍</string>
+    <string-array name="perf_offline_mode_titles">
+        <!-- <item>全部資料</item> -->
+        <item>僅瀏覽過的課程</item>
+        <item>僅瀏覽過的資料</item>
+    </string-array>
+    <string-array name="perf_offline_mode_values">
+        <!-- <item>0</item> -->
+        <item>1</item>
+        <item>2</item>
+    </string-array>
 
     <string name="pref_title_social_recommendations">Enable social recommendations</string>
     <string name="pref_description_social_recommendations">Recommendations for people to contact based on your message history</string>

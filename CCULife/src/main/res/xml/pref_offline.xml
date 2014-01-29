@@ -1,0 +1,18 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <CheckBoxPreference
+        android:title="啟用離線瀏覽"
+        android:key="offline_enable"
+        android:defaultValue="true" />
+
+    <ListPreference
+        android:dependency="offline_enable"
+        android:key="offline_mode"
+        android:title="@string/perf_title_offline_mode"
+        android:entries="@array/perf_offline_mode_titles"
+        android:entryValues="@array/perf_offline_mode_values"
+        android:defaultValue="1"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null" />
+
+</PreferenceScreen>

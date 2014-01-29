@@ -17,6 +17,7 @@ import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.text.TextUtils;
 
+import org.zankio.cculife.CCUService.Source.EcourseLocalSource;
 import org.zankio.cculife.Debug;
 import org.zankio.cculife.R;
 import org.zankio.cculife.SessionManager;
@@ -46,6 +47,12 @@ public class SettingsActivity extends PreferenceActivity implements SessionManag
         fakeHeader.setTitle(R.string.pref_header_account);
         getPreferenceScreen().addPreference(fakeHeader);
         addPreferencesFromResource(R.xml.pref_account);
+
+        fakeHeader = new PreferenceCategory(this);
+        fakeHeader.setTitle(R.string.perf_header_offline);
+        getPreferenceScreen().addPreference(fakeHeader);
+        addPreferencesFromResource(R.xml.pref_offline);
+        bindPreferenceSummaryToValue(findPreference("offline_mode"));
 
         fakeHeader = new PreferenceCategory(this);
         fakeHeader.setTitle(R.string.pref_header_custom);
@@ -128,13 +135,17 @@ public class SettingsActivity extends PreferenceActivity implements SessionManag
         }
     }
 
-    private static Preference.OnPreferenceClickListener onPreferenceClickListener = new Preference.OnPreferenceClickListener() {
+    private Preference.OnPreferenceClickListener onPreferenceClickListener = new Preference.OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(Preference preference) {
             String key = preference.getKey();
             if(key == null || key.equals("")) return false;
             else if ("account_log_in_out".equals(key)) {
                 sessionManager.toggleLogin();
+                EcourseLocalSource ecourseLocalSource;
+
+                ecourseLocalSource = new EcourseLocalSource(null, SettingsActivity.this);
+                ecourseLocalSource.clearData();
             }
 
             return false;
@@ -201,6 +212,14 @@ public class SettingsActivity extends PreferenceActivity implements SessionManag
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_about);
+        }
+    }
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public static class OfflinePreferenceFragment extends PreferenceFragment {
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.pref_offline);
         }
     }
 

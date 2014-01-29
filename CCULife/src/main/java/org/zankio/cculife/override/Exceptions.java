@@ -1,5 +1,6 @@
 package org.zankio.cculife.override;
 
+import java.io.IOException;
 import java.net.SocketTimeoutException;
 
 public class Exceptions {

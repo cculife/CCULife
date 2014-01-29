@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,7 @@ public class CourseListActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_courselist);
 
         adapter = new CourseAdapter();
@@ -52,10 +54,26 @@ public class CourseListActivity extends BaseActivity {
 
         setMessageView(R.id.courselist);
         setSSOService(new org.zankio.cculife.CCUService.PortalService.Ecourse());
+
+        if(ecourse != null) {
+            Log.e("", "ecourse != null");
+            ecourse.openSource();
+        }
         new LoadDataAsyncTask().execute();
 
     }
 
+    @Override
+    protected void onPause() {
+        if(ecourse != null) ecourse.closeSource();
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        if(ecourse != null) ecourse.openSource();
+        super.onResume();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

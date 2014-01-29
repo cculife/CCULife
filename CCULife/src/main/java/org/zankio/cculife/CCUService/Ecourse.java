@@ -1,34 +1,92 @@
 package org.zankio.cculife.CCUService;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import org.zankio.cculife.CCUService.Parser.EcourseParser;
+import org.zankio.cculife.CCUService.Source.EcourseLocalSource;
 import org.zankio.cculife.CCUService.Source.EcourseRemoteSource;
 import org.zankio.cculife.CCUService.Source.EcourseSource;
+import org.zankio.cculife.CCUService.SourceSwitcher.AutoNetworkSourceSwitcher;
 import org.zankio.cculife.CCUService.SourceSwitcher.ISwitcher;
 import org.zankio.cculife.CCUService.SourceSwitcher.SingleSourceSwitcher;
 import org.zankio.cculife.SessionManager;
 import org.zankio.cculife.override.Exceptions;
+import org.zankio.cculife.override.NetworkErrorException;
 
 import java.io.IOException;
 
 public class Ecourse {
-    public ISwitcher sourceSwitcher;
+    private ISwitcher sourceSwitcher;
 
     public Course nowCourse = null;
+    public int OFFLINE_MODE = 0;
 
     public Ecourse(Context context) throws Exception {
         EcourseRemoteSource ecourseRemoteSource;
+        EcourseLocalSource ecourseLocalSource;
+        SharedPreferences preferences;
+        SessionManager sessionManager = SessionManager.getInstance(context);
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        OFFLINE_MODE = sessionManager.isSave() &&
+                preferences.getBoolean("offline_enable", true)
+                ? Integer.valueOf(preferences.getString("offline_mode", "1")) : -1;
+
         ecourseRemoteSource = new EcourseRemoteSource(this, new EcourseParser());
-        ecourseRemoteSource.Authenticate(SessionManager.getInstance(context));
-        sourceSwitcher = new SingleSourceSwitcher(ecourseRemoteSource);
+
+        try {
+            ecourseRemoteSource.Authenticate(sessionManager);
+            // if(OFFLINE_MODE == 0) syncAll();
+        } catch (NetworkErrorException e) {
+            ecourseRemoteSource.setSessionManager(sessionManager);
+        }
+
+        if (OFFLINE_MODE < 0) {
+            sourceSwitcher = new SingleSourceSwitcher(ecourseRemoteSource);
+        } else {
+            ecourseLocalSource = new EcourseLocalSource(this, context);
+            ecourseRemoteSource.setLocalStorage(ecourseLocalSource);
+            sourceSwitcher = new AutoNetworkSourceSwitcher(context, ecourseLocalSource, ecourseRemoteSource);
+        }
 
     }
 
+    public void openSource() {
+        sourceSwitcher.openSource();
+    }
+
+    public void closeSource() {
+        sourceSwitcher.closeSource();
+    }
+
     public void switchCourse(Course course) {
-        if(nowCourse == null || !course.getCourseid().equals(nowCourse.getCourseid())) {
-            nowCourse = course;
-            getSource().switchCourse(course);
+        EcourseSource source = getSource();
+
+        if(source == null) return;
+
+        source.switchCourse(course);
+        nowCourse = course;
+    }
+
+    public void syncAll() {
+        if (OFFLINE_MODE < 0) return;
+
+        Course[] courses;
+        Announce[] announces;
+        try {
+            courses = getCourses();
+            for(Course course: courses) {
+                announces = course.getAnnounces();
+                for(Announce announce : announces) {
+                    announce.getContent();
+                }
+                //course.getFiles();
+                course.getScore();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -85,7 +143,7 @@ public class Ecourse {
 
             getEcourse().switchCourse(this);
             try {
-                this.scores = ecourseSource.getScore();
+                this.scores = ecourseSource.getScore(this);
             } catch (IOException e) {
                 throw Exceptions.getNetworkException(e);
             }
@@ -100,7 +158,7 @@ public class Ecourse {
             getEcourse().switchCourse(this);
 
             try {
-                return ecourseSource.getClassmate();
+                return ecourseSource.getClassmate(this);
             } catch (IOException e) {
                 throw Exceptions.getNetworkException(e);
             }
@@ -115,9 +173,35 @@ public class Ecourse {
 
             try {
                 this.announces = ecourseSource.getAnnounces(this);
+                if(OFFLINE_MODE == 1) {
+
+                    final Announce[] sync = this.announces;
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            syncAnnounceContent(sync);
+                        }
+                    }).start();
+
+                }
                 return this.announces;
             } catch (IOException e) {
                 throw Exceptions.getNetworkException();
+            }
+        }
+
+        private void syncAnnounceContent(Announce[] announces) {
+            if(!(sourceSwitcher instanceof AutoNetworkSourceSwitcher)) return;
+            EcourseLocalSource ecourseLocalSource;
+            ecourseLocalSource = (EcourseLocalSource) ((AutoNetworkSourceSwitcher)sourceSwitcher).getLocalSource();
+
+            if(ecourseLocalSource == null || ecourseLocalSource.equals(getSource())) return;
+
+            if(announces != null) {
+                for (Announce announce : announces) {
+                    if(!ecourseLocalSource.hasAnnounceContent(announce))
+                        announce.getContent();
+                }
             }
         }
 
@@ -236,21 +320,25 @@ public class Ecourse {
 
         public Announce(Ecourse ecourse, Course course) {this.ecourse = ecourse; this.course = course;}
 
-        public String getContent() {
-            if (Content != null && !"資料讀取錯誤".equals(Content)) return Content;
+        public String getCourseID() {
+            return this.course.getCourseid();
+        }
 
+        public String getContent() {
+            if (this.Content != null) return this.Content;
             EcourseSource ecourseSource;
             ecourseSource = getSource();
             ecourse.switchCourse(course);
 
             try {
-                Content = ecourseSource.getAnnounceContent(this);
+                this.Content = ecourseSource.getAnnounceContent(this);
+
             } catch (Exception e) {
                 e.printStackTrace();
-                Content = e.getMessage();
+                return e.getMessage();
             }
 
-            return Content;
+            return this.Content;
         }
     }
 
@@ -263,6 +351,7 @@ public class Ecourse {
 
 
     public class Scores {
+        public String courseid;
         public Score[] scores;
         public String Name;
         public String Score;
@@ -270,6 +359,7 @@ public class Ecourse {
     }
 
     public class Score {
+        public String courseid;
         public String Name;
         public String Score;
         public String Rank;

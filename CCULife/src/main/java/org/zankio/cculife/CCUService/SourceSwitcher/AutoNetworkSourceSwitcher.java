@@ -1,4 +1,4 @@
-/*package org.zankio.cculife.CCUService.SourceSwitcher;
+package org.zankio.cculife.CCUService.SourceSwitcher;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -35,9 +35,6 @@ public class AutoNetworkSourceSwitcher implements ISwitcher {
 
     @Override
     public ISource getSource() {
-
-        Log.e("", "getSource");
-        new Exception().printStackTrace();
         return ckeckNetworkConnection() ? remoteSource : localSource;
     }
 
@@ -64,4 +61,4 @@ public class AutoNetworkSourceSwitcher implements ISwitcher {
     public ISource getLocalSource() {
         return localSource;
     }
-}*/
+}

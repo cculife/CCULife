@@ -20,4 +20,14 @@ public class SingleSourceSwitcher implements ISwitcher{
     public ISource getSource() {
         return source;
     }
+
+    @Override
+    public void openSource() {
+        source.openSource();
+    }
+
+    @Override
+    public void closeSource() {
+        source.closeSource();
+    }
 }

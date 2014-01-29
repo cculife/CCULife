@@ -18,6 +18,7 @@ import com.actionbarsherlock.app.SherlockActivity;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
+import org.zankio.cculife.CCUService.Source.EcourseLocalSource;
 import org.zankio.cculife.CCUService.Portal;
 import org.zankio.cculife.R;
 import org.zankio.cculife.SessionManager;
@@ -178,6 +179,12 @@ public class LoginActivity extends SherlockActivity {
                 SessionManager.getInstance(LoginActivity.this)
                         .createLoginSession(mStudentId, mPassword, mRemeber);
                 setResult(RESULT_OK);
+
+                EcourseLocalSource ecourseLocalSource;
+
+                ecourseLocalSource = new EcourseLocalSource(null, LoginActivity.this);
+                ecourseLocalSource.clearData();
+
                 finish();
             } else {
                 mPasswordView.setError(message);
