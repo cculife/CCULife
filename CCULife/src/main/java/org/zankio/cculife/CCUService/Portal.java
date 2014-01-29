@@ -78,12 +78,11 @@ public class Portal extends BaseService {
                         } else if(ERROR_WORNG_AUTHCODE.equals(matcher.group(1))) {
                             throw new LoginErrorException("認證碼錯誤!?!?!?");
                         } else {
-                            throw new LoginErrorException("未知錯誤");
+                            throw new LoginErrorException("未辨識錯誤 : " + matcher.group(1));
                         }
                     }
                 } else {
-                    throw new LoginErrorException("系統更新?");
-
+                    throw new LoginErrorException("學校系統更新 ?");
                 }
             }
 
