@@ -48,6 +48,11 @@ nav a {
 	color: #F89797;
 }
 
+#changelog li.fix:before {
+	content: "\f0ad";
+	font-family: FontAwesome;
+	color: #808080;
+}
 
 .contain {
 	max-width: 960px;
