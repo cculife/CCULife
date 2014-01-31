@@ -138,10 +138,11 @@ public class Ecourse {
         public Scores[] getScore() throws Exception {
             if (scores != null) return scores;
 
+            Ecourse eco = getEcourse();
             EcourseSource ecourseSource;
-            ecourseSource = getSource();
+            ecourseSource = eco.getSource();
 
-            getEcourse().switchCourse(this);
+            eco.switchCourse(this);
             try {
                 this.scores = ecourseSource.getScore(this);
             } catch (IOException e) {
@@ -152,10 +153,12 @@ public class Ecourse {
         }
 
         public Classmate[] getClassmate() throws Exception {
-            EcourseSource ecourseSource;
-            ecourseSource = getSource();
 
-            getEcourse().switchCourse(this);
+            Ecourse eco = getEcourse();
+            EcourseSource ecourseSource;
+            ecourseSource = eco.getSource();
+
+            eco.switchCourse(this);
 
             try {
                 return ecourseSource.getClassmate(this);
@@ -166,10 +169,12 @@ public class Ecourse {
 
         public Announce[] getAnnounces() throws Exception {
             if (this.announces != null) return this.announces;
-            EcourseSource ecourseSource;
-            ecourseSource = getSource();
 
-            getEcourse().switchCourse(this);
+            Ecourse eco = getEcourse();
+            EcourseSource ecourseSource;
+            ecourseSource = eco.getSource();
+
+            eco.switchCourse(this);
 
             try {
                 this.announces = ecourseSource.getAnnounces(this);
@@ -192,6 +197,7 @@ public class Ecourse {
 
         private void syncAnnounceContent(Announce[] announces) {
             if(!(sourceSwitcher instanceof AutoNetworkSourceSwitcher)) return;
+
             EcourseLocalSource ecourseLocalSource;
             ecourseLocalSource = (EcourseLocalSource) ((AutoNetworkSourceSwitcher)sourceSwitcher).getLocalSource();
 
@@ -208,8 +214,12 @@ public class Ecourse {
         public File[] getFiles() throws Exception {
             if (this.files != null) return this.files;
 
+            Ecourse eco = getEcourse();
             EcourseSource ecourseSource;
-            ecourseSource = getSource();
+            ecourseSource = eco.getSource();
+
+            eco.switchCourse(this);
+
             this.files = ecourseSource.getFiles(this);
 
             return this.files;
@@ -326,9 +336,10 @@ public class Ecourse {
 
         public String getContent() {
             if (this.Content != null) return this.Content;
+
             EcourseSource ecourseSource;
-            ecourseSource = getSource();
-            ecourse.switchCourse(course);
+            ecourseSource = ecourse.getSource();
+            ecourseSource.switchCourse(course);
 
             try {
                 this.Content = ecourseSource.getAnnounceContent(this);

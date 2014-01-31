@@ -107,6 +107,9 @@ public class EcourseRemoteSource extends EcourseSource {
     public Ecourse.Course[] getCourse() throws Exception {
         checkAuth();
 
+        // reset
+        currentCourse = null;
+
         Connection connection;
 
         connection = Jsoup.connect("http://ecourse.elearning.ccu.edu.tw/php/Courses_Admin/take_course.php?frame=1");
