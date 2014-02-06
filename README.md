@@ -18,7 +18,7 @@ Just enjoy!
 
 ###Ecourse
 
-> 公告、成績、教學檔案
+> 公告、成績、教學檔案、離線瀏覽！！
 
 ###Timetable
 
@@ -44,7 +44,7 @@ Just enjoy!
 
 ###v1.1
 
-Feb 29, 2014
+Jan 29, 2014
 
 * (新增) Ecourse 離線瀏覽
 * (新增) 隱藏預警標示
