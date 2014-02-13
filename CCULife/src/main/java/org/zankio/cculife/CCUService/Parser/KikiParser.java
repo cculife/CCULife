@@ -24,11 +24,19 @@ public class KikiParser extends BaseParser{
 
     public String parserSessionID(Document document) {
         Elements logout;
+        String sessionid;
+        int q;
 
-        logout = document.select("a[href^=logout.php?session_id=]");
+        logout = document.select("a[href^=logout.php?]");
         if (logout.size() == 0) return null;
 
-        return logout.attr("href").replace("logout.php?session_id=", "");
+        sessionid = logout.attr("href");
+        q = sessionid.indexOf("session_id=");
+        sessionid = sessionid.substring(q + 11);
+        q = sessionid.indexOf("&");
+        if(q >= 0) sessionid = sessionid.substring(0, q);
+
+        return sessionid;
     }
 
     public String parserError(Document document) {
