@@ -298,8 +298,9 @@ public class Updater {
             latest = document.getElementById("latest_version");
             result.versionCode = elementsToInt(latest.getElementsByClass("versionCode"));
             result.versionName = elementsToString(latest.getElementsByClass("versionName"));
-            result.downloadURL = elementsToString(latest.getElementsByClass("downloadURL"));
+            result.downloadURL = elementsToString(latest.getElementsByClass("downloadURL_short"));
             result.changelog = elementsToString(latest.getElementsByClass("changelog"));
+            if (result.downloadURL == null) elementsToString(latest.getElementsByClass("downloadURL"));
 
             return result;
         } catch (IOException e) {
