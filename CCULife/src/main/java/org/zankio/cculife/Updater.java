@@ -211,13 +211,30 @@ public class Updater {
             wl.acquire();
 
             try {
+                int responseCode;
+                String redirectUrl;
                 InputStream input = null;
                 OutputStream output = null;
                 HttpURLConnection connection = null;
                 try {
                     URL url = new URL(sUrl[0]);
                     connection = (HttpURLConnection) url.openConnection();
+                    connection.setInstanceFollowRedirects(false);
                     connection.connect();
+
+                    while ((responseCode = connection.getResponseCode()) == HttpURLConnection.HTTP_MOVED_PERM ||
+                            responseCode == HttpURLConnection.HTTP_MOVED_TEMP) {
+                        redirectUrl = connection.getHeaderField("Location");
+                        if(redirectUrl == null) {
+                            return "Can't find redirect url";
+                        }
+
+                        url = new URL(redirectUrl);
+                        connection = (HttpURLConnection) url.openConnection();
+                        connection.setInstanceFollowRedirects(false);
+                        connection.connect();
+
+                    }
 
                     // expect HTTP 200 OK, so we don't mistakenly save error report
                     // instead of the file
