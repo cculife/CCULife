@@ -22,6 +22,7 @@ import java.util.Locale;
 
 public class CourseActivity extends BaseFragmentActivity implements ActionBar.TabListener {
 
+    //ToDo Don't reload on rotation.
     SectionsPagerAdapter mSectionsPagerAdapter;
     protected Ecourse.Course course;
     protected Ecourse ecourse;

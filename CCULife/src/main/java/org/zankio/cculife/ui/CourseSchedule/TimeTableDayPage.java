@@ -1,6 +1,5 @@
 package org.zankio.cculife.ui.CourseSchedule;
 
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -29,7 +28,7 @@ public class TimeTableDayPage extends BasePage implements onDataLoadListener<Kik
     private TimeTableAdapter[] adapter;
     private boolean inited;
 
-    public TimeTableDayPage(LayoutInflater inflater, FragmentManager fm, Kiki.TimeTable timeTable) {
+    public TimeTableDayPage(LayoutInflater inflater, Kiki.TimeTable timeTable) {
         super(inflater);
         this.timeTable = timeTable;
 
