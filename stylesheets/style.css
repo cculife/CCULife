@@ -89,8 +89,8 @@ nav a {
 	max-width: 900px;
 }
 
-#header h1 {
-	color: #9E7A62;
+#header h1 a {
+	color: #9E7A62 !important;
 }
 
 #header .padding{
@@ -181,6 +181,13 @@ nav a {
 	margin-left: 10px; 
 }
 
+.thumb {
+	padding: 5px;
+	width: 300px;
+	border: 20px solid rgba(217, 173, 97, 0.38);
+	margin: 5px;
+}
+
 @media only screen and (min-width:775px){
 	#banner .logo {
 		float: right;
@@ -252,9 +259,19 @@ nav a {
 	#banner {
 		text-align: center;
 	}
+
 	a {
 		word-wrap: break-word;
 		word-break: break-word;
+	}
+
+	.work-break {
+		word-wrap: break-word;
+		word-break: break-word;
+	}
+
+	.thumb {
+		width: 85%;
 	}
 }
 
@@ -277,6 +294,12 @@ nav a {
 @media only screen and (max-width:475px){
 	#social {
 		width: auto;
+	}
+}
+
+@media only screen and (max-width: 900px){
+	.hidden-900 {
+		display: none;
 	}
 }
 
