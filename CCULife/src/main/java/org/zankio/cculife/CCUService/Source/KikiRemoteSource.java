@@ -86,10 +86,10 @@ public class KikiRemoteSource extends KikiSource {
         int term;
 
 
-        if(month >= 7) {
+        if(month >= Calendar.JULY) {
             term = 1;
             year++;
-        } else if(month <= 1) {
+        } else if(month <= Calendar.JANUARY) {
             term = 1;
         }
         else term = 2;
