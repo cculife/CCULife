@@ -20,6 +20,7 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.zankio.cculife.CCUService.Source.EcourseLocalSource;
 import org.zankio.cculife.CCUService.Portal;
+import org.zankio.cculife.CCUService.Source.KikiLocalSource;
 import org.zankio.cculife.R;
 import org.zankio.cculife.SessionManager;
 import org.zankio.cculife.override.Exceptions;
@@ -181,9 +182,12 @@ public class LoginActivity extends SherlockActivity {
                 setResult(RESULT_OK);
 
                 EcourseLocalSource ecourseLocalSource;
+                KikiLocalSource kikiLocalSource;
 
                 ecourseLocalSource = new EcourseLocalSource(null, LoginActivity.this);
                 ecourseLocalSource.clearData();
+                kikiLocalSource = new KikiLocalSource(null, LoginActivity.this);
+                kikiLocalSource.clearData();
 
                 finish();
             } else {

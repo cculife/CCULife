@@ -20,6 +20,7 @@ import android.preference.RingtonePreference;
 import android.text.TextUtils;
 
 import org.zankio.cculife.CCUService.Source.EcourseLocalSource;
+import org.zankio.cculife.CCUService.Source.KikiLocalSource;
 import org.zankio.cculife.Debug;
 import org.zankio.cculife.R;
 import org.zankio.cculife.SessionManager;
@@ -146,9 +147,12 @@ public class SettingsActivity extends PreferenceActivity implements SessionManag
             else if ("account_log_in_out".equals(key)) {
                 sessionManager.toggleLogin();
                 EcourseLocalSource ecourseLocalSource;
+                KikiLocalSource kikiLocalSource;
 
                 ecourseLocalSource = new EcourseLocalSource(null, SettingsActivity.this);
                 ecourseLocalSource.clearData();
+                kikiLocalSource = new KikiLocalSource(null, SettingsActivity.this);
+                kikiLocalSource.clearData();
             }
 
             return false;
