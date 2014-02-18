@@ -4,5 +4,6 @@
         <attr name="ClassName" format="string" />
         <attr name="TextColor" format="color" />
         <attr name="BackgroundColor" format="color" />
+        <attr name="TimeColor" format="color" />
     </declare-styleable>
 </resources>

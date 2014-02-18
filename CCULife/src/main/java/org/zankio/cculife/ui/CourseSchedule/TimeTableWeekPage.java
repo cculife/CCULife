@@ -90,6 +90,8 @@ public class TimeTableWeekPage extends BasePage implements onDataLoadListener<Ki
                 lessionView.setClassName(mClass.name);
                 lessionView.setClassRoom(mClass.classroom);
                 lessionView.setClassTeacher(mClass.teacher);
+                lessionView.setStartTime(mClass.start);
+                lessionView.setEndTime(mClass.end);
                 lessionView.setBackgroundColor(mClass.color);
 
                 layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (getTimeDiffInMinute(mClass.start, mClass.end) * minuteToPixel));

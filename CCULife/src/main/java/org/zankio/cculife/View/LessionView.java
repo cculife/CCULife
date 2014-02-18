@@ -11,14 +11,14 @@ import android.view.View;
 
 import org.zankio.cculife.R;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-
 public class LessionView extends View {
 
 
-    private Calendar mStartTime;
-    private Calendar mEndTime;
+    private String mStartTime;
+    private String mEndTime;
 
     private String mClassName;
     private String mClassRoom;
@@ -34,7 +34,9 @@ public class LessionView extends View {
 
     private int mBackgroundColor = 0xFFFFBB33;
     private int mTextColor = 0xFF000000;
+    private int mTimeColor = 0xAA000000;
     private Paint mBackgroundPaint;
+    private Paint mTimePaint;
     private Paint mTextPaint;
 
     private float mClassNameX = 0.0f;
@@ -42,9 +44,20 @@ public class LessionView extends View {
     private float mClassNameWidth = 0.0f;
     private float mClassNameHeight = 0.0f;
 
+    private float mStartTimeX = 0.0f;
+    private float mStartTimeY = 0.0f;
+    private float mStartTimeWidth = 0.0f;
+    private float mStartTimeHeight = 0.0f;
+
+    private float mEndTimeX = 0.0f;
+    private float mEndTimeY = 0.0f;
+    private float mEndTimeWidth = 0.0f;
+    private float mEndTimeHeight = 0.0f;
+
     public LessionView(Context context) {
         super(context);
         init();
+
     }
 
     public LessionView(Context context, AttributeSet attrs) {
@@ -59,6 +72,7 @@ public class LessionView extends View {
             assert a != null;
             mClassName = a.getString(R.styleable.LessionView_ClassName);
             mTextColor = a.getColor(R.styleable.LessionView_TextColor, 0xFF000000);
+            mTimeColor = a.getColor(R.styleable.LessionView_TextColor, 0xAA000000);
             mBackgroundColor = a.getColor(R.styleable.LessionView_BackgroundColor, 0xFFFFBB33);
         } finally {
             a.recycle();
@@ -76,19 +90,41 @@ public class LessionView extends View {
         mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mTextPaint.setColor(mTextColor);
         mTextPaint.setTextSize(20);
+
+        mTimePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mTimePaint.setColor(mTimeColor);
+        mTimePaint.setTextSize(15);
         measureTextSize();
 
     }
 
     public void measureTextSize(){
+        Rect rect;
+        rect = new Rect();
         if(mClassName != null) {
-            Rect rect = new Rect();
             mTextPaint.getTextBounds(mClassName, 0, mClassName.length(), rect);
             mClassNameHeight = rect.height();
             mClassNameWidth = rect.width();
             mClassNameX = mBound.centerX() - mClassNameWidth / 2.0f;
             mClassNameY = mBound.centerY();
         }
+
+        if (mStartTime != null) {
+            mTimePaint.getTextBounds(mStartTime, 0, mStartTime.length(), rect);
+            mStartTimeHeight = rect.height();
+            mStartTimeWidth = rect.width();
+            mStartTimeX = 6;
+            mStartTimeY = 6 + mStartTimeHeight;
+        }
+
+        if (mEndTime != null) {
+            mTimePaint.getTextBounds(mEndTime, 0, mEndTime.length(), rect);
+            mEndTimeHeight = rect.height();
+            mEndTimeWidth = rect.width();
+            mEndTimeX = mBound.width() - 6 - mEndTimeWidth;
+            mEndTimeY = mBound.height() - 6;
+        }
+
     }
 
     public void setClassName(String className) {
@@ -107,8 +143,17 @@ public class LessionView extends View {
         invalidate();
     }
 
+    public void setEndTime(Calendar endTime) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+        mEndTime = simpleDateFormat.format(endTime.getTime());
+        measureTextSize();
+        invalidate();
+    }
+
     public void setStartTime(Calendar startTime) {
-        mStartTime = startTime;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+        mStartTime = simpleDateFormat.format(startTime.getTime());
+        measureTextSize();
         invalidate();
     }
 
@@ -124,6 +169,7 @@ public class LessionView extends View {
 
         mClassNameX = mBound.centerX() - mClassNameWidth / 2.0f;
         mClassNameY = mBound.centerY();
+        measureTextSize();
     }
 
 
@@ -143,6 +189,17 @@ public class LessionView extends View {
                 y += mClassNameHeight + 3;
             }
         }
+
+        if (mStartTime != null) {
+            canvas.drawText(mStartTime, mStartTimeX, mStartTimeY, mTimePaint);
+        }
+
+
+        if (mEndTime != null) {
+            canvas.drawText(mEndTime, mEndTimeX, mEndTimeY, mTimePaint);
+        }
+
+    }
 
     private String[] splitText(String str, Paint paint, float width) {
         int nextPos, length;
