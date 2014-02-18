@@ -87,7 +87,7 @@ public class Portal extends BaseService {
             }
 
             SESSIONID = null;
-            return false;
+            throw new LoginErrorException("未知錯誤");
 
         } catch (IOException e){
             throw Exceptions.getNetworkException(e);

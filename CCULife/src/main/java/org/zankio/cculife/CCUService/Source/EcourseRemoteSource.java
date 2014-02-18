@@ -49,7 +49,7 @@ public class EcourseRemoteSource extends EcourseSource {
 
     }
 
-    public boolean Authenticate(String user, String pass) throws Exception{
+    public boolean Authenticate(String user, String pass) throws Exception {
         
         Connection connection = Jsoup.connect("http://ecourse.elearning.ccu.edu.tw/php/index_login.php");
         ConnectionHelper.initTimeout(connection)
@@ -71,12 +71,11 @@ public class EcourseRemoteSource extends EcourseSource {
                         throw new LoginErrorException("帳號或密碼錯誤");
                     }
                 }
-                return false;
             }
+            throw new LoginErrorException("未知錯誤");
         } catch (IOException e) {
             throw Exceptions.getNetworkException(e);
         }
-        return false;
     }
 
     @Override

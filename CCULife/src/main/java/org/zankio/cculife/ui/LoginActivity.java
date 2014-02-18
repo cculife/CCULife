@@ -20,6 +20,7 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.zankio.cculife.CCUService.Source.EcourseLocalSource;
 import org.zankio.cculife.CCUService.Portal;
+import org.zankio.cculife.CCUService.Source.EcourseRemoteSource;
 import org.zankio.cculife.CCUService.Source.KikiLocalSource;
 import org.zankio.cculife.R;
 import org.zankio.cculife.SessionManager;
@@ -154,6 +155,7 @@ public class LoginActivity extends SherlockActivity {
         @Override
         protected Boolean doInBackground(Void... params) {
             Portal portal;
+            EcourseRemoteSource ecourseRemoteSource;
             try {
                 portal = new Portal(LoginActivity.this);
                 return portal.getSession(mStudentId, mPassword);
@@ -162,6 +164,17 @@ public class LoginActivity extends SherlockActivity {
                 message = e.getMessage();
                 return false;
             } catch (LoginErrorException e) {
+                try {
+                    ecourseRemoteSource = new EcourseRemoteSource(null, null);
+                    return ecourseRemoteSource.Authenticate(mStudentId, mPassword);
+                } catch (LoginErrorException e1) {
+                    if ("帳號或密碼錯誤".equals(e.getMessage())) {
+                        message = e.getMessage();
+                        return false;
+                    }
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
                 message = e.getMessage();
                 return false;
             } catch (Exception e) {
