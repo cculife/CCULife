@@ -56,7 +56,6 @@ public class CourseListActivity extends BaseActivity {
         setSSOService(new org.zankio.cculife.CCUService.PortalService.Ecourse());
 
         if(ecourse != null) {
-            Log.e("", "ecourse != null");
             ecourse.openSource();
         }
         new LoadDataAsyncTask().execute();

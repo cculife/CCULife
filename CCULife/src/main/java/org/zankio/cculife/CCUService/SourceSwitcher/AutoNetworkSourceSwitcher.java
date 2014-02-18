@@ -51,7 +51,6 @@ public class AutoNetworkSourceSwitcher implements ISwitcher {
     }
 
     private boolean ckeckNetworkConnection() {
-        Log.e("", "ckeckNetworkConnection");
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         //Log.e("", "getTypeName:" + netInfo.getTypeName() + ", netInfo.isConnected:" + netInfo.isConnected());
