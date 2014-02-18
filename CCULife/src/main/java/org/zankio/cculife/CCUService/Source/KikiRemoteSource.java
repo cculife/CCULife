@@ -36,7 +36,7 @@ public class KikiRemoteSource extends KikiSource {
     }
 
     public void checkAuth() throws Exception {
-        if(auth.getQueryParameter(SESSION_FIELD_NAME) == null)
+        if (auth.getQueryParameter(SESSION_FIELD_NAME) == null)
             throw Exceptions.getNeedLoginException();
     }
 
@@ -69,7 +69,7 @@ public class KikiRemoteSource extends KikiSource {
                         throw new LoginErrorException("未知錯誤");
                     }
                 }
-                return false;
+                throw new LoginErrorException("未知錯誤");
             }
             auth.addQueryParameter(SESSION_FIELD_NAME, sessionID);
             return true;
