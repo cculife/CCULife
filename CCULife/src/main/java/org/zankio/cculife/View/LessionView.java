@@ -11,6 +11,7 @@ import android.view.View;
 
 import org.zankio.cculife.R;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class LessionView extends View {
@@ -126,12 +127,47 @@ public class LessionView extends View {
     }
 
 
-    // ToDo 換行
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        if(mClassName != null)
-            canvas.drawText(mClassName, mClassNameX, mClassNameY, mTextPaint);
+        float x, y;
+        String[] drawText;
 
+        if(mClassName != null) {
+            drawText = splitText(mClassName, mTextPaint, mBound.width());
+            x = mClassNameX;
+            y = mClassNameY;
+
+            for (String text : drawText) {
+                canvas.drawText(text, x, y, mTextPaint);
+                y += mClassNameHeight + 3;
+            }
+        }
+
+    private String[] splitText(String str, Paint paint, float width) {
+        int nextPos, length;
+        String substr;
+        float drawHeight, drawWidth = 0;
+        ArrayList<String> result = new ArrayList<String>();
+        length = str.length();
+
+        while (length > 0) {
+            nextPos = paint.breakText(str, true, width, null);
+            substr = str.substring(0, nextPos);
+            drawWidth = Math.max(paint.measureText(substr), drawWidth);
+
+            result.add(substr);
+            length -= nextPos;
+
+            if (length > 0)
+                str = str.substring(nextPos);
+        }
+
+        drawHeight = result.size() * mClassNameHeight + ((result.size() - 1) * 3);
+        mClassNameX = mBound.centerX() - drawWidth / 2.0f;
+        mClassNameY = mBound.centerY() - drawHeight / 2.0f + mClassNameHeight / 2.0f;
+
+        return result.toArray(new String[result.size()]);
     }
+
 }
