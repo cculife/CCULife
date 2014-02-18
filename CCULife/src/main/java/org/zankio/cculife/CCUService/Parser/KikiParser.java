@@ -72,7 +72,7 @@ public class KikiParser extends BaseParser{
                 , classRoomIndex = -1
                 , classTeacherIndex = -1;
 
-        int classColor;
+        int classColor, classColorTotal = 0;
         //TODO only use select
         table = document.select("table");
         if (table.size() < 2) return null;
@@ -105,16 +105,28 @@ public class KikiParser extends BaseParser{
             if (classTeacherIndex >= 0) classTeacher = fields.get(classTeacherIndex).text();
             if (classTimeIndex >= 0) classTime = fields.get(classTimeIndex).text();
             classColor = randomColor();
+            classColorTotal++;
 
+            /*Format example:
+                一G 三G
+                四12,13,14
+                五C,D
+            */
             int k = 0;
             int processingTime = -1;
+
+            //先去掉空白
             classTime = classTime.replaceAll(" ", "");
+
+            //把每天切開
             daylist = classTime.split("[日一二三四五六]");
             for (int j = 1; j < daylist.length; j++) {
 
+                //把每節課分開
                 timelist = daylist[j].split(",");
 
                 for (; k < classTime.length(); k++) {
+                    //依序找到星期幾
                     if ((processingTime = weekName.indexOf(classTime.substring(k, k + 1))) > -1) {
                         k++;
                         break;
@@ -126,11 +138,15 @@ public class KikiParser extends BaseParser{
                 mClass.name = className;
                 mClass.classroom = classRoom;
                 mClass.color = classColor;
+                mClass.colorid = classColorTotal;
                 mClass.teacher = classTeacher;
+
+                // 轉換時間代碼為 h:m
                 parseClassTime(mClass, processingTime, timelist[0]);
                 for (int l = 1; l < timelist.length; l++) {
                     mergeClassTime(mClass, processingTime, timelist[l]);
                 }
+
                 result.days[processingTime].classList.add(mClass);
             }
         }

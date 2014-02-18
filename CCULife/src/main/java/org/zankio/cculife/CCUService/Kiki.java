@@ -1,17 +1,22 @@
 package org.zankio.cculife.CCUService;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.zankio.cculife.CCUService.Parser.KikiParser;
+import org.zankio.cculife.CCUService.Source.KikiLocalSource;
 import org.zankio.cculife.CCUService.Source.KikiRemoteSource;
 import org.zankio.cculife.CCUService.Source.KikiSource;
+import org.zankio.cculife.CCUService.SourceSwitcher.AutoNetworkSourceSwitcher;
 import org.zankio.cculife.CCUService.SourceSwitcher.ISwitcher;
 import org.zankio.cculife.CCUService.SourceSwitcher.SingleSourceSwitcher;
 import org.zankio.cculife.SessionManager;
 import org.zankio.cculife.override.Net;
+import org.zankio.cculife.override.NetworkErrorException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,11 +27,33 @@ import java.util.Comparator;
 public class Kiki {
 
     public ISwitcher sourceSwitcher;
+    public int OFFLINE_MODE = -1;
 
     public Kiki(Context context) throws Exception {
-        KikiRemoteSource kikiRemoteSource = new KikiRemoteSource(this, new KikiParser());
-        kikiRemoteSource.Authenticate(SessionManager.getInstance(context));
-        sourceSwitcher = new SingleSourceSwitcher(kikiRemoteSource);
+        KikiLocalSource kikiLocalSource;
+        KikiRemoteSource kikiRemoteSource;
+        SessionManager sessionManager;
+        SharedPreferences preferences;
+
+        sessionManager = SessionManager.getInstance(context);
+        preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        OFFLINE_MODE = sessionManager.isSave() &&
+                preferences.getBoolean("offline_enable", true)
+                ? 1 : 0;
+
+        kikiRemoteSource = new KikiRemoteSource(this, new KikiParser());
+
+        try {
+            kikiRemoteSource.Authenticate(sessionManager);
+        } catch (NetworkErrorException e) { }
+
+        if (OFFLINE_MODE > 0) {
+            kikiLocalSource = new KikiLocalSource(this, context);
+            kikiRemoteSource.setLocalSource(kikiLocalSource);
+            sourceSwitcher = new AutoNetworkSourceSwitcher(context, kikiLocalSource, kikiRemoteSource);
+        } else {
+            sourceSwitcher = new SingleSourceSwitcher(kikiRemoteSource);
+        }
 
     }
 
@@ -66,6 +93,7 @@ public class Kiki {
             public Calendar start;
             public Calendar end;
             public int color;
+            public int colorid;
         }
 
         public void sort() {
