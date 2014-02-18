@@ -72,7 +72,7 @@ public class KikiParser extends BaseParser{
                 , classRoomIndex = -1
                 , classTeacherIndex = -1;
 
-        int classColor;
+        int classColor, classColorTotal = 0;
         //TODO only use select
         table = document.select("table");
         if (table.size() < 2) return null;
@@ -105,6 +105,7 @@ public class KikiParser extends BaseParser{
             if (classTeacherIndex >= 0) classTeacher = fields.get(classTeacherIndex).text();
             if (classTimeIndex >= 0) classTime = fields.get(classTimeIndex).text();
             classColor = randomColor();
+            classColorTotal++;
 
             /*Format example:
                 一G 三G
@@ -137,6 +138,7 @@ public class KikiParser extends BaseParser{
                 mClass.name = className;
                 mClass.classroom = classRoom;
                 mClass.color = classColor;
+                mClass.colorid = classColorTotal;
                 mClass.teacher = classTeacher;
 
                 // 轉換時間代碼為 h:m

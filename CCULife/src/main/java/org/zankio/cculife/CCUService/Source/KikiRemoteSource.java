@@ -20,6 +20,7 @@ public class KikiRemoteSource extends KikiSource {
     private Kiki kiki;
     private QueryStringAuth auth;
     private KikiParser parser;
+    private KikiLocalSource kikiLocalSource;
     private ConnectionHelper connectionHelper;
     private final static String SESSION_FIELD_NAME = "session_id";
 
@@ -28,6 +29,10 @@ public class KikiRemoteSource extends KikiSource {
         this.auth = new QueryStringAuth();
         this.parser = (KikiParser) parser;
         this.connectionHelper = new ConnectionHelper(auth);
+    }
+
+    public void setLocalSource(KikiLocalSource kikiLocalSource) {
+        this.kikiLocalSource = kikiLocalSource;
     }
 
     public void checkAuth() throws Exception {
@@ -84,7 +89,7 @@ public class KikiRemoteSource extends KikiSource {
         int year = today.get(Calendar.YEAR) - 1911 - 1;
         int month = today.get(Calendar.MONTH);
         int term;
-
+        Kiki.TimeTable result;
 
         if(month >= Calendar.JULY) {
             term = 1;
@@ -93,7 +98,11 @@ public class KikiRemoteSource extends KikiSource {
             term = 1;
         }
         else term = 2;
-        return getTimeTable(year, term);
+
+        result = getTimeTable(year, term);
+        if (kikiLocalSource != null)
+            kikiLocalSource.storeTimeTable(result);
+        return result;
 
     }
 
