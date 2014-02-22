@@ -104,12 +104,15 @@ public class Updater {
                         final DownloadTask downloadTask = new DownloadTask(context, mProgressDialog);
                         downloadTask.execute(version.downloadURL);
 
+                        /*
                         mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                             @Override
                             public void onCancel(DialogInterface dialog) {
                                 downloadTask.cancel(true);
                             }
                         });
+                        */
+
                     }
                     break;
                 case DialogInterface.BUTTON_NEGATIVE:
