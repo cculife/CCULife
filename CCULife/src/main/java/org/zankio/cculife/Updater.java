@@ -152,12 +152,6 @@ public class Updater {
 
             Updater.this.version = version;
 
-
-            preferences = PreferenceManager.getDefaultSharedPreferences(context);
-            editor = preferences.edit();
-            editor.putLong("update_latest_check", System.currentTimeMillis());
-            editor.commit();
-
             if(version != null) {
                 builder = new AlertDialog.Builder(context);
                 builder.setTitle("發現更新");
@@ -166,6 +160,11 @@ public class Updater {
                 builder.setNegativeButton("不再提醒", dialogOnClick);
                 builder.setNeutralButton("暫時不要", dialogOnClick);
                 builder.show();
+            } else {
+                preferences = PreferenceManager.getDefaultSharedPreferences(context);
+                editor = preferences.edit();
+                editor.putLong("update_latest_check", System.currentTimeMillis());
+                editor.commit();
             }
         }
     }
