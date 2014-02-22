@@ -189,9 +189,9 @@ public class Updater {
         protected void onPostExecute(String result) {
             mProgressDialog.dismiss();
             if (result != null)
-                Toast.makeText(context, "Download error: " + result, Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "下載更新檔案錯誤: " + result, Toast.LENGTH_LONG).show();
             else {
-                Toast.makeText(context, "File downloaded", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "下載更新檔案完成", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setDataAndType(Uri.fromFile(new File(DOWNLOAD_FULLPATH)), "application/vnd.android.package-archive");
                 context.startActivity(intent);
