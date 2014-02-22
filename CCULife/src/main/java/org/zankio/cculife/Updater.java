@@ -63,7 +63,7 @@ public class Updater {
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
         if (preferences.getBoolean("auto_check_update", true)) {
             long latestCheck = preferences.getLong("update_latest_check", 0);
-            int updateInterval = preferences.getInt("update_interval", 7);
+            int updateInterval = preferences.getInt("update_interval", 1);
 
             if ((System.currentTimeMillis() - latestCheck > updateInterval * 24 * 60 * 60 * 1000)
                     || (preferences.getBoolean("debug_force_update", false))) {
