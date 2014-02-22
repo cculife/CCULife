@@ -24,6 +24,7 @@ import org.zankio.cculife.CCUService.Source.KikiLocalSource;
 import org.zankio.cculife.Debug;
 import org.zankio.cculife.R;
 import org.zankio.cculife.SessionManager;
+import org.zankio.cculife.Updater;
 
 import java.util.List;
 
@@ -67,6 +68,7 @@ public class SettingsActivity extends PreferenceActivity implements SessionManag
         getPreferenceScreen().addPreference(fakeHeader);
         addPreferencesFromResource(R.xml.pref_about);
         findPreference("about_title").setSummary(getVersionName());
+        findPreference("check_update").setOnPreferenceClickListener(onPreferenceClickListener);
 
         if (Debug.debug) {
             fakeHeader = new PreferenceCategory(this);
@@ -153,6 +155,8 @@ public class SettingsActivity extends PreferenceActivity implements SessionManag
                 ecourseLocalSource.clearData();
                 kikiLocalSource = new KikiLocalSource(null, SettingsActivity.this);
                 kikiLocalSource.clearData();
+            } else if ("check_update".equals(key)) {
+                new Updater(SettingsActivity.this).checkUpdate(true);
             }
 
             return false;

@@ -7,6 +7,10 @@
         android:key="auto_check_update"
         android:defaultValue="true" />
     <Preference
+        android:key="check_update"
+        android:title="檢查更新">
+    </Preference>
+    <Preference
         android:key="about_title"
         android:title="@string/app_name">
     </Preference>

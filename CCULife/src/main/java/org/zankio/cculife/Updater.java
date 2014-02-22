@@ -318,10 +318,10 @@ public class Updater {
     }
 
     public int elementsToInt(Elements elements) {
-        if(elements != null & elements.size() > 0) {
+        if(elements != null && elements.size() > 0) {
             try {
                 return Integer.parseInt(elements.text());
-            } catch (NumberFormatException e) {};
+            } catch (NumberFormatException e) {}
         }
         return -1;
     }
