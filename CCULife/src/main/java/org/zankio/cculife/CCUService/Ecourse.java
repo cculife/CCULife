@@ -191,7 +191,7 @@ public class Ecourse {
                 }
                 return this.announces;
             } catch (IOException e) {
-                throw Exceptions.getNetworkException();
+                throw Exceptions.getNetworkException(e);
             }
         }
 

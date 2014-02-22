@@ -24,11 +24,11 @@ public class Exceptions {
         return new Exception(getNeedLogin());
     }
 
-    public static Exception getNetworkException(){
-        return new Exception(getNetworkErrorMessage());
+    public static NetworkErrorException getNetworkException(){
+        return new NetworkErrorException(getNetworkErrorMessage());
     }
 
-    public static Exception getNetworkException(Throwable throwable){
+    public static NetworkErrorException getNetworkException(Throwable throwable){
         if (throwable instanceof SocketTimeoutException)
             return new NetworkErrorException(getTimeoutMessage(), throwable);
         else
