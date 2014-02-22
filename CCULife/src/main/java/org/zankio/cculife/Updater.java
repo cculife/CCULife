@@ -21,7 +21,10 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.zankio.cculife.override.AsyncTaskWithErrorHanding;
+import org.zankio.cculife.override.Exceptions;
 import org.zankio.cculife.override.Net;
+import org.zankio.cculife.override.NetworkErrorException;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -41,9 +44,9 @@ public class Updater {
         this.context = context;
     }
 
-    public Version getUpdate() { return getUpdate(false);}
+    public Version getUpdate() throws NetworkErrorException { return getUpdate(false);}
 
-    public Version getUpdate(boolean force) {
+    public Version getUpdate(boolean force) throws NetworkErrorException {
         SharedPreferences preferences;
         Version result = getLatestVersion();
 
@@ -51,7 +54,7 @@ public class Updater {
             preferences = PreferenceManager.getDefaultSharedPreferences(context);
             if (force ||
                   (result.versionCode > 0 && result.versionCode > getVersionCode() && result.versionCode > preferences.getInt("update_ignore", 0)) ||
-                  (preferences.getBoolean("debug_force_update", false))){
+                  (preferences.getBoolean("debug_force_update", false))) {
                 return result;
             }
         }
@@ -123,17 +126,21 @@ public class Updater {
         }
     };
 
-    private class UpdateTask extends AsyncTask<Void, Void, Version> {
+    private class UpdateTask extends AsyncTaskWithErrorHanding<Void, Void, Version> {
 
         @Override
-        protected Version doInBackground(Void... params) {
+        protected void onError(String msg) {
+            super.onError(msg);
+            Toast.makeText(context, "檢查更新錯誤: " + msg, Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        protected Version _doInBackground(Void... params) throws Exception {
             return getUpdate();
         }
 
         @Override
-        protected void onPostExecute(Version version) {
-            super.onPostExecute(version);
-
+        protected void _onPostExecute(Version version) {
             SharedPreferences preferences;
             SharedPreferences.Editor editor;
 
@@ -285,7 +292,7 @@ public class Updater {
         }
     }
 
-    public Version getLatestVersion() {
+    public Version getLatestVersion() throws NetworkErrorException {
         Connection connection;
         Document document;
         Element latest;
@@ -304,10 +311,8 @@ public class Updater {
 
             return result;
         } catch (IOException e) {
-            e.printStackTrace();
+            throw Exceptions.getNetworkException(e);
         }
-
-        return null;
     }
 
     public String elementsToString(Elements elements) {
