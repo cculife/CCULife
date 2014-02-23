@@ -35,6 +35,12 @@ public class SettingsActivity extends PreferenceActivity implements SessionManag
     private static SessionManager sessionManager;
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        sessionManager = SessionManager.getInstance(this);
+    }
+
+    @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 
@@ -67,7 +73,7 @@ public class SettingsActivity extends PreferenceActivity implements SessionManag
         fakeHeader.setTitle(R.string.pref_header_about);
         getPreferenceScreen().addPreference(fakeHeader);
         addPreferencesFromResource(R.xml.pref_about);
-        findPreference("about_title").setSummary(getVersionName());
+        findPreference("about_title").setSummary(getVersionName(this));
         findPreference("check_update").setOnPreferenceClickListener(onPreferenceClickListener);
         bindPreferenceSummaryToValue(findPreference("update_interval"));
 
@@ -81,13 +87,13 @@ public class SettingsActivity extends PreferenceActivity implements SessionManag
             bindPreferenceSummaryToValue(findPreference("debug_ecourse_term"));
         }
 
+        sessionManager.setOnLoginStateChangedListener(this);
         loadAccountsSetting();
     }
 
     private void loadAccountsSetting(){
-        sessionManager = SessionManager.getInstance(this);
-        sessionManager.setOnLoginStateChangedListener(this);
         Preference loginout = findPreference("account_log_in_out");
+
         assert loginout != null;
         loginout.setOnPreferenceClickListener(onPreferenceClickListener);
 
@@ -97,7 +103,8 @@ public class SettingsActivity extends PreferenceActivity implements SessionManag
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        sessionManager.setOnLoginStateChangedListener(null);
+        if(sessionManager != null)
+            sessionManager.setOnLoginStateChangedListener(null);
     }
 
     @Override
@@ -142,22 +149,24 @@ public class SettingsActivity extends PreferenceActivity implements SessionManag
         }
     }
 
-    private Preference.OnPreferenceClickListener onPreferenceClickListener = new Preference.OnPreferenceClickListener() {
+    private static Preference.OnPreferenceClickListener onPreferenceClickListener = new Preference.OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(Preference preference) {
+            Context context = preference.getContext();
             String key = preference.getKey();
-            if(key == null || key.equals("")) return false;
+
+            if (key == null || key.equals("")) return false;
             else if ("account_log_in_out".equals(key)) {
                 sessionManager.toggleLogin();
                 EcourseLocalSource ecourseLocalSource;
                 KikiLocalSource kikiLocalSource;
 
-                ecourseLocalSource = new EcourseLocalSource(null, SettingsActivity.this);
+                ecourseLocalSource = new EcourseLocalSource(null, context);
                 ecourseLocalSource.clearData();
-                kikiLocalSource = new KikiLocalSource(null, SettingsActivity.this);
+                kikiLocalSource = new KikiLocalSource(null, context);
                 kikiLocalSource.clearData();
             } else if ("check_update".equals(key)) {
-                new Updater(SettingsActivity.this).checkUpdate(true);
+                new Updater(context).checkUpdate(true);
             }
 
             return false;
@@ -211,11 +220,47 @@ public class SettingsActivity extends PreferenceActivity implements SessionManag
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static class AccountPreferenceFragment extends PreferenceFragment {
+    public static class AccountPreferenceFragment extends PreferenceFragment implements SessionManager.onLoginStateChangedListener{
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_account);
+            sessionManager.setOnLoginStateChangedListener(this);
+
+            loadAccountsSetting();
+        }
+
+        private void loadAccountsSetting(){
+            Preference loginout = findPreference("account_log_in_out");
+            assert loginout != null;
+            loginout.setOnPreferenceClickListener(onPreferenceClickListener);
+            onLoginStateChanged(sessionManager.isLogined());
+        }
+
+        @Override
+        public void onDestroy() {
+            super.onDestroy();
+            sessionManager.setOnLoginStateChangedListener(null);
+        }
+
+        @Override
+        public void onLoginStateChanged(boolean isLogined) {
+            Preference loginout = findPreference("account_log_in_out");
+            Preference user = findPreference("account_user");
+
+            assert user != null;
+            assert loginout != null;
+
+            if (isLogined) {
+                String username = sessionManager.getUserName();
+                user.setSummary(username);
+                loginout.setTitle("登出");
+            } else {
+                user.setSummary("未登入");
+                loginout.setTitle("登入");
+            }
+
         }
     }
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -224,6 +269,16 @@ public class SettingsActivity extends PreferenceActivity implements SessionManag
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_about);
+            findPreference("about_title").setSummary(getVersionName(this.getActivity()));
+            findPreference("check_update").setOnPreferenceClickListener(onPreferenceClickListener);
+            bindPreferenceSummaryToValue(findPreference("update_interval"));
+
+            if (Debug.debug) {
+                addPreferencesFromResource(R.xml.pref_debug);
+
+                bindPreferenceSummaryToValue(findPreference("debug_ecourse_year"));
+                bindPreferenceSummaryToValue(findPreference("debug_ecourse_term"));
+            }
         }
     }
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -232,6 +287,7 @@ public class SettingsActivity extends PreferenceActivity implements SessionManag
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_offline);
+            bindPreferenceSummaryToValue(findPreference("offline_mode"));
         }
     }
 
@@ -244,14 +300,14 @@ public class SettingsActivity extends PreferenceActivity implements SessionManag
         }
     }
 
-    private String getVersionName() {
+    private static String getVersionName(Context context) {
         PackageManager pm = null;
         PackageInfo pinfo = null;
 
         try {
-            pm = getPackageManager();
+            pm = context.getPackageManager();
             if(pm != null) {
-                pinfo = pm.getPackageInfo(getPackageName(), 0);
+                pinfo = pm.getPackageInfo(context.getPackageName(), 0);
                 return "v" + pinfo.versionName;
             }
 
