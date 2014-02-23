@@ -40,6 +40,23 @@
         <item>-1</item>
     </string-array>
 
+    <string name="pref_update_interval">檢查更新間隔</string>
+    <string-array name="pref_update_interval_titles">
+        <item>1天</item>
+        <item>2天</item>
+        <item>7天</item>
+        <item>15天</item>
+        <item>30天</item>
+    </string-array>
+    <string-array name="pref_update_interval_values">
+        <item>1</item>
+        <item>2</item>
+        <item>7</item>
+        <item>15</item>
+        <item>30</item>
+    </string-array>
+
+
     <!-- Example settings for Data & Sync -->
     <string name="pref_header_data_sync">資料同步</string>
 

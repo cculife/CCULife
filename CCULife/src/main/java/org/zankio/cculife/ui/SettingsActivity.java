@@ -69,6 +69,7 @@ public class SettingsActivity extends PreferenceActivity implements SessionManag
         addPreferencesFromResource(R.xml.pref_about);
         findPreference("about_title").setSummary(getVersionName());
         findPreference("check_update").setOnPreferenceClickListener(onPreferenceClickListener);
+        bindPreferenceSummaryToValue(findPreference("update_interval"));
 
         if (Debug.debug) {
             fakeHeader = new PreferenceCategory(this);
