@@ -14,11 +14,10 @@ repositories {
 
 android {
     compileSdkVersion 17
-    buildToolsVersion "19.0.0"
+    buildToolsVersion "19.0.3"
 
     defaultConfig {
         minSdkVersion 7
-        targetSdkVersion 17
         targetSdkVersion 17
     }
 }
@@ -28,7 +27,7 @@ tasks.withType(Compile) {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:18.0.+'
+    compile 'com.android.support:support-v4:19.+'
     compile files('libs/jsoup-1.7.2.jar')
     compile project(':ActionBarSherlock')
 }
