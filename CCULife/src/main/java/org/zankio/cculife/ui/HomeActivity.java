@@ -68,7 +68,7 @@ public class HomeActivity extends BaseActivity {
             }
         });
 
-        new Updater(this).checkUpdate();
+        // new Updater(this).checkUpdate();
     }
 
     @Override

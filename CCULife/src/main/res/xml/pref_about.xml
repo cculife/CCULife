@@ -2,10 +2,11 @@
 
     <!-- A 'parent' preference, which enables/disables child preferences (below)
          when checked/unchecked. -->
+    <!--
     <CheckBoxPreference
         android:title="自動檢查更新"
         android:key="auto_check_update"
-        android:defaultValue="true" />
+        android:defaultValue="true"/>
     <ListPreference
         android:title="@string/pref_update_interval"
         android:key="update_interval"
@@ -18,6 +19,7 @@
         android:key="check_update"
         android:title="檢查更新">
     </Preference>
+    -->
     <Preference
         android:key="about_title"
         android:title="@string/app_name">
