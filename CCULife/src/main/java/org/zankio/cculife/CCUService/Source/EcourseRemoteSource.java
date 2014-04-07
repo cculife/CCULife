@@ -27,10 +27,18 @@ public class EcourseRemoteSource extends EcourseSource {
     private EcourseLocalSource ecourseLocalSource;
     private SessionManager sessionManager;
 
-    private final static String SESSION_FIELD_NAME = "PHPSESSID";
+    private static final String SESSION_FIELD_NAME = "PHPSESSID";
+    private static final String ECOURSE_URL_LOGIN = "http://ecourse.elearning.ccu.edu.tw/php/index_login.php";
+    private static final String ECOURSE_URL_COURSE_SELECT = "http://ecourse.elearning.ccu.edu.tw/php/login_s.php?courseid=%s";
+    private static final String ECOURSE_URL_COURSE_LIST = "http://ecourse.elearning.ccu.edu.tw/php/Courses_Admin/take_course.php?frame=1";
+    private static final String ECOURSE_URL_COURSE_SCORE = "http://ecourse.elearning.ccu.edu.tw/php/Trackin/SGQueryFrame1.php";
+    private static final String ECOURSE_URL_COURSE_CLASSMATE = "http://ecourse.elearning.ccu.edu.tw/php/Learner_Profile/SSQueryFrame1.php";
+    private static final String ECOURSE_URL_COURSE_ANNOUNCE = "http://ecourse.elearning.ccu.edu.tw/php/news/news.php";
+    private static final String ECOURSE_URL_COURSE_FILELIST = "http://ecourse.elearning.ccu.edu.tw/php/textbook/course_menu.php?list=1";
+    private static final String ECOURSE_URL_COURSE_FILELISTFILES = "http://ecourse.elearning.ccu.edu.tw/php/textbook/%s";
+    private static final String ECOURSE_URL_COURSE_ANNOUNCE_CONTENT = "http://ecourse.elearning.ccu.edu.tw/php/news/%s";
 
-
-    public EcourseRemoteSource(Ecourse ecourse,IParser parser) {
+    public EcourseRemoteSource(Ecourse ecourse, IParser parser) {
         this.ecourse = ecourse;
         this.parser = (EcourseParser) parser;
         this.auth = new CookieAuth();
@@ -51,7 +59,7 @@ public class EcourseRemoteSource extends EcourseSource {
 
     public boolean Authenticate(String user, String pass) throws Exception {
         
-        Connection connection = Jsoup.connect("http://ecourse.elearning.ccu.edu.tw/php/index_login.php");
+        Connection connection = Jsoup.connect(ECOURSE_URL_LOGIN);
         ConnectionHelper.initTimeout(connection)
                 .data("id", user)
                 .data("pass", pass)
@@ -65,7 +73,7 @@ public class EcourseRemoteSource extends EcourseSource {
             if (url.startsWith("http://ecourse.elearning.ccu.edu.tw/php/Courses_Admin/take_course.php")) {
                 auth.setCookie(connection, SESSION_FIELD_NAME);
                 return true;
-            } else if (url.startsWith("http://ecourse.elearning.ccu.edu.tw/php/index_login.php")) {
+            } else if (url.startsWith(ECOURSE_URL_LOGIN)) {
                 if (body != null) {
                     if (body.contains("帳號或密碼錯誤")) {
                         throw new LoginErrorException("帳號或密碼錯誤");
@@ -95,7 +103,7 @@ public class EcourseRemoteSource extends EcourseSource {
 
         Connection connection;
         try {
-            connection = Jsoup.connect("http://ecourse.elearning.ccu.edu.tw/php/login_s.php?courseid=" + course.getCourseid());
+            connection = Jsoup.connect(String.format(ECOURSE_URL_COURSE_SELECT, course.getCourseid()));
             connectionHelper.initConnection(connection).get();
             currentCourse = course;
         } catch (IOException e) {
@@ -111,7 +119,7 @@ public class EcourseRemoteSource extends EcourseSource {
 
         Connection connection;
 
-        connection = Jsoup.connect("http://ecourse.elearning.ccu.edu.tw/php/Courses_Admin/take_course.php?frame=1");
+        connection = Jsoup.connect(ECOURSE_URL_COURSE_LIST);
         connectionHelper.initConnection(connection);
 
         try {
@@ -162,7 +170,7 @@ public class EcourseRemoteSource extends EcourseSource {
         checkAuth();
 
         Connection connection;
-        connection = Jsoup.connect("http://ecourse.elearning.ccu.edu.tw/php/Trackin/SGQueryFrame1.php");
+        connection = Jsoup.connect(ECOURSE_URL_COURSE_SCORE);
         connectionHelper.initConnection(connection);
 
         connection.method(Connection.Method.GET);
@@ -187,7 +195,7 @@ public class EcourseRemoteSource extends EcourseSource {
         checkAuth();
 
         Connection connection;
-        connection = Jsoup.connect("http://ecourse.elearning.ccu.edu.tw/php/Learner_Profile/SSQueryFrame1.php");
+        connection = Jsoup.connect(ECOURSE_URL_COURSE_CLASSMATE);
         connectionHelper.initConnection(connection);
 
         try {
@@ -202,7 +210,7 @@ public class EcourseRemoteSource extends EcourseSource {
         checkAuth();
 
         Connection connection;
-        connection = Jsoup.connect("http://ecourse.elearning.ccu.edu.tw/php/news/news.php");
+        connection = Jsoup.connect(ECOURSE_URL_COURSE_ANNOUNCE);
         connectionHelper.initConnection(connection);
 
         try {
@@ -236,14 +244,14 @@ public class EcourseRemoteSource extends EcourseSource {
         Document document;
         Elements lists;
 
-        connection = Jsoup.connect("http://ecourse.elearning.ccu.edu.tw/php/textbook/course_menu.php?list=1");
+        connection = Jsoup.connect(ECOURSE_URL_COURSE_FILELIST);
         connectionHelper.initConnection(connection);
 
         try {
             document = connection.get();
             lists = document.select("a[href^=course_menu.php]");
 
-            for(int i = 0; i < lists.size(); i++) {
+            for (int i = 0; i < lists.size(); i++) {
                 getFileListFile(filelist, lists.get(i).attr("href"));
             }
         } catch (IOException e) {
@@ -254,7 +262,7 @@ public class EcourseRemoteSource extends EcourseSource {
     private void getFileListFile(ArrayList<Ecourse.File> filelist, String href) {
         Connection connection;
 
-        connection = Jsoup.connect("http://ecourse.elearning.ccu.edu.tw/php/textbook/" + href);
+        connection = Jsoup.connect(String.format(ECOURSE_URL_COURSE_FILELISTFILES, href));
         connectionHelper.initConnection(connection)
                 .method(Connection.Method.GET);
 
@@ -274,7 +282,7 @@ public class EcourseRemoteSource extends EcourseSource {
     public String getAnnounceContent(Ecourse.Announce announce) throws Exception {
         Connection connection;
 
-        connection = Jsoup.connect("http://ecourse.elearning.ccu.edu.tw/php/news/" + announce.url);
+        connection = Jsoup.connect(String.format(ECOURSE_URL_COURSE_ANNOUNCE_CONTENT, announce.url));
         connectionHelper.initConnection(connection);
 
         try {
