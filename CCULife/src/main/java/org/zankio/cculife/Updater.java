@@ -305,6 +305,9 @@ public class Updater {
 
             document = connection.get();
             latest = document.getElementById("latest_version");
+
+            if(latest == null) return null;
+
             result.versionCode = elementsToInt(latest.getElementsByClass("versionCode"));
             result.versionName = elementsToString(latest.getElementsByClass("versionName"));
             result.downloadURL = elementsToString(latest.getElementsByClass("downloadURL_short"));
