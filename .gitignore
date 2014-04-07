@@ -19,11 +19,18 @@ local.properties
 .classpath
 .project
 
-# Android Studio
+# Windows thumbnail db
 .DS_Store 
-.gradle/
-/.idea/workspace.xml
+
+# Android Studio
+.idea/*
+.gradle
 /*/local.properties
 /*/out
 */build
 */production
+*.iml
+*.iws
+*.ipr
+*~
+*.swp
