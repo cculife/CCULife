@@ -54,7 +54,10 @@ public class ScoreQueryActivity extends BaseFragmentActivity {
 
         @Override
         public Fragment getItem(int position) {
-            Fragment fragment = new DummySectionFragment(grades, gradePages);
+            DummySectionFragment.gradePages = gradePages;
+            DummySectionFragment.grades = grades;
+
+            Fragment fragment = new DummySectionFragment();
             Bundle args = new Bundle();
             args.putInt(DummySectionFragment.ARG_POSITION, position);
             fragment.setArguments(args);
@@ -81,10 +84,10 @@ public class ScoreQueryActivity extends BaseFragmentActivity {
         public DummySectionFragment() {
         }
 
-        public DummySectionFragment(ScoreQuery.Grade[] grades, GradePage[] gradePages) {
+        /* public DummySectionFragment(ScoreQuery.Grade[] grades, GradePage[] gradePages) {
             this.grades = grades;
             this.gradePages = gradePages;
-        }
+        } */
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,

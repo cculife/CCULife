@@ -117,7 +117,10 @@ public class CourseActivity extends BaseFragmentActivity implements ActionBar.Ta
 
         @Override
         public Fragment getItem(int position) {
-            Fragment fragment = new DummySectionFragment(course);
+            //Todo ?
+            DummySectionFragment.course = course;
+
+            Fragment fragment = new DummySectionFragment();
             Bundle args = new Bundle();
             if(position == 0)
                 args.putInt(DummySectionFragment.ARG_PAGE_VIEW, R.layout.fragment_course_announce);
@@ -156,9 +159,9 @@ public class CourseActivity extends BaseFragmentActivity implements ActionBar.Ta
         public DummySectionFragment() {
         }
 
-        public DummySectionFragment(Ecourse.Course course){
+        /*public DummySectionFragment(Ecourse.Course course){
             this.course = course;
-        }
+        }*/
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
