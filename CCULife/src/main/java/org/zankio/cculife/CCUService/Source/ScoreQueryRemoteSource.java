@@ -5,7 +5,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.zankio.cculife.CCUService.Authentication.CookieAuth;
 import org.zankio.cculife.CCUService.Helper.ConnectionHelper;
-import org.zankio.cculife.CCUService.Parser.KikiParser;
 import org.zankio.cculife.CCUService.Parser.ScoreQueryParser;
 import org.zankio.cculife.CCUService.ScoreQuery;
 import org.zankio.cculife.SessionManager;

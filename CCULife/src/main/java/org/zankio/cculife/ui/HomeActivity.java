@@ -17,7 +17,6 @@ import com.actionbarsherlock.view.Menu;
 
 import org.zankio.cculife.R;
 import org.zankio.cculife.SessionManager;
-import org.zankio.cculife.Updater;
 import org.zankio.cculife.ui.Base.BaseActivity;
 import org.zankio.cculife.ui.CCUSchedule.CCUScheduleActivity;
 import org.zankio.cculife.ui.CourseSchedule.CourseTimeTableActivity;

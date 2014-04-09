@@ -16,20 +16,14 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockActivity;
 
-import org.jsoup.Connection;
-import org.jsoup.Jsoup;
-import org.zankio.cculife.CCUService.Source.EcourseLocalSource;
 import org.zankio.cculife.CCUService.Portal;
+import org.zankio.cculife.CCUService.Source.EcourseLocalSource;
 import org.zankio.cculife.CCUService.Source.EcourseRemoteSource;
 import org.zankio.cculife.CCUService.Source.KikiLocalSource;
 import org.zankio.cculife.R;
 import org.zankio.cculife.SessionManager;
-import org.zankio.cculife.override.Exceptions;
 import org.zankio.cculife.override.LoginErrorException;
-import org.zankio.cculife.override.Net;
 import org.zankio.cculife.override.NetworkErrorException;
-
-import java.io.IOException;
 
 public class LoginActivity extends SherlockActivity {
 

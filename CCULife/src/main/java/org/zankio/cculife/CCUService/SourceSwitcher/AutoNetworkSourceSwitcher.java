@@ -3,7 +3,6 @@ package org.zankio.cculife.CCUService.SourceSwitcher;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
 
 import org.zankio.cculife.CCUService.Source.ISource;
 
