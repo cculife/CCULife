@@ -184,7 +184,8 @@ public class EcourseParser extends BaseParser {
     private String getFileName(String url) {
         url = url.substring(url.lastIndexOf('/') + 1);
         try {
-            return java.net.URLDecoder.decode(url, "big5");
+            url = java.net.URLDecoder.decode(url, "ISO-8859-1");
+            return new String(url.getBytes("ISO-8859-1"), "big5");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -199,7 +200,7 @@ public class EcourseParser extends BaseParser {
                 url.startsWith("mailto:")
                 ) return url;
 
-        URL mUrl = null;
+        URL mUrl;
         try {
             mUrl = new URL(base);
             return mUrl.getProtocol() + "://" + mUrl.getHost() + mUrl.getFile().substring(0, mUrl.getFile().lastIndexOf('/') + 1) + url;
