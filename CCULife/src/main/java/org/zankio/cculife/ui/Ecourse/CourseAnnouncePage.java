@@ -4,6 +4,9 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,7 +89,15 @@ public class CourseAnnouncePage extends BasePage implements AdapterView.OnItemCl
         protected void onPostExecute(Ecourse.Announce announce) {
             AlertDialog.Builder builder = new AlertDialog.Builder(inflater.getContext());
 
-            builder.setMessage(Html.fromHtml(announce.getContent()));
+            TextView message = new TextView(inflater.getContext());
+            message.setText(Html.fromHtml(announce.getContent()));
+            message.setAutoLinkMask(Linkify.WEB_URLS);
+            message.setMovementMethod(LinkMovementMethod.getInstance());
+            message.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+            message.setPadding(20, 20, 20, 20);
+            builder.setView(message);
+
+            //builder.setMessage(Html.fromHtml(announce.getContent()));
             builder.setTitle(announce.Title);
             builder.setPositiveButton("確定", new DialogInterface.OnClickListener() {
                 @Override
