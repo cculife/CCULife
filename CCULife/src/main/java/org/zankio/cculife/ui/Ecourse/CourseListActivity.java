@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 
@@ -41,11 +42,14 @@ public class CourseListActivity extends BaseActivity {
             @Override
             public void onItemClick(final AdapterView<?> parent, View view, final int position, long id) {
                 final Ecourse.Course course = (Ecourse.Course) parent.getAdapter().getItem(position);
+                final Toast toast = Toast.makeText(CourseListActivity.this, "請稍後...", Toast.LENGTH_SHORT);
+                toast.show();
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         ecourse.switchCourse(course);
                         startActivity(new Intent(CourseListActivity.this, CourseActivity.class));
+                        toast.cancel();
                     }
                 }).start();
             }
