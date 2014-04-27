@@ -113,7 +113,7 @@ public class Ecourse {
         private int homework;
         private int exam;
         private boolean warning;
-        private File[] files;
+        private FileList[] files;
         private Announce[] announces;
         private Scores[] scores;
         private Ecourse ecourse;
@@ -211,7 +211,7 @@ public class Ecourse {
             }
         }
 
-        public File[] getFiles() throws Exception {
+        public FileList[] getFiles() throws Exception {
             if (this.files != null) return this.files;
 
             Ecourse eco = getEcourse();
@@ -297,7 +297,7 @@ public class Ecourse {
             this.ecourse = ecourse;
         }
 
-        public void setFiles(File[] files) {
+        public void setFiles(FileList[] files) {
             this.files = files;
         }
 
@@ -315,6 +315,11 @@ public class Ecourse {
         public String Name;
         public String URL;
         public String Size;
+    }
+
+    public class FileList {
+        public String Name;
+        public File[] Files;
     }
 
     public class Announce {

@@ -390,7 +390,7 @@ public class EcourseLocalSource extends EcourseSource {
 
 
     @Override
-    public Ecourse.File[] getFiles(Ecourse.Course course) throws Exception {
+    public Ecourse.FileList[] getFiles(Ecourse.Course course) throws Exception {
         throw new Exception("未支援離線資料");
         //return new Ecourse.File[0];
     }

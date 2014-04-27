@@ -6,7 +6,7 @@
 
     <include android:id="@+id/message_panel" layout="@layout/layout_msg_panel" />
 
-    <ListView
+    <ExpandableListView
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin"

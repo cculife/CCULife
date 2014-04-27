@@ -15,7 +15,8 @@
             android:layout_alignParentLeft="true"
             android:textColor="@color/Gray"
             android:paddingLeft="10dp"
-            android:paddingBottom="10dp"/>
+            android:paddingBottom="10dp"
+        android:layout_marginLeft="40dip" />
 
     <TextView
             android:layout_width="wrap_content"
@@ -27,5 +28,6 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:paddingLeft="10sp"
-            android:paddingTop="10dp"/>
+            android:paddingTop="10dp"
+        android:layout_marginLeft="40dip" />
 </RelativeLayout>

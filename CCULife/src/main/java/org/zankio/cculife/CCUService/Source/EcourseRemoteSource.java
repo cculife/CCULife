@@ -3,6 +3,7 @@ package org.zankio.cculife.CCUService.Source;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.zankio.cculife.CCUService.Authentication.CookieAuth;
 import org.zankio.cculife.CCUService.Ecourse;
@@ -16,6 +17,8 @@ import org.zankio.cculife.override.LoginErrorException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class EcourseRemoteSource extends EcourseSource {
 
@@ -227,32 +230,56 @@ public class EcourseRemoteSource extends EcourseSource {
 
     }
 
-    public Ecourse.File[] getFiles(Ecourse.Course course) throws Exception {
+    public Ecourse.FileList[] getFiles(Ecourse.Course course) throws Exception {
         checkAuth();
 
-        ArrayList<Ecourse.File> result = new ArrayList<Ecourse.File>();
+        ArrayList<Ecourse.FileList> result = new ArrayList<Ecourse.FileList>();
 
         ecourse.switchCourse(course);
         getFileList(result);
 
-        return result.toArray(new Ecourse.File[result.size()]);
+        return result.toArray(new Ecourse.FileList[result.size()]);
 
     }
 
-    private void getFileList(ArrayList<Ecourse.File> filelist) throws Exception {
+    private void getFileList(ArrayList<Ecourse.FileList> filelist) throws Exception {
         Connection connection;
         Document document;
         Elements lists;
-
+        ArrayList<Ecourse.File> files;
+        Ecourse.FileList mList;
         connection = Jsoup.connect(ECOURSE_URL_COURSE_FILELIST);
         connectionHelper.initConnection(connection);
 
         try {
             document = connection.get();
-            lists = document.select("a[href^=course_menu.php]");
+            lists = document.select("a[href^=course_menu.php], .child script");
 
-            for (int i = 0; i < lists.size(); i++) {
-                getFileListFile(filelist, lists.get(i).attr("href"));
+            for (Element list : lists) {
+                if (list.tag().getName().equals("a")) {
+                    files = new ArrayList<Ecourse.File>();
+                    getFileListFile(files, list.attr("href"));
+                    if (files.size() > 0) {
+                        mList = ecourse.new FileList();
+                        mList.Name = list.text();
+                        mList.Files = files.toArray(new Ecourse.File[files.size()]);
+                        filelist.add(mList);
+                    }
+                }
+                else {
+                    Pattern pattern = Pattern.compile("href='(course_menu\\.php\\?.+)'>(.*?)<");
+                    Matcher matcher = pattern.matcher(list.html());
+                    while(matcher.find()) {
+                        files = new ArrayList<Ecourse.File>();
+                        getFileListFile(files, matcher.group(1));
+                        if (files.size() > 0) {
+                            mList = ecourse.new FileList();
+                            mList.Name = matcher.group(2).replaceAll("&lt;?", "<").replaceAll("&gt;?", ">").replaceAll("&nbsp;?", " ").replaceAll("&amp;?", "&");
+                            mList.Files = files.toArray(new Ecourse.File[files.size()]);
+                            filelist.add(mList);
+                        }
+                    }
+                }
             }
         } catch (IOException e) {
             throw Exceptions.getNetworkException(e);

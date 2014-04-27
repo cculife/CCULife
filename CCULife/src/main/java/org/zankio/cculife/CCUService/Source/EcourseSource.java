@@ -20,7 +20,7 @@ public abstract class EcourseSource extends BaseSource {
 
     public abstract String getAnnounceContent(Ecourse.Announce announce) throws Exception;
 
-    public abstract Ecourse.File[] getFiles(Ecourse.Course course) throws Exception ;
+    public abstract Ecourse.FileList[] getFiles(Ecourse.Course course) throws Exception ;
 
     public Ecourse.Course[] getCourse(int year, int term, Kiki kiki) throws Exception {
         return getCourse();

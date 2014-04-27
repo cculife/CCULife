@@ -1,6 +1,7 @@
 package org.zankio.cculife.ui.Ecourse;
 
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.net.Uri;
@@ -10,9 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 import org.zankio.cculife.CCUService.Ecourse;
@@ -23,10 +25,10 @@ import org.zankio.cculife.ui.Base.BasePage;
 public class CourseFilePage extends BasePage {
 
     private Ecourse.Course course;
-    private ListView list;
+    private ExpandableListView list;
     private FileAdapter adapter;
 
-    private static Ecourse.File[] _file;
+    private static Ecourse.FileList[] _file;
     private static Ecourse.Course _course;
     private static LoadFileDataAsyncTask _fileTask;
 
@@ -57,30 +59,42 @@ public class CourseFilePage extends BasePage {
     public void initViews() {
         adapter = new FileAdapter();
 
-        list = (ListView) PageView.findViewById(R.id.list);
+        list = (ExpandableListView) PageView.findViewById(R.id.list);
         list.setAdapter(adapter);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
+            @TargetApi(Build.VERSION_CODES.GINGERBREAD)
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Ecourse.File file = (Ecourse.File) parent.getAdapter().getItem(position);
-                String filename = file.Name != null ? file.Name : URLUtil.guessFileName(file.URL, null, null);
+                Ecourse.File file;
+                String filename;
 
-                DownloadManager manager = (DownloadManager) inflater.getContext().getSystemService(Activity.DOWNLOAD_SERVICE);
-                DownloadManager.Request request = new DownloadManager.Request(Uri.parse(file.URL));
+                file = (Ecourse.File) parent.getAdapter().getItem(position);
+                filename = file.Name != null ? file.Name : URLUtil.guessFileName(file.URL, null, null);
+
+                DownloadManager manager;
+                DownloadManager.Request request;
+
+                manager = (DownloadManager) inflater.getContext().getSystemService(Activity.DOWNLOAD_SERVICE);
+                request = new DownloadManager.Request(Uri.parse(file.URL));
                 request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-                else
-                    request.setShowRunningNotification(true);
                 request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                } else {
+                    request.setShowRunningNotification(true);
+                }
+
                 manager.enqueue(request);
             }
+
         });
 
         getData();
     }
 
-    public class LoadFileDataAsyncTask extends AsyncTaskWithErrorHanding<Void, Void, Ecourse.File[]> {
+
+
+    public class LoadFileDataAsyncTask extends AsyncTaskWithErrorHanding<Void, Void, Ecourse.FileList[]> {
 
         @Override
         protected void onPreExecute() {
@@ -89,7 +103,7 @@ public class CourseFilePage extends BasePage {
         }
 
         @Override
-        protected Ecourse.File[] _doInBackground(Void... params) throws Exception {
+        protected Ecourse.FileList[] _doInBackground(Void... params) throws Exception {
             if(course == null) throw new Exception("請重試...");
             return course.getFiles();
         }
@@ -100,7 +114,7 @@ public class CourseFilePage extends BasePage {
         }
 
         @Override
-        protected void _onPostExecute(Ecourse.File[] result){
+        protected void _onPostExecute(Ecourse.FileList[] result){
             onDataLoaded(result);
         }
     }
@@ -113,7 +127,7 @@ public class CourseFilePage extends BasePage {
         }
     }
 
-    private void onDataLoaded(Ecourse.File[] files) {
+    private void onDataLoaded(Ecourse.FileList[] files) {
         if (files == null || files.length == 0) {
             showMessage("沒有檔案");
             return;
@@ -122,14 +136,100 @@ public class CourseFilePage extends BasePage {
         _file = files;
 
         adapter.setFiles(files);
+        if(files.length == 1) {
+            list.setGroupIndicator(null);
+            list.expandGroup(0);;
+
+        }
         hideMessage();
     }
+    public class FileAdapter extends BaseExpandableListAdapter {
+        private Ecourse.FileList[] filelists;
 
-    public class FileAdapter extends BaseAdapter {
+        public void setFiles(Ecourse.FileList[] filelists){
+            this.filelists = filelists;
+            this.notifyDataSetChanged();
+        }
 
-        private Ecourse.File[] files;
+        @Override
+        public int getGroupCount() {
+            return filelists == null ? 0 : filelists.length;
+        }
 
-        public void setFiles(Ecourse.File[] files){
+        @Override
+        public int getChildrenCount(int groupPosition) {
+            return filelists[groupPosition].Files.length;
+        }
+
+        @Override
+        public Object getGroup(int groupPosition) {
+            return filelists[groupPosition];
+        }
+
+        @Override
+        public Object getChild(int groupPosition, int childPosition) {
+            return filelists[groupPosition].Files[childPosition];
+        }
+
+        @Override
+        public long getGroupId(int groupPosition) {
+            return 0;
+        }
+
+        @Override
+        public long getChildId(int groupPosition, int childPosition) {
+            return 0;
+        }
+
+        @Override
+        public boolean hasStableIds() {
+            return false;
+        }
+
+        @Override
+        public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+            Ecourse.FileList group = (Ecourse.FileList) getGroup(groupPosition);
+            View view;
+
+            if(convertView == null)
+                view = inflater.inflate(R.layout.item_file_group, null);
+            else
+                view = convertView;
+
+            ((TextView)view.findViewById(R.id.Name)).setText(group.Name);
+            if (getGroupCount() == 1)
+                view.setLayoutParams(new AbsListView.LayoutParams(1,1));
+            else
+                view.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            return view;
+        }
+
+        @Override
+        public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+            Ecourse.File file = (Ecourse.File) getChild(groupPosition, childPosition);
+            View view;
+
+            if(convertView == null)
+                view = inflater.inflate(R.layout.item_file, null);
+            else
+                view = convertView;
+
+            ((TextView)view.findViewById(R.id.Name)).setText(file.Name);
+            ((TextView)view.findViewById(R.id.Size)).setText(file.Size != null ? file.Size : "");
+
+            return view;
+        }
+
+        @Override
+        public boolean isChildSelectable(int groupPosition, int childPosition) {
+            return false;
+        }
+    }
+    /*public class FileAdapter extends BaseExpandableListAdapterAdapter {
+
+        private Ecourse.FileList[] files;
+
+        public void setFiles(Ecourse.FileList[] files){
             this.files = files;
             this.notifyDataSetChanged();
         }
@@ -164,6 +264,6 @@ public class CourseFilePage extends BasePage {
 
             return view;
         }
-    }
+    }*/
 
 }
