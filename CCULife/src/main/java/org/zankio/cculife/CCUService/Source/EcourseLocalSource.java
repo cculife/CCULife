@@ -280,7 +280,7 @@ public class EcourseLocalSource extends EcourseSource {
                 EcourseDatabaseHelper.TABLE_ECOURSE_ANNOUNCE,
                 announceColumns,
                 EcourseDatabaseHelper.ANNOUNCE_COLUMN_COURSEID + "=\"" + course.getCourseid() + "\"",
-                null, null, null, null
+                null, null, null, EcourseDatabaseHelper.ANNOUNCE_COLUMN_DATE + " DESC"
         );
 
         cursor.moveToFirst();
