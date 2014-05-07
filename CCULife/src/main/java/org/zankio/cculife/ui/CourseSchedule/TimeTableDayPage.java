@@ -164,6 +164,7 @@ public class TimeTableDayPage extends BasePage implements onDataLoadListener<Kik
             View view = inflater.inflate(R.layout.item_timetable_day, null);
             ((TextView)view.findViewById(R.id.CourseName)).setText(course.name);
             ((TextView)view.findViewById(R.id.ClassRoom)).setText(course.classroom);
+            ((TextView)view.findViewById(R.id.CourseTeacher)).setText(course.teacher);
             ((TextView)view.findViewById(R.id.CourseTime)).setText(
                     simpleDateFormat.format(course.start.getTime()) + "-" + simpleDateFormat.format(course.end.getTime())
             );

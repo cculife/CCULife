@@ -50,4 +50,26 @@
             android:paddingLeft="3dp"
             android:textColor="@color/Gray"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="/"
+        android:id="@+id/deshT"
+        android:paddingRight="3dp"
+        android:paddingLeft="3dp"
+        android:textColor="@color/Gray"
+        android:layout_toRightOf="@+id/CourseTime"
+        android:layout_alignBottom="@+id/CourseTime" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="CourseTeacher"
+        android:id="@+id/CourseTeacher"
+        android:textColor="@color/Gray"
+        android:layout_toRightOf="@+id/deshT"
+        android:layout_alignBottom="@+id/deshT" />
+
 </RelativeLayout>
