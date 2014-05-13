@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.zankio.cculife.CCUService.Ecourse;
 import org.zankio.cculife.R;
@@ -36,7 +37,7 @@ public class CourseFilePage extends BasePage {
         super(inflater);
         this.course = course;
 
-        if(_course != course) {
+        if (_course != course) {
             if (_fileTask != null) _fileTask.cancel(false);
             _fileTask = null;
             _file = null;
@@ -61,37 +62,39 @@ public class CourseFilePage extends BasePage {
 
         list = (ExpandableListView) PageView.findViewById(R.id.list);
         list.setAdapter(adapter);
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @TargetApi(Build.VERSION_CODES.GINGERBREAD)
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Ecourse.File file;
-                String filename;
+        list.setOnChildClickListener(
+                new ExpandableListView.OnChildClickListener() {
+                    @Override
+                    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
+                    public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                        Ecourse.File file;
+                        String filename;
+                        file = (Ecourse.File) parent.getExpandableListAdapter().getChild(groupPosition, childPosition);
+                        assert file != null;
+                        filename = file.Name != null ? file.Name : URLUtil.guessFileName(file.URL, null, null);
 
-                file = (Ecourse.File) parent.getAdapter().getItem(position);
-                filename = file.Name != null ? file.Name : URLUtil.guessFileName(file.URL, null, null);
+                        DownloadManager manager;
+                        DownloadManager.Request request;
 
-                DownloadManager manager;
-                DownloadManager.Request request;
+                        manager = (DownloadManager) inflater.getContext().getSystemService(Activity.DOWNLOAD_SERVICE);
+                        request = new DownloadManager.Request(Uri.parse(file.URL));
+                        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
+                        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename);
 
-                manager = (DownloadManager) inflater.getContext().getSystemService(Activity.DOWNLOAD_SERVICE);
-                request = new DownloadManager.Request(Uri.parse(file.URL));
-                request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
-                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename);
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-                } else {
-                    request.setShowRunningNotification(true);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                        } else {
+                            request.setShowRunningNotification(true);
+                        }
+                        Toast.makeText(inflater.getContext(), "下載 : " + filename, Toast.LENGTH_SHORT).show();
+                        manager.enqueue(request);
+                        return false;
+                    }
                 }
-
-                manager.enqueue(request);
-            }
-
-        });
+        );
 
         getData();
     }
-
 
 
     public class LoadFileDataAsyncTask extends AsyncTaskWithErrorHanding<Void, Void, Ecourse.FileList[]> {
@@ -104,7 +107,7 @@ public class CourseFilePage extends BasePage {
 
         @Override
         protected Ecourse.FileList[] _doInBackground(Void... params) throws Exception {
-            if(course == null) throw new Exception("請重試...");
+            if (course == null) throw new Exception("請重試...");
             return course.getFiles();
         }
 
@@ -114,13 +117,13 @@ public class CourseFilePage extends BasePage {
         }
 
         @Override
-        protected void _onPostExecute(Ecourse.FileList[] result){
+        protected void _onPostExecute(Ecourse.FileList[] result) {
             onDataLoaded(result);
         }
     }
 
     private void getData() {
-        if(_file == null) {
+        if (_file == null) {
             new LoadFileDataAsyncTask().execute();
         } else {
             onDataLoaded(_file);
@@ -136,17 +139,19 @@ public class CourseFilePage extends BasePage {
         _file = files;
 
         adapter.setFiles(files);
-        if(files.length == 1) {
+        if (files.length == 1) {
             list.setGroupIndicator(null);
-            list.expandGroup(0);;
+            list.expandGroup(0);
+            ;
 
         }
         hideMessage();
     }
+
     public class FileAdapter extends BaseExpandableListAdapter {
         private Ecourse.FileList[] filelists;
 
-        public void setFiles(Ecourse.FileList[] filelists){
+        public void setFiles(Ecourse.FileList[] filelists) {
             this.filelists = filelists;
             this.notifyDataSetChanged();
         }
@@ -191,14 +196,14 @@ public class CourseFilePage extends BasePage {
             Ecourse.FileList group = (Ecourse.FileList) getGroup(groupPosition);
             View view;
 
-            if(convertView == null)
+            if (convertView == null)
                 view = inflater.inflate(R.layout.item_file_group, null);
             else
                 view = convertView;
 
-            ((TextView)view.findViewById(R.id.Name)).setText(group.Name);
+            ((TextView) view.findViewById(R.id.Name)).setText(group.Name);
             if (getGroupCount() == 1)
-                view.setLayoutParams(new AbsListView.LayoutParams(1,1));
+                view.setLayoutParams(new AbsListView.LayoutParams(1, 1));
             else
                 view.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             return view;
@@ -209,20 +214,20 @@ public class CourseFilePage extends BasePage {
             Ecourse.File file = (Ecourse.File) getChild(groupPosition, childPosition);
             View view;
 
-            if(convertView == null)
+            if (convertView == null)
                 view = inflater.inflate(R.layout.item_file, null);
             else
                 view = convertView;
 
-            ((TextView)view.findViewById(R.id.Name)).setText(file.Name);
-            ((TextView)view.findViewById(R.id.Size)).setText(file.Size != null ? file.Size : "");
+            ((TextView) view.findViewById(R.id.Name)).setText(file.Name);
+            ((TextView) view.findViewById(R.id.Size)).setText(file.Size != null ? file.Size : "");
 
             return view;
         }
 
         @Override
         public boolean isChildSelectable(int groupPosition, int childPosition) {
-            return false;
+            return true;
         }
     }
     /*public class FileAdapter extends BaseExpandableListAdapterAdapter {
