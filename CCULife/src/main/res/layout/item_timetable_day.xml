@@ -1,75 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="CourseName"
-            android:id="@+id/CourseName"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:padding="3dp"/>
-
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="ClassRoom"
-            android:id="@+id/ClassRoom"
-            android:layout_below="@+id/CourseName"
-            android:layout_alignParentLeft="true"
-            android:paddingLeft="3dp"
-            android:paddingRight="3dp"
-            android:textColor="@color/Gray"/>
-
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="CourseTime"
-            android:id="@+id/CourseTime"
-            android:layout_below="@+id/CourseName"
-            android:layout_toRightOf="@+id/desh"
-            android:textColor="@color/Gray"/>
-
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="/"
-            android:id="@+id/desh"
-            android:layout_alignBaseline="@+id/CourseTime"
-            android:layout_alignBottom="@+id/CourseTime"
-            android:layout_toRightOf="@+id/ClassRoom"
-            android:paddingRight="3dp"
-            android:paddingLeft="3dp"
-            android:textColor="@color/Gray"/>
-
-    <TextView
+        android:id="@+id/CourseName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="/"
-        android:id="@+id/deshT"
-        android:paddingRight="3dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:padding="3dp"
+        android:text="CourseName"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/ClassInfo"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/CourseName"
+        android:ellipsize="marquee"
         android:paddingLeft="3dp"
-        android:textColor="@color/Gray"
-        android:layout_toRightOf="@+id/CourseTime"
-        android:layout_alignBottom="@+id/CourseTime" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:paddingRight="3dp"
+        android:scrollHorizontally="true"
+        android:text="ClassInfo"
+        android:singleLine="true"
+        android:marqueeRepeatLimit="1"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="CourseTeacher"
-        android:id="@+id/CourseTeacher"
-        android:textColor="@color/Gray"
-        android:layout_toRightOf="@+id/deshT"
-        android:layout_alignBottom="@+id/deshT" />
+        android:textColor="@color/Gray"/>
 
 </RelativeLayout>

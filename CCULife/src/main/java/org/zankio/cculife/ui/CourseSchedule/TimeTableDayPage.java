@@ -5,6 +5,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -27,7 +28,7 @@ public class TimeTableDayPage extends BasePage implements onDataLoadListener<Kik
     private ViewPager mViewPager;
     private TimeTableAdapter[] adapter;
     private boolean inited;
-
+    static View old = null;
     public TimeTableDayPage(LayoutInflater inflater, Kiki.TimeTable timeTable) {
         super(inflater);
         this.timeTable = timeTable;
@@ -105,7 +106,15 @@ public class TimeTableDayPage extends BasePage implements onDataLoadListener<Kik
             adapter[week] = new TimeTableAdapter(getWeekClasses(week));
             list[week] = (ListView) view.findViewById(R.id.list);
             list[week].setAdapter(adapter[week]);
+            list[week].setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    if (old != null) old.findViewById(R.id.ClassInfo).setSelected(false);
+                    view.findViewById(R.id.ClassInfo).setSelected(true);
+                    old = view;
+                }
+            });
             container.addView(view, 0);
             return view;
         }
@@ -127,7 +136,7 @@ public class TimeTableDayPage extends BasePage implements onDataLoadListener<Kik
         }
     }
 
-    public class TimeTableAdapter extends BaseAdapter {
+    public class TimeTableAdapter extends BaseAdapter implements View.OnFocusChangeListener {
 
         private ArrayList<Kiki.TimeTable.Class> classes;
 
@@ -163,13 +172,18 @@ public class TimeTableDayPage extends BasePage implements onDataLoadListener<Kik
 
             View view = inflater.inflate(R.layout.item_timetable_day, null);
             ((TextView)view.findViewById(R.id.CourseName)).setText(course.name);
-            ((TextView)view.findViewById(R.id.ClassRoom)).setText(course.classroom);
-            ((TextView)view.findViewById(R.id.CourseTeacher)).setText(course.teacher);
-            ((TextView)view.findViewById(R.id.CourseTime)).setText(
-                    simpleDateFormat.format(course.start.getTime()) + "-" + simpleDateFormat.format(course.end.getTime())
+            ((TextView)view.findViewById(R.id.ClassInfo)).setText(
+                    course.classroom
+                            + " / " + simpleDateFormat.format(course.start.getTime()) + "-" + simpleDateFormat.format(course.end.getTime())
+                            + " / " + course.teacher
             );
-
+            view.setOnFocusChangeListener(this);
             return view;
+        }
+
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            v.findViewById(R.id.ClassInfo).setSelected(hasFocus);
         }
     }
 

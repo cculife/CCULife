@@ -13,6 +13,7 @@
     <ListView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:focusable="true"
             android:id="@+id/list"
             tools:listitem="@android:layout/simple_expandable_list_item_2"/>
 </LinearLayout>
