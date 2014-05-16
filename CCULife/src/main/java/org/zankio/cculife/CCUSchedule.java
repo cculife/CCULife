@@ -20,8 +20,8 @@ public class CCUSchedule {
         this.context = context;
     }
 
-    public String[] SCHEDULE_TITLE = {"102學年度"};
-    public String[] SCHEDULE_FILE = {"102schedule"};
+    public String[] SCHEDULE_TITLE = {"102學年度", "103學年度"};
+    public String[] SCHEDULE_FILE = {"102schedule", "103schedule"};
 
     private String getScheduleRawDate(String fileName) {
         InputStream is;
@@ -48,7 +48,8 @@ public class CCUSchedule {
         List<Item> list;
         Schedule[] result = new Schedule[SCHEDULE_TITLE.length];
 
-        pattern = Pattern.compile("^(\\d{0,2})[ \t]+(\\d{0,2})[ \t]+([一二三四五六日]?)[ \t]+([^\r\n]+)", Pattern.MULTILINE);
+        pattern = Pattern.compile("^(\\d{0,4})[ \t]+(\\d{0,2})[ \t]+(\\d{0,2})[ \t]+([一二三四五六日]?)[ \t]*([^\n" +
+                "]+)", Pattern.MULTILINE);
 
         for (int i = 0; i < SCHEDULE_TITLE.length; i++) {
             result[i] = new Schedule();
@@ -61,11 +62,12 @@ public class CCUSchedule {
             while (matcher.find()) {
                 Item item = new Item();
                 if (!"".equals(matcher.group(1))) {
-                    int month = Integer.parseInt(matcher.group(1));
-                    int day = Integer.parseInt(matcher.group(2));
-                    date = new GregorianCalendar(month < 8 ? 2014 : 2013, month - 1, day);
+                    int year = Integer.parseInt(matcher.group(1));
+                    int month = Integer.parseInt(matcher.group(2));
+                    int day = Integer.parseInt(matcher.group(3));
+                    date = new GregorianCalendar(year, month - 1, day);
                 }
-                String title = matcher.group(4);
+                String title = matcher.group(5);
 
                 item.Title = title;
                 item.Date = date;
