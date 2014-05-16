@@ -31,6 +31,7 @@ public class CourseTimeTableActivity extends BaseFragmentActivity implements Act
         setContentView(R.layout.activity_course_timetable);
 
         final ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 

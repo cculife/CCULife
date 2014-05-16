@@ -33,7 +33,7 @@ public class CourseListActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_courselist);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         adapter = new CourseAdapter();
 
         ListView courselist = (ListView)findViewById(R.id.courselist);

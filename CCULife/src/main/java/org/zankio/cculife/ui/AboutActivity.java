@@ -21,6 +21,7 @@ public class AboutActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         findViewById(R.id.dbg_c).setOnClickListener(dbg_click);
         findViewById(R.id.dbg_c2).setOnClickListener(dbg_click);

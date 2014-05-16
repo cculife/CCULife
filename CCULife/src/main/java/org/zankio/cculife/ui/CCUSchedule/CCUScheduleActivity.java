@@ -31,6 +31,7 @@ public class CCUScheduleActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ccu_schedule);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         adapter = new ScheduleAdapter();
 

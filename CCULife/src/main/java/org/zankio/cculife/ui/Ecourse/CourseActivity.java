@@ -40,6 +40,7 @@ public class CourseActivity extends BaseFragmentActivity implements ActionBar.Ta
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setTitle(course.getName());
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
