@@ -125,7 +125,7 @@ public class SessionManager {
      * @return 是否已儲存
      */
     public boolean isLogined(){
-        return save ? preferences.getBoolean(KEY_ISLOGIN, false) : isLogined;
+        return save || isLogined;
     }
 
     public boolean isSave() {
