@@ -165,7 +165,7 @@ public class BaseFragmentActivity extends SherlockFragmentActivity {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(launchURL[0])));
 
             for (int i = 1; i < launchURL.length; i++) {
-                Thread.sleep(500);
+                Thread.sleep(1000);
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(launchURL[i])));
             }
 
