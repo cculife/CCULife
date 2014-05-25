@@ -14,10 +14,15 @@ import java.util.regex.Pattern;
 public class EcourseParser extends BaseParser {
 
     public Ecourse.Course[] parserCourses(Ecourse ecourse, Document document) {
-        Elements courses, fields;
+        Elements tables, courses = null, fields;
         Ecourse.Course[] result = null;
+        tables = document.select("table");
 
-        courses = document.select("tr[bgcolor=#E6FFFC], tr[bgcolor=#F0FFEE]");
+        for (Element table : tables) {
+            courses = table.select("tr[bgcolor=#E6FFFC], tr[bgcolor=#F0FFEE]");
+            if (courses.size() > 0) break;
+        }
+        if (courses == null) return null;
         result = new Ecourse.Course[courses.size()];
 
         for (int i = 0; i < courses.size(); i++) {

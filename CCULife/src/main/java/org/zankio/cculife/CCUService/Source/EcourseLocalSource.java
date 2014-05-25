@@ -109,7 +109,7 @@ public class EcourseLocalSource extends EcourseSource {
     }
 
     public Ecourse.Course[] storeCourse(Ecourse.Course[] courses) {
-        if(database == null || !database.isOpen() || database.isReadOnly()) return courses;
+        if(courses == null || database == null || !database.isOpen() || database.isReadOnly()) return courses;
 
         database.delete(EcourseDatabaseHelper.TABLE_ECOURSE, null, null);
 
@@ -180,7 +180,7 @@ public class EcourseLocalSource extends EcourseSource {
     }
 
     public Ecourse.Scores[] storeScores(Ecourse.Scores[] scores, Ecourse.Course course) {
-        if(database == null || !database.isOpen() || database.isReadOnly()) return scores;
+        if(scores == null || database == null || !database.isOpen() || database.isReadOnly()) return scores;
 
         int i = 1;
 
@@ -311,7 +311,7 @@ public class EcourseLocalSource extends EcourseSource {
     }
 
     public Ecourse.Announce[] storeAnnounce(Ecourse.Announce[] announces, Ecourse.Course course) {
-        if(database == null || !database.isOpen() || database.isReadOnly()) return announces;
+        if(announces == null || database == null || !database.isOpen() || database.isReadOnly()) return announces;
 
         database.delete(
                 EcourseDatabaseHelper.TABLE_ECOURSE_ANNOUNCE,
@@ -364,7 +364,7 @@ public class EcourseLocalSource extends EcourseSource {
     }
 
     public String storeAnnounceContent(String content, Ecourse.Announce announce) {
-        if(database == null || !database.isOpen() || database.isReadOnly()) return content;
+        if(content == null || database == null || !database.isOpen() || database.isReadOnly()) return content;
 
         ContentValues values = new ContentValues();
         values.put(EcourseDatabaseHelper.ANNOUNCE_COLUMN_CONTENT, content);
