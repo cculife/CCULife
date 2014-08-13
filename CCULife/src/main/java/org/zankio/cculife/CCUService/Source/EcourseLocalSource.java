@@ -62,7 +62,7 @@ public class EcourseLocalSource extends EcourseSource {
 
     @Override
     public void closeSource() {
-        databaseHelper.close();
+        //databaseHelper.close();
     }
 
     public void clearData() {

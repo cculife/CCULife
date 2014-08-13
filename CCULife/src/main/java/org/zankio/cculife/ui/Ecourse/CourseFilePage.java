@@ -142,7 +142,6 @@ public class CourseFilePage extends BasePage {
         if (files.length == 1) {
             list.setGroupIndicator(null);
             list.expandGroup(0);
-            ;
 
         }
         hideMessage();
