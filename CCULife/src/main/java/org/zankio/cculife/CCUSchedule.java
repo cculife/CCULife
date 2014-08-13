@@ -20,8 +20,8 @@ public class CCUSchedule {
         this.context = context;
     }
 
-    public String[] SCHEDULE_TITLE = {"102學年度", "103學年度"};
-    public String[] SCHEDULE_FILE = {"102schedule", "103schedule"};
+    public String[] SCHEDULE_TITLE = {"103學年度"};
+    public String[] SCHEDULE_FILE = {"schedule/103schedule"};
 
     private String getScheduleRawDate(String fileName) {
         InputStream is;
@@ -58,7 +58,6 @@ public class CCUSchedule {
             matcher = pattern.matcher(getScheduleRawDate(SCHEDULE_FILE[i]));
 
             list = new ArrayList<Item>();
-
             while (matcher.find()) {
                 Item item = new Item();
                 if (!"".equals(matcher.group(1))) {

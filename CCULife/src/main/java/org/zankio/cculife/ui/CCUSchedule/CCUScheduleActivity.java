@@ -17,6 +17,7 @@ import org.zankio.cculife.override.AsyncTaskWithErrorHanding;
 import org.zankio.cculife.ui.Base.BaseActivity;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -49,6 +50,7 @@ public class CCUScheduleActivity extends BaseActivity {
 
     public class LoadDataAsyncTask extends AsyncTaskWithErrorHanding<Void, Void, CCUSchedule.Schedule[]> {
 
+        private CCUSchedule schedule = null;
         @Override
         protected void onError(String msg) {
             showMessage(msg);
@@ -61,15 +63,35 @@ public class CCUScheduleActivity extends BaseActivity {
                 return;
             }
 
-            adapter.setItems(result[0].list);
+
+            int i, length = 0;
+            for (i = 0; i < result.length; i++) {
+                length += result[i].list.length;
+            }
+            CCUSchedule.Item[] list = new CCUSchedule.Item[length + result.length];
+
+            i = 0;
+            for (CCUSchedule.Schedule s : result) {
+                CCUSchedule.Item header = schedule.new Item();
+                header.Title = s.Name;
+                header.Date = s.list[0].Date;
+                list[i++] = header;
+
+                for (CCUSchedule.Item item : s.list) {
+                    list[i++] = item;
+                }
+            }
+
+            adapter.setItems(list);
             hideMessage();
 
-            scrollToNow(result[0].list);
+            scrollToNow(list);
         }
 
         @Override
         protected CCUSchedule.Schedule[] _doInBackground(Void... params) throws Exception {
-            return new CCUSchedule(CCUScheduleActivity.this).getScheduleList();
+            schedule = new CCUSchedule(CCUScheduleActivity.this);
+            return schedule.getScheduleList();
         }
     }
 
@@ -93,6 +115,7 @@ public class CCUScheduleActivity extends BaseActivity {
     public class ScheduleAdapter extends BaseAdapter {
 
         private CCUSchedule.Item[] items;
+        private
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM / dd");
         private static final String weekName = "日一二三四五六";
 
