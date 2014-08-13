@@ -34,3 +34,4 @@ local.properties
 *.ipr
 *~
 *.swp
+build/*
