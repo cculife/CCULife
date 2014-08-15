@@ -10,7 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.zankio.cculife.CCUService.Kiki;
+import org.zankio.cculife.CCUService.kiki.Kiki;
 import org.zankio.cculife.R;
 import org.zankio.cculife.ui.Base.BasePage;
 import org.zankio.cculife.ui.Base.onDataLoadListener;

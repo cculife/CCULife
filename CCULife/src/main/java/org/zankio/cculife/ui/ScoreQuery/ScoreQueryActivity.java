@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 
 import com.actionbarsherlock.view.Menu;
 
-import org.zankio.cculife.CCUService.ScoreQuery;
+import org.zankio.cculife.CCUService.kiki.ScoreQuery;
 import org.zankio.cculife.R;
 import org.zankio.cculife.override.AsyncTaskWithErrorHanding;
 import org.zankio.cculife.ui.Base.BaseFragmentActivity;
@@ -36,7 +36,7 @@ public class ScoreQueryActivity extends BaseFragmentActivity {
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         setMessageView(R.id.pager);
-        setSSOService(new org.zankio.cculife.CCUService.PortalService.ScoreQuery());
+        setSSOService(new org.zankio.cculife.CCUService.portal.service.ScoreQuery());
         new LoadGradeDataAsyncTask().execute();
     }
 

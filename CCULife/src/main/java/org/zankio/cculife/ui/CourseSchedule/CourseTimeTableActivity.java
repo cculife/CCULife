@@ -11,7 +11,7 @@ import android.widget.ArrayAdapter;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 
-import org.zankio.cculife.CCUService.Kiki;
+import org.zankio.cculife.CCUService.kiki.Kiki;
 import org.zankio.cculife.R;
 import org.zankio.cculife.override.AsyncTaskWithErrorHanding;
 import org.zankio.cculife.ui.Base.BaseFragmentActivity;

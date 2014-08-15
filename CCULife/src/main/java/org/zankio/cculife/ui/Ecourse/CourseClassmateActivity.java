@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.view.Menu;
 
-import org.zankio.cculife.CCUService.Ecourse;
+import org.zankio.cculife.CCUService.ecourse.Ecourse;
 import org.zankio.cculife.R;
 import org.zankio.cculife.override.AsyncTaskWithErrorHanding;
 import org.zankio.cculife.ui.Base.BaseActivity;

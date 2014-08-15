@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.zankio.cculife.CCUService.Kiki;
+import org.zankio.cculife.CCUService.kiki.Kiki;
 import org.zankio.cculife.R;
 import org.zankio.cculife.View.LessionView;
 import org.zankio.cculife.ui.Base.BasePage;

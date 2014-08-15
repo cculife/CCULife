@@ -16,8 +16,8 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 
-import org.zankio.cculife.CCUService.Ecourse;
-import org.zankio.cculife.CCUService.Kiki;
+import org.zankio.cculife.CCUService.ecourse.Ecourse;
+import org.zankio.cculife.CCUService.kiki.Kiki;
 import org.zankio.cculife.Debug;
 import org.zankio.cculife.R;
 import org.zankio.cculife.override.AsyncTaskWithErrorHanding;
@@ -56,7 +56,7 @@ public class CourseListActivity extends BaseActivity {
         });
 
         setMessageView(R.id.courselist);
-        setSSOService(new org.zankio.cculife.CCUService.PortalService.Ecourse());
+        setSSOService(new org.zankio.cculife.CCUService.portal.service.Ecourse());
 
         if(ecourse != null) {
             ecourse.openSource();

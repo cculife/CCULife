@@ -11,8 +11,8 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 
-import org.zankio.cculife.CCUService.Portal;
-import org.zankio.cculife.CCUService.PortalService.BasePortal;
+import org.zankio.cculife.CCUService.portal.Portal;
+import org.zankio.cculife.CCUService.portal.service.BasePortal;
 import org.zankio.cculife.R;
 import org.zankio.cculife.override.AsyncTaskWithErrorHanding;
 import org.zankio.cculife.ui.SettingsActivity;

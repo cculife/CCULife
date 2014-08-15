@@ -14,7 +14,7 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
-import org.zankio.cculife.CCUService.Ecourse;
+import org.zankio.cculife.CCUService.ecourse.Ecourse;
 import org.zankio.cculife.R;
 import org.zankio.cculife.ui.Base.BaseFragmentActivity;
 
@@ -61,7 +61,7 @@ public class CourseActivity extends BaseFragmentActivity implements ActionBar.Ta
                             .setTabListener(this));
         }
 
-        setSSOService(new org.zankio.cculife.CCUService.PortalService.Ecourse().setCourseID(course.getCourseid()));
+        setSSOService(new org.zankio.cculife.CCUService.portal.service.Ecourse().setCourseID(course.getCourseid()));
     }
 
     @Override
