@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Question1"
+            android:id="@+id/Title"
+            android:layout_gravity="center"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+        android:paddingTop="10dp"
+        android:layout_marginLeft="10dip" />
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="15%"
+            android:id="@+id/Score"
+            android:layout_gravity="center"
+            android:layout_below="@+id/Title"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:textColor="@color/Gray"
+        android:paddingBottom="10dp"
+        android:layout_marginLeft="10dip" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2014-03-04"
+        android:id="@+id/Deadline"
+        android:layout_gravity="center"
+        android:textColor="@color/Gray"
+        android:paddingBottom="10dp"
+        android:layout_below="@+id/Title"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="5dip" />
+</RelativeLayout>

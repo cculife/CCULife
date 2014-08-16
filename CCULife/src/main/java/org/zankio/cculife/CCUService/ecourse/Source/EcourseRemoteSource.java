@@ -90,7 +90,7 @@ public class EcourseRemoteSource extends EcourseSource {
     }
 
     public boolean needSwitchCourse(Ecourse.Course course) {
-        return currentCourse == null || (course != null && course.getCourseid() != null && !course.getCourseid().equals(currentCourse.getCourseid()));
+        return currentCourse == null || (course != null && course.courseid != null && !course.courseid.equals(currentCourse.courseid));
     }
 
     @Override
@@ -99,7 +99,7 @@ public class EcourseRemoteSource extends EcourseSource {
 
         Connection connection;
         try {
-            connection = Jsoup.connect(String.format(Url.COURSE_SELECT, course.getCourseid()));
+            connection = Jsoup.connect(String.format(Url.COURSE_SELECT, course.courseid));
             connectionHelper.init(connection).get();
             currentCourse = course;
         } catch (IOException e) {
@@ -143,14 +143,14 @@ public class EcourseRemoteSource extends EcourseSource {
 
             for (int i = 0; i < courses.length; i++) {
                 result[i] = ecourse.new Course(ecourse);
-                result[i].setCourseid(courses[i].getEcourseID());
-                result[i].setName(courses[i].Name);
-                result[i].setId("");
-                result[i].setTeacher(courses[i].Teacher);
-                result[i].setNotice(0);
-                result[i].setHomework(0);
-                result[i].setExam(0);
-                result[i].setWarning(false);
+                result[i].courseid = courses[i].getEcourseID();
+                result[i].name = courses[i].Name;
+                result[i].id = "";
+                result[i].teacher = courses[i].Teacher;
+                result[i].notice = 0;
+                result[i].homework = 0;
+                result[i].exam = 0;
+                result[i].warning = false;
             }
 
         } catch (IOException e) {
@@ -159,6 +159,33 @@ public class EcourseRemoteSource extends EcourseSource {
         }
 
         return result;
+    }
+
+    @Override
+    public void getHomeworkContent(Homework homework) throws Exception {
+        Connection connection;
+
+        connection = connectionHelper.create(String.format(Url.COURSE_HOMEWORK_CONTENT, homework.id));
+        connection.method(Connection.Method.GET);
+        connection.followRedirects(false);
+
+        try {
+            connection.execute();
+            String location = connection.response().header("location");
+
+            if (location != null) {
+                if (!location.startsWith("http")) {
+                    homework.contentUrl = "http://ecourse.elearning.ccu.edu.tw/php/Testing_Assessment/" + location;
+                } else {
+                    homework.contentUrl = location;
+                }
+            } else {
+                parser.parserHomeworkContent(connection.response().parse(), homework);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw Exceptions.getNetworkException(e);
+        }
     }
 
     public Ecourse.Scores[] getScore(Ecourse.Course course) throws Exception {
@@ -232,6 +259,22 @@ public class EcourseRemoteSource extends EcourseSource {
 
         return result.toArray(new Ecourse.FileList[result.size()]);
 
+    }
+
+    @Override
+    public Homework[] getHomework(Ecourse.Course course) throws Exception {
+        checkAuth();
+
+        Homework[] result;
+        Connection connection = connectionHelper.create(Url.COURSE_HOMEWORK);
+
+        try {
+            result = parser.parseHomework(connection.get(), ecourse, course);
+
+            return result;
+        } catch (IOException e) {
+            throw Exceptions.getNetworkException(e);
+        }
     }
 
     private void getFileList(ArrayList<Ecourse.FileList> filelist) throws Exception {

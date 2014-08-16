@@ -12,4 +12,5 @@ public class Url {
     public static final String COURSE_FILELISTFILES = "http://ecourse.elearning.ccu.edu.tw/php/textbook/%s";
     public static final String COURSE_ANNOUNCE_CONTENT = "http://ecourse.elearning.ccu.edu.tw/php/news/%s";
     public static final String COURSE_HOMEWORK = "http://ecourse.elearning.ccu.edu.tw/php/Testing_Assessment/show_allwork.php";
+    public static final String COURSE_HOMEWORK_CONTENT = "http://ecourse.elearning.ccu.edu.tw/php/Testing_Assessment/show_allwork.php?work_id=%d&action=showwork";
 }

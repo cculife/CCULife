@@ -157,11 +157,11 @@ public class CourseListActivity extends BaseActivity {
             }
 
             Ecourse.Course course = courses[position];
-            ((TextView) (view.findViewById(R.id.course_name))).setText(course.getName() + "");
+            ((TextView) (view.findViewById(R.id.course_name))).setText(course.name + "");
 
-            ((TextView)view.findViewById(R.id.unread)).setText(course.getNotice() + course.getHomework() + course.getExam() + "");
+            ((TextView)view.findViewById(R.id.unread)).setText(course.notice + course.homework + course.exam + "");
             if (!preferences.getBoolean("ignore_ecourse_warnning", false)) {
-                view.findViewById(R.id.warring).setBackgroundColor( course.isWarning() ? getResources().getColor(R.color.Red_Course_Warring) : 0);
+                view.findViewById(R.id.warring).setBackgroundColor( course.warning ? getResources().getColor(R.color.Red_Course_Warring) : 0);
             }
             return view;
         }

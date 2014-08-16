@@ -22,6 +22,13 @@ import java.util.Locale;
 
 public class CourseActivity extends BaseFragmentActivity implements ActionBar.TabListener {
 
+    private static Page[] pages = {
+        new Page(R.string.title_announce, R.layout.fragment_course_announce),
+        new Page(R.string.title_score, R.layout.fragment_course_score),
+        new Page(R.string.title_file, R.layout.fragment_course_file),
+        new Page(R.string.title_homework, R.layout.fragment_course_homework)
+    };
+
     //ToDo Don't reload on rotation.
     SectionsPagerAdapter mSectionsPagerAdapter;
     protected Ecourse.Course course;
@@ -39,7 +46,7 @@ public class CourseActivity extends BaseFragmentActivity implements ActionBar.Ta
 
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        actionBar.setTitle(course.getName());
+        actionBar.setTitle(course.name);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -61,7 +68,7 @@ public class CourseActivity extends BaseFragmentActivity implements ActionBar.Ta
                             .setTabListener(this));
         }
 
-        setSSOService(new org.zankio.cculife.CCUService.portal.service.Ecourse().setCourseID(course.getCourseid()));
+        setSSOService(new org.zankio.cculife.CCUService.portal.service.Ecourse().setCourseID(course.courseid));
     }
 
     @Override
@@ -123,32 +130,25 @@ public class CourseActivity extends BaseFragmentActivity implements ActionBar.Ta
 
             Fragment fragment = new DummySectionFragment();
             Bundle args = new Bundle();
-            if(position == 0)
-                args.putInt(DummySectionFragment.ARG_PAGE_VIEW, R.layout.fragment_course_announce);
-            else if(position == 1)
-                args.putInt(DummySectionFragment.ARG_PAGE_VIEW, R.layout.fragment_course_score);
-            else if(position == 2)
-                args.putInt(DummySectionFragment.ARG_PAGE_VIEW, R.layout.fragment_course_file);
+
+            if (position < pages.length)
+                args.putInt(DummySectionFragment.ARG_PAGE_VIEW, pages[position].layout);
+
             fragment.setArguments(args);
             return fragment;
         }
 
         @Override
         public int getCount() {
-            return 3;
+            return pages.length;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
             Locale l = Locale.getDefault();
-            switch (position) {
-                case 0:
-                    return getString(R.string.title_announce).toUpperCase(l);
-                case 1:
-                    return getString(R.string.title_score).toUpperCase(l);
-                case 2:
-                    return getString(R.string.title_file).toUpperCase(l);
-            }
+            if (position < pages.length)
+                return getString(pages[position].title).toUpperCase(l);
+
             return null;
         }
     }
@@ -176,8 +176,19 @@ public class CourseActivity extends BaseFragmentActivity implements ActionBar.Ta
                     return new CourseScorePage(inflater, course).getView();
                 case R.layout.fragment_course_file:
                     return new CourseFilePage(inflater, course).getView();
+                case R.layout.fragment_course_homework:
+                    return new CourseHomewrokPage(inflater, course).getView();
             }
             return inflater.inflate(layout, null);
+        }
+    }
+
+    public static class Page {
+        public int layout;
+        public int title;
+        public Page (int title, int layout) {
+            this.title = title;
+            this.layout = layout;
         }
     }
 

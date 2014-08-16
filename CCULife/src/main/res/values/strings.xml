@@ -32,5 +32,6 @@
     <string name="title_activity_course_classmate">修課同學</string>
     <string name="action_classmatelist">修課同學</string>
     <string name="pref_header_custom">自訂</string>
+    <string name="title_homework">作業</string>
 
 </resources>

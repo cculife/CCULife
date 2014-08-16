@@ -5,6 +5,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.zankio.cculife.CCUService.base.parser.BaseParser;
 import org.zankio.cculife.CCUService.ecourse.Ecourse;
+import org.zankio.cculife.CCUService.ecourse.model.Homework;
+import org.zankio.cculife.override.Exceptions;
 
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -13,6 +15,22 @@ import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 public class EcourseParser extends BaseParser {
+
+    public Elements parseRow(Elements elements) {
+        return elements.select("tr[bgcolor=#E6FFFC], tr[bgcolor=#F0FFEE]");
+    }
+
+    public Elements parseRow(Element elements) {
+        return elements.select("tr[bgcolor=#E6FFFC], tr[bgcolor=#F0FFEE]");
+    }
+
+    public Elements parseField(Element elements) {
+        return elements.select("td");
+    }
+
+    public Elements parseField(Elements elements) {
+        return elements.select("td");
+    }
 
     public Ecourse.Course[] parserCourses(Ecourse ecourse, Document document) {
         Elements tables, courses = null, fields;
@@ -30,14 +48,14 @@ public class EcourseParser extends BaseParser {
             fields = courses.get(i).getElementsByTag("td");
             result[i] = ecourse.new Course(ecourse);
 
-            result[i].setCourseid(fields.get(3).child(0).child(0).attr("href").replace("../login_s.php?courseid=", ""));
-            result[i].setId(fields.get(2).text());
-            result[i].setName(fields.get(3).text());
-            result[i].setTeacher(fields.get(4).text());
-            result[i].setNotice(Integer.parseInt(fields.get(5).text()));
-            result[i].setHomework(Integer.parseInt(fields.get(6).text()));
-            result[i].setExam(Integer.parseInt(fields.get(7).text()));
-            result[i].setWarning(!fields.get(9).text().equals("--"));
+            result[i].courseid = fields.get(3).child(0).child(0).attr("href").replace("../login_s.php?courseid=", "");
+            result[i].id = fields.get(2).text();
+            result[i].name = fields.get(3).text();
+            result[i].teacher = fields.get(4).text();
+            result[i].notice = Integer.parseInt(fields.get(5).text());
+            result[i].homework = Integer.parseInt(fields.get(6).text());
+            result[i].exam = Integer.parseInt(fields.get(7).text());
+            result[i].warning = !fields.get(9).text().equals("--");
 
         }
 
@@ -134,7 +152,7 @@ public class EcourseParser extends BaseParser {
         announces = document.select("tr[bgcolor=#E6FFFC], tr[bgcolor=#F0FFEE]");
         result = new Ecourse.Announce[announces.size()];
 
-        for(int i = 0; i < announces.size(); i++) {
+        for(int i = 0; i < result.length; i++) {
             fields = announces.get(i).select("td");
 
             result[i] = ecourse.new Announce(ecourse, course);
@@ -144,6 +162,25 @@ public class EcourseParser extends BaseParser {
             result[i].browseCount = Integer.parseInt(fields.get(3).text());
             result[i].isnew = fields.get(2).select("img").size() > 0;
             result[i].url = fields.get(2).child(0).child(0).child(0).attr("onclick").split("'")[1].replace("./", "");
+        }
+
+        return result;
+    }
+
+    public Homework[] parseHomework(Document document, Ecourse ecourse, Ecourse.Course course) {
+        Elements row, field;
+        Homework[] result;
+
+        row = parseRow(document);
+        result = new Homework[row.size()];
+
+        for (int i = 0; i < result.length; ++i) {
+            field = parseField(row.get(i));
+            result[i] = new Homework(ecourse, course);
+            result[i].id = Integer.valueOf(field.get(5).child(1).val());
+            result[i].title = field.get(1).text();
+            result[i].deadline = field.get(3).text();
+            result[i].score = field.get(4).text();
         }
 
         return result;
@@ -227,5 +264,14 @@ public class EcourseParser extends BaseParser {
         else
             throw new Exception("讀取資料錯誤");
 
+    }
+
+    public void parserHomeworkContent(Document document, Homework homework) throws Exception {
+        Elements content;
+
+        content = document.select("pre");
+        if (content.size() == 0) throw new Exception("讀取作業題目錯誤");
+
+        homework.content = content.html();
     }
 }

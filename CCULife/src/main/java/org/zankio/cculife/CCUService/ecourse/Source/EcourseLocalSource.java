@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import org.zankio.cculife.CCUService.ecourse.Ecourse;
 import org.zankio.cculife.CCUService.ecourse.database.EcourseDatabaseHelper;
+import org.zankio.cculife.CCUService.ecourse.model.Homework;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,13 +99,13 @@ public class EcourseLocalSource extends EcourseSource {
 
     private Ecourse.Course cursorToCourse(Cursor cursor) {
         Ecourse.Course course = ecourse.new Course(ecourse);
-        course.setCourseid(cursor.getString(0));
-        course.setName(cursor.getString(1));
-        course.setTeacher(cursor.getString(2));
-        course.setHomework(cursor.getInt(3));
-        course.setNotice(cursor.getInt(4));
-        course.setExam(cursor.getInt(5));
-        course.setWarning(cursor.getInt(6) == 1);
+        course.courseid = cursor.getString(0);
+        course.name = cursor.getString(1);
+        course.teacher = cursor.getString(2);
+        course.homework = cursor.getInt(3);
+        course.notice = cursor.getInt(4);
+        course.exam = cursor.getInt(5);
+        course.warning = cursor.getInt(6) == 1;
         return course;
     }
 
@@ -116,13 +117,13 @@ public class EcourseLocalSource extends EcourseSource {
         ContentValues values = new ContentValues();
         for(Ecourse.Course course : courses) {
             values.clear();
-            values.put(EcourseDatabaseHelper.LIST_COLUMN_COURSEID, course.getCourseid());
-            values.put(EcourseDatabaseHelper.LIST_COLUMN_NAME, course.getName());
-            values.put(EcourseDatabaseHelper.LIST_COLUMN_TEACHER, course.getTeacher());
-            values.put(EcourseDatabaseHelper.LIST_COLUMN_HOMEWORK, course.getHomework());
-            values.put(EcourseDatabaseHelper.LIST_COLUMN_NOTICE, course.getNotice());
-            values.put(EcourseDatabaseHelper.LIST_COLUMN_EXAM, course.getExam());
-            values.put(EcourseDatabaseHelper.LIST_COLUMN_WARNING, course.isWarning() ? 1 : 0);
+            values.put(EcourseDatabaseHelper.LIST_COLUMN_COURSEID, course.courseid);
+            values.put(EcourseDatabaseHelper.LIST_COLUMN_NAME, course.name);
+            values.put(EcourseDatabaseHelper.LIST_COLUMN_TEACHER, course.teacher);
+            values.put(EcourseDatabaseHelper.LIST_COLUMN_HOMEWORK, course.homework);
+            values.put(EcourseDatabaseHelper.LIST_COLUMN_NOTICE, course.notice);
+            values.put(EcourseDatabaseHelper.LIST_COLUMN_EXAM, course.exam);
+            values.put(EcourseDatabaseHelper.LIST_COLUMN_WARNING, course.warning ? 1 : 0);
             database.insert(EcourseDatabaseHelper.TABLE_ECOURSE, null, values);
         }
 
@@ -142,7 +143,7 @@ public class EcourseLocalSource extends EcourseSource {
                 EcourseDatabaseHelper.TABLE_ECOURSE_SCORE,
                 scoreColumns,
                 EcourseDatabaseHelper.SCORE_COLUMN_HEADER + "<0 AND " +
-                        EcourseDatabaseHelper.SCORE_COLUMN_COURSEID + "=\"" + course.getCourseid() + "\"",
+                        EcourseDatabaseHelper.SCORE_COLUMN_COURSEID + "=\"" + course.courseid + "\"",
                 null, null, null, null
         );
 
@@ -154,7 +155,7 @@ public class EcourseLocalSource extends EcourseSource {
                     EcourseDatabaseHelper.TABLE_ECOURSE_SCORE,
                     scoreColumns,
                     EcourseDatabaseHelper.SCORE_COLUMN_HEADER + "=" + (-cursorHeader.getInt(4)) + " AND " +
-                            EcourseDatabaseHelper.SCORE_COLUMN_COURSEID + "=\"" + course.getCourseid() + "\"",
+                            EcourseDatabaseHelper.SCORE_COLUMN_COURSEID + "=\"" + course.courseid + "\"",
                     null, null, null, null
             );
 
@@ -186,7 +187,7 @@ public class EcourseLocalSource extends EcourseSource {
 
         database.delete(
                 EcourseDatabaseHelper.TABLE_ECOURSE_SCORE,
-                EcourseDatabaseHelper.SCORE_COLUMN_COURSEID + "=\"" + course.getCourseid() + "\"",
+                EcourseDatabaseHelper.SCORE_COLUMN_COURSEID + "=\"" + course.courseid + "\"",
                 null
         );
 
@@ -196,7 +197,7 @@ public class EcourseLocalSource extends EcourseSource {
             values.put(EcourseDatabaseHelper.SCORE_COLUMN_NAME, scoreHeader.Name);
             values.put(EcourseDatabaseHelper.SCORE_COLUMN_SCORE, scoreHeader.Score);
             values.put(EcourseDatabaseHelper.SCORE_COLUMN_RANK, scoreHeader.Rank);
-            values.put(EcourseDatabaseHelper.SCORE_COLUMN_COURSEID, course.getCourseid());
+            values.put(EcourseDatabaseHelper.SCORE_COLUMN_COURSEID, course.courseid);
             values.put(EcourseDatabaseHelper.SCORE_COLUMN_HEADER, -i);
             database.insert(EcourseDatabaseHelper.TABLE_ECOURSE_SCORE, null, values);
 
@@ -207,7 +208,7 @@ public class EcourseLocalSource extends EcourseSource {
                     values.put(EcourseDatabaseHelper.SCORE_COLUMN_SCORE, score.Score);
                     values.put(EcourseDatabaseHelper.SCORE_COLUMN_RANK, score.Rank);
                     values.put(EcourseDatabaseHelper.SCORE_COLUMN_PERCENT, score.Rank);
-                    values.put(EcourseDatabaseHelper.SCORE_COLUMN_COURSEID, course.getCourseid());
+                    values.put(EcourseDatabaseHelper.SCORE_COLUMN_COURSEID, course.courseid);
                     values.put(EcourseDatabaseHelper.SCORE_COLUMN_HEADER, i);
                     database.insert(EcourseDatabaseHelper.TABLE_ECOURSE_SCORE, null, values);
                 }
@@ -279,7 +280,7 @@ public class EcourseLocalSource extends EcourseSource {
         Cursor cursor = database.query(
                 EcourseDatabaseHelper.TABLE_ECOURSE_ANNOUNCE,
                 announceColumns,
-                EcourseDatabaseHelper.ANNOUNCE_COLUMN_COURSEID + "=\"" + course.getCourseid() + "\"",
+                EcourseDatabaseHelper.ANNOUNCE_COLUMN_COURSEID + "=\"" + course.courseid + "\"",
                 null, null, null, EcourseDatabaseHelper.ANNOUNCE_COLUMN_DATE + " DESC"
         );
 
@@ -297,7 +298,7 @@ public class EcourseLocalSource extends EcourseSource {
 
     private Ecourse.Announce cursorToAnnounce(Cursor cursor) {
         Ecourse.Course course = ecourse.new Course(ecourse);
-        course.setCourseid(cursor.getString(0));
+        course.courseid = cursor.getString(0);
 
         Ecourse.Announce announce = ecourse.new Announce(ecourse, course);
         announce.Title = cursor.getString(1);
@@ -315,7 +316,7 @@ public class EcourseLocalSource extends EcourseSource {
 
         database.delete(
                 EcourseDatabaseHelper.TABLE_ECOURSE_ANNOUNCE,
-                EcourseDatabaseHelper.ANNOUNCE_COLUMN_COURSEID + "=\"" + course.getCourseid() + "\"" +
+                EcourseDatabaseHelper.ANNOUNCE_COLUMN_COURSEID + "=\"" + course.courseid + "\"" +
                         " AND " + EcourseDatabaseHelper.ANNOUNCE_COLUMN_CONTENT + " IS NULL OR " +
                         "trim(" + EcourseDatabaseHelper.ANNOUNCE_COLUMN_CONTENT + ") = \"\"",
                 null
@@ -328,7 +329,7 @@ public class EcourseLocalSource extends EcourseSource {
             values.clear();
             values.put(EcourseDatabaseHelper.ANNOUNCE_COLUMN_TITLE, announce.Title);
             values.put(EcourseDatabaseHelper.ANNOUNCE_COLUMN_BROWSECOUNT, announce.browseCount);
-            values.put(EcourseDatabaseHelper.ANNOUNCE_COLUMN_COURSEID, course.getCourseid());
+            values.put(EcourseDatabaseHelper.ANNOUNCE_COLUMN_COURSEID, course.courseid);
             values.put(EcourseDatabaseHelper.ANNOUNCE_COLUMN_DATE, announce.Date);
             values.put(EcourseDatabaseHelper.ANNOUNCE_COLUMN_IMPORTANT, announce.important);
             values.put(EcourseDatabaseHelper.ANNOUNCE_COLUMN_NEW, announce.isnew ? 1 : 0);
@@ -338,14 +339,14 @@ public class EcourseLocalSource extends EcourseSource {
             cursor = database.query(
                     EcourseDatabaseHelper.TABLE_ECOURSE_ANNOUNCE,
                     new String[]{ EcourseDatabaseHelper.ANNOUNCE_COLUMN_URL },
-                    EcourseDatabaseHelper.ANNOUNCE_COLUMN_COURSEID + "=\"" + course.getCourseid() + "\" AND " +
+                    EcourseDatabaseHelper.ANNOUNCE_COLUMN_COURSEID + "=\"" + course.courseid + "\" AND " +
                             EcourseDatabaseHelper.ANNOUNCE_COLUMN_URL + "=" + DatabaseUtils.sqlEscapeString(removeUrlPHPSESSID(announce.url)) + "",
                     null, null, null, null
             );
 
             if(cursor.getCount() > 0) {
                 database.update(EcourseDatabaseHelper.TABLE_ECOURSE_ANNOUNCE, values,
-                        EcourseDatabaseHelper.ANNOUNCE_COLUMN_COURSEID + "=\"" + course.getCourseid() + "\" AND " +
+                        EcourseDatabaseHelper.ANNOUNCE_COLUMN_COURSEID + "=\"" + course.courseid + "\" AND " +
                                 EcourseDatabaseHelper.ANNOUNCE_COLUMN_URL + "=" + DatabaseUtils.sqlEscapeString(removeUrlPHPSESSID(announce.url)) + "", null);
             } else {
                 database.insert(EcourseDatabaseHelper.TABLE_ECOURSE_ANNOUNCE, null, values);
@@ -393,6 +394,16 @@ public class EcourseLocalSource extends EcourseSource {
     public Ecourse.FileList[] getFiles(Ecourse.Course course) throws Exception {
         throw new Exception("未支援離線資料");
         //return new Ecourse.File[0];
+    }
+
+    @Override
+    public Homework[] getHomework(Ecourse.Course course) throws Exception {
+        throw new Exception("未支援離線資料");
+    }
+
+    @Override
+    public void getHomeworkContent(Homework homework) throws Exception {
+        throw new Exception("未支援離線資料");
     }
 
 

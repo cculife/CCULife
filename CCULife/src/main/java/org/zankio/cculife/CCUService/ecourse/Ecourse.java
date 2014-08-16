@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import org.zankio.cculife.CCUService.ecourse.model.Homework;
 import org.zankio.cculife.CCUService.kiki.Kiki;
 import org.zankio.cculife.CCUService.ecourse.parser.EcourseParser;
 import org.zankio.cculife.CCUService.ecourse.source.EcourseLocalSource;
@@ -106,32 +107,33 @@ public class Ecourse {
 
 
     public class Course {
-        private String courseid;
-        private String id;
-        private String name;
-        private String teacher;
-        private int notice;
-        private int homework;
-        private int exam;
-        private boolean warning;
+        public String courseid;
+        public String id;
+        public String name;
+        public String teacher;
+        public int notice;
+        public int homework;
+        public int exam;
+        public boolean warning;
         private FileList[] files;
         private Announce[] announces;
         private Scores[] scores;
         private Ecourse ecourse;
+        private Homework[] homeworks;
 
         public Course(Ecourse content) {
             this.setEcourse(content);
         }
 
         public Course(String courseid, String id, String name, String teacher, int notice, int homework, int exam, String warning){
-            this.setCourseid(courseid);
-            this.setId(id);
-            this.setName(name);
-            this.setTeacher(teacher);
-            this.setNotice(notice);
-            this.setHomework(homework);
-            this.setExam(exam);
-            this.setWarning(!warning.equals("--"));
+            this.courseid = courseid;
+            this.id = id;
+            this.name = name;
+            this.teacher = teacher;
+            this.notice = notice;
+            this.exam = exam;
+            this.warning = !warning.equals("--");
+            this.homework = homework;
         }
 
 
@@ -226,68 +228,17 @@ public class Ecourse {
             return this.files;
         }
 
-        public String getCourseid() {
-            return courseid;
-        }
+        public Homework[] getHomework() throws Exception {
+            if (this.homeworks != null) return this.homeworks;
+            Ecourse eco = getEcourse();
+            EcourseSource ecourseSource;
+            ecourseSource = eco.getSource();
 
-        public void setCourseid(String courseid) {
-            this.courseid = courseid;
-        }
+            eco.switchCourse(this);
 
-        public String getId() {
-            return id;
-        }
+            this.homeworks = ecourseSource.getHomework(this);
 
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getTeacher() {
-            return teacher;
-        }
-
-        public void setTeacher(String teacher) {
-            this.teacher = teacher;
-        }
-
-        public int getNotice() {
-            return notice;
-        }
-
-        public void setNotice(int notice) {
-            this.notice = notice;
-        }
-
-        public int getHomework() {
-            return homework;
-        }
-
-        public void setHomework(int homework) {
-            this.homework = homework;
-        }
-
-        public int getExam() {
-            return exam;
-        }
-
-        public void setExam(int exam) {
-            this.exam = exam;
-        }
-
-        public boolean isWarning() {
-            return warning;
-        }
-
-        public void setWarning(boolean warning) {
-            this.warning = warning;
+            return this.homeworks;
         }
 
         public Ecourse getEcourse() {
@@ -296,18 +247,6 @@ public class Ecourse {
 
         public void setEcourse(Ecourse ecourse) {
             this.ecourse = ecourse;
-        }
-
-        public void setFiles(FileList[] files) {
-            this.files = files;
-        }
-
-        public void setAnnounces(Announce[] announces) {
-            this.announces = announces;
-        }
-
-        public Scores[] getScores() {
-            return scores;
         }
 
     }
@@ -337,7 +276,7 @@ public class Ecourse {
         public Announce(Ecourse ecourse, Course course) {this.ecourse = ecourse; this.course = course;}
 
         public String getCourseID() {
-            return this.course.getCourseid();
+            return this.course.courseid;
         }
 
         public String getContent() {
