@@ -5,6 +5,7 @@ import org.jsoup.select.Elements;
 import org.zankio.cculife.CCUService.kiki.Kiki;
 import org.zankio.cculife.CCUService.base.parser.BaseParser;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -113,7 +114,7 @@ public class KikiParser extends BaseParser {
                 四12,13,14
                 五C,D
             */
-            int k = 0;
+            int k = 0, m;
             int processingTime = -1;
 
             //先去掉空白
@@ -125,6 +126,25 @@ public class KikiParser extends BaseParser {
 
                 //把每節課分開
                 timelist = daylist[j].split(",");
+
+                //sort for time
+                // 一10,7,8,9
+                for (m = 0; m < timelist.length; m++) {
+                    if (timelist[m].length() <= 1) {
+                        break;
+                    }
+                }
+                if (m != 0) {
+                    String[] tmp;
+                    tmp = new String[timelist.length];
+                    int idx = 0;
+                    for (; m < timelist.length; m++) {
+                        tmp[idx++] = timelist[m];
+                    }
+                    for (m = 0; idx < timelist.length; idx++, m++) {
+                        tmp[idx] = timelist[m];
+                    }
+                }
 
                 for (; k < classTime.length(); k++) {
                     //依序找到星期幾
