@@ -66,7 +66,7 @@ public class KikiRemoteSource extends KikiSource {
                     {
                         throw new LoginErrorException("帳號或密碼錯誤");
                     } else {
-                        throw new LoginErrorException("未知錯誤");
+                        throw new LoginErrorException("未知錯誤 : " + error);
                     }
                 }
                 throw new LoginErrorException("未知錯誤");

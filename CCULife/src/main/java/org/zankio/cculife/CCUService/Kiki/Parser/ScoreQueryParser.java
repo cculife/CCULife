@@ -10,15 +10,15 @@ import org.zankio.cculife.CCUService.base.parser.BaseParser;
 public class ScoreQueryParser extends BaseParser {
 
     public String parserError(Document document) {
-        String message = null;
+        StringBuilder message = new StringBuilder();
         Elements textNode;
 
         textNode = document.select("font");
-        if (textNode.size() < 2) {
-            message = textNode.get(2).text();
+        for (int i = 0; i < textNode.size(); i++) {
+            message.append(textNode.get(i).text());
         }
 
-        return message;
+        return message.toString();
     }
 
     public ScoreQuery.Grade[] parserGrade(Document document) {
