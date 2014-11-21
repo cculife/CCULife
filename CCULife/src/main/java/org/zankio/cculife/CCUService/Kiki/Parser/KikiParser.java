@@ -144,6 +144,9 @@ public class KikiParser extends BaseParser {
                     for (m = 0; idx < timelist.length; idx++, m++) {
                         tmp[idx] = timelist[m];
                     }
+					for (idx = 0; idx < timelist.length; idx++) {
+						timelist[idx] = tmp[idx];
+					}
                 }
 
                 for (; k < classTime.length(); k++) {
