@@ -2,13 +2,13 @@ package org.zankio.cculife.CCUService.portal.service;
 
 public class Ecourse extends BasePortal {
 
-    public static final String LOGIN_COURSE_URL = "http://ecourse.elearning.ccu.edu.tw/php/login_s.php?courseid=%s";
+    public static final String LOGIN_COURSE_URL = "http://ecourse.ccu.edu.tw/php/login_s.php?courseid=%s";
     protected String CourseID;
 
     {
         CourseID = null;
         PORTAL_ID = "0000";
-        PORTAL_URL = "http://ecourse.elearning.ccu.edu.tw/php/getssoCcuRight.php";
+        PORTAL_URL = "http://ecourse.ccu.edu.tw/php/getssoCcuRight.php";
     }
 
     public Ecourse setCourseID(String ID) {

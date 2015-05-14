@@ -23,7 +23,7 @@ public class Portal extends BaseService {
     private static final String SSO_URL_BASE = "http://portal.ccu.edu.tw/ssoService.php?service=%s&linkId=%s";
     public static final String SSO_ECOURSE = "0000";
     public static final String SSO_SCORE = "0007";
-    private static final String SSO_ECOURSE_URL = "http://ecourse.elearning.ccu.edu.tw/php/getssoCcuRight.php";
+    private static final String SSO_ECOURSE_URL = "http://ecourse.ccu.edu.tw/php/getssoCcuRight.php";
     private static final String SSO_SCORE_URL = "http://140.123.30.106/~ccmisp06/cgi-bin/library/SSO/Query_grade/getssoCcuRight.php";
     private static final String ERROR_WRONG_USERPASS = "錯誤代碼：LOGIN_001\\n帳號或密碼錯誤,請重新登錄！";
     private static final String ERROR_AUTOLOGOUT = "錯誤代碼：GLOBAL_001\\n您沒有權限，或是系統已自動登出，請重新登入！";

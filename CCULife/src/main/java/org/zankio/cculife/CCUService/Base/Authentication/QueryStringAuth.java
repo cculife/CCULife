@@ -1,5 +1,6 @@
 package org.zankio.cculife.CCUService.base.authentication;
 
+import android.annotation.TargetApi;
 import android.net.Uri;
 import android.os.Build;
 
@@ -30,6 +31,7 @@ public class QueryStringAuth implements IAuth<Connection>{
     }
 
     @Override
+    @TargetApi(11)
     public Connection Auth(Connection connection) {
         HashMap<String, String> queryString;
         Uri uri;
@@ -65,6 +67,7 @@ public class QueryStringAuth implements IAuth<Connection>{
         return connection;
     }
 
+    @TargetApi(11)
     private Set<String> getQueryParameterNames(Uri uri) {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             return uri.getQueryParameterNames();

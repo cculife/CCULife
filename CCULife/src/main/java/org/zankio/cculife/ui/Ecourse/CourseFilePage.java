@@ -64,7 +64,8 @@ public class CourseFilePage extends BasePage {
         list.setOnChildClickListener(
                 new ExpandableListView.OnChildClickListener() {
                     @Override
-                    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
+                    @TargetApi(11)
+                    //@TargetApi(Build.VERSION_CODES.GINGERBREAD)
                     public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                         Ecourse.File file;
                         String filename;
