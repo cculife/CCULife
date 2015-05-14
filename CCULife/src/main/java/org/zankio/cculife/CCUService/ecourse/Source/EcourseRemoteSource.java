@@ -66,7 +66,7 @@ public class EcourseRemoteSource extends EcourseSource {
             String url = connection.response().url().toString();
             String body = connection.response().body();
 
-            if (url.startsWith("http://ecourse.elearning.ccu.edu.tw/php/Courses_Admin/take_course.php")) {
+            if (url.startsWith("http://ecourse.ccu.edu.tw/php/Courses_Admin/take_course.php")) {
                 auth.setCookie(connection, SESSION_FIELD_NAME);
                 return true;
             } else if (url.startsWith(Url.LOGIN)) {
@@ -175,7 +175,7 @@ public class EcourseRemoteSource extends EcourseSource {
 
             if (location != null) {
                 if (!location.startsWith("http")) {
-                    homework.contentUrl = "http://ecourse.elearning.ccu.edu.tw/php/Testing_Assessment/" + location;
+                    homework.contentUrl = "http://ecourse.ccu.edu.tw/php/Testing_Assessment/" + location;
                 } else {
                     homework.contentUrl = location;
                 }
