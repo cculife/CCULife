@@ -1,6 +1,8 @@
 package org.zankio.cculife.ui.Ecourse;
 
 import android.app.AlertDialog;
+import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -91,9 +93,10 @@ public class CourseHomewrokPage extends BasePage implements AdapterView.OnItemCl
 
         @Override
         protected void onPostExecute(Homework homework) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(inflater.getContext());
+            Context context = inflater.getContext();
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
-            TextView message = new TextView(inflater.getContext());
+            TextView message = new TextView(context);
             String err = homework.getContent();
             String content = null, url = null;
             if (err != null)
@@ -130,9 +133,10 @@ public class CourseHomewrokPage extends BasePage implements AdapterView.OnItemCl
                     }
                 });
                 final AlertDialog dialog = builder.create();
+                if (context instanceof Activity && ((Activity)context).isFinishing()) return;
                 dialog.show();
             } else {
-                Toast.makeText(inflater.getContext(), "讀取題目錯誤", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "讀取題目錯誤", Toast.LENGTH_SHORT).show();
             }
         }
     }

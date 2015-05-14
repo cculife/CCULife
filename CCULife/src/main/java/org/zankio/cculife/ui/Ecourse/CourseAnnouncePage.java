@@ -1,6 +1,8 @@
 package org.zankio.cculife.ui.Ecourse;
 
 import android.app.AlertDialog;
+import android.content.Context;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.text.Html;
@@ -87,10 +89,13 @@ public class CourseAnnouncePage extends BasePage implements AdapterView.OnItemCl
 
         @Override
         protected void onPostExecute(Ecourse.Announce announce) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(inflater.getContext());
+            Context context = inflater.getContext();
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
             TextView message = new TextView(inflater.getContext());
-            message.setText(Html.fromHtml(announce.getContent()));
+            if (announce.getContent() != null) {
+                message.setText(Html.fromHtml(announce.getContent()));
+            }
             message.setAutoLinkMask(Linkify.WEB_URLS);
             message.setMovementMethod(LinkMovementMethod.getInstance());
             message.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
@@ -106,7 +111,9 @@ public class CourseAnnouncePage extends BasePage implements AdapterView.OnItemCl
                 }
             });
             final AlertDialog dialog = builder.create();
+            if (context instanceof Activity && ((Activity)context).isFinishing()) return;
             dialog.show();
+
         }
     }
 
