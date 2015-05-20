@@ -206,7 +206,7 @@ public class EcourseParser extends BaseParser {
 
             nodeHref = setBaseUrl(nodeHref, baseurl);
 
-            if (Pattern.matches("^http\\:\\/\\/ecourse\\.ccu\\.edu\\.tw\\/[^/]+\\/textbook\\/.+$", nodeHref)) {
+            if (Pattern.matches("^http\\:\\/\\/ecourse(?:\\.elearning)\\.ccu\\.edu\\.tw\\/[^/]+\\/textbook\\/.+$", nodeHref)) {
 
                 file = ecourse.new File();
                 file.Name = getFileName(nodeHref);
