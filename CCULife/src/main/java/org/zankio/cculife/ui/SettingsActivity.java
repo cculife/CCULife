@@ -204,13 +204,17 @@ public class SettingsActivity extends PreferenceActivity
                 kikiLocalSource = new KikiLocalSource(null, context);
                 kikiLocalSource.clearData();
             } else if ("account_wifi_log_in_out".equals(key)) {
-              debug.info("Start login activity");
-              Intent intent = new Intent(context, WifiLoginActivity.class);
-              intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-              intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-              context.startActivity(intent);
+              WifiAccount account = WifiAccount.getInstance(context);
+              if(account.isLogin()) {
+                account.clearLogin();
+              } else {
+                Intent intent = new Intent(context, WifiLoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+              }
             } else if ("check_update".equals(key)) {
-                new Updater(context).checkUpdate(true);
+              new Updater(context).checkUpdate(true);
             }
 
             return false;
