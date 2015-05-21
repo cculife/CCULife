@@ -67,7 +67,6 @@ public class LoginWifi {
    */
   public boolean login(Context context) {
     Debug debug = new Debug();
-    debug.debug = true;
     debug.info("Login wireless");
     if(username == null || password == null) {
       return false;
@@ -86,11 +85,11 @@ public class LoginWifi {
         int idx = new Random().nextInt(GOOGLE_IP.length);
         debug.info("Try connect generate_204");
         Response response = Jsoup.connect("http://" + GOOGLE_IP[idx] + "/generate_204")
-          .followRedirects(false).execute();
+          .followRedirects(false) //  Don't follow, sometime will response 200
+          .execute();
         if(response.statusCode() != 204) { // Maybe we need to login
-          URL url = new URL(response.header("location"));
-          debug.info("Url: " + url.toString());
-          if(url.toString().startsWith("http://140.123.1.53")) { // It is ccu wireless login
+          String url = response.header("location"); // Get redirect url
+          if(url != null && url.startsWith("http://140.123.1.53")) { // It is ccu wireless login
             debug.info("CCU login page");
             Response login_page = Jsoup.connect(WIFI_LOGIN_URL)
               .data("buttonClicked", "4")
@@ -105,7 +104,7 @@ public class LoginWifi {
             debug.info("Login done");
             Document page = Jsoup.parse(login_page.body());
             String body = page.body().text();
-            return body.contains("You can now use all our regular network services");
+            return body.contains("You can now use all our regular network services"); // If success, body will contain
           }
           else {
             return false;
@@ -119,29 +118,21 @@ public class LoginWifi {
 
     @Override
     @TargetApi(11)
-    protected void onPostExecute(Boolean result) {
+    protected void onPostExecute(Boolean login_result) {
       Debug debug = new Debug();
-      debug.info("post execute");
       NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
       PendingIntent contentIntent = PendingIntent.getActivity(context, 0, new Intent(), 0);
       Resources resources = context.getResources();
-      if(result.equals(true)) {
-        Notification n = new Notification.Builder(context)
-          .setContentTitle(resources.getString(R.string.app_name))
-          .setContentText(resources.getString(R.string.wifi_login_success))
-          .setSmallIcon(R.drawable.ic_launcher)
-          .setContentIntent(contentIntent)
-          .getNotification();
-        nm.notify("CCULife_Wifi_Auto_Login", 1, n);
-      } else {
-        Notification n = new Notification.Builder(context)
-          .setContentTitle(resources.getString(R.string.app_name))
-          .setContentText(resources.getString(R.string.wifi_login_check_pw))
-          .setSmallIcon(R.drawable.ic_launcher)
-          .setContentIntent(contentIntent)
-          .getNotification();
-        nm.notify("CCULife_Wifi_Auto_Login", 1, n);
-      }
+      int notify_content_id = (login_result.equals(true) ? R.string.wifi_login_success : R.string.wifi_login_check_pw);
+      String app_name = resources.getString(R.string.app_name),
+             notify_content = resources.getString(notify_content_id);
+      Notification n = new Notification.Builder(context)
+        .setContentTitle(app_name)
+        .setContentText(notify_content)
+        .setSmallIcon(R.drawable.ic_launcher)
+        .setContentIntent(contentIntent)
+        .getNotification();
+      nm.notify("CCULife_Wifi_Auto_Login", 1, n);
     }
   }
 }

@@ -59,6 +59,7 @@ public class WifiAccount {
     pref_editor.putBoolean(KEY_IS_LOGIN, false);
     pref_editor.putString(KEY_USERNAME, null);
     pref_editor.putString(KEY_USERNAME, null);
+    pref_editor.commit();
     publishState();
   }
 
