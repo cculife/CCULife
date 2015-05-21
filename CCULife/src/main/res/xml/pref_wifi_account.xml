@@ -1,0 +1,10 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <CheckBoxPreference
+        android:title="啟用自動登入"
+        android:key="autologin_enable"
+        android:defaultValue="true" />
+    <Preference android:key="account_wifi_user" android:title="Wifi帳號"/>
+    <Preference android:key="account_wifi_log_in_out" android:title="登入"/>
+
+</PreferenceScreen>

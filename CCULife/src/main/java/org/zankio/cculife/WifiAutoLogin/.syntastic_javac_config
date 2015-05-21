@@ -1,0 +1,1 @@
+let g:syntastic_java_javac_classpath = '/home/snow/Desktop/CCULife/CCULife/src/main/java:/home/snow/sdk/android-sdk/platforms/android-17/*.jar'

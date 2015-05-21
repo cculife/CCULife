@@ -15,6 +15,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
@@ -22,10 +23,23 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
+        <service android:name="org.zankio.cculife.WifiAutoLogin.WifiLoginService"/>
+
+        <receiver
+          android:name="org.zankio.cculife.WifiAutoLogin.NetworkChangeReceiver">
+          <intent-filter>
+            <action android:name="android.net.wifi.WIFI_STATE_CHANGED"/>
+            <action android:name="android.net.wifi.STATE_CHANGE"/>
+          </intent-filter>
+      </receiver>
 
         <!-- android:theme="@style/AppTheme" -->
         <activity
             android:name="org.zankio.cculife.ui.LoginActivity"
+            android:windowSoftInputMode="adjustResize|stateVisible" >
+        </activity>
+        <activity
+            android:name="org.zankio.cculife.ui.WifiLoginActivity"
             android:windowSoftInputMode="adjustResize|stateVisible" >
         </activity>
         <activity android:name="org.zankio.cculife.ui.HomeActivity" >

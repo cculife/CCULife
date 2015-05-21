@@ -1,0 +1,53 @@
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".WifiLoginActivity">
+
+    <!-- Login form -->
+    <ScrollView
+        android:id="@+id/wifi_login_form"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout style="@style/LoginFormContainer"
+                      android:orientation="vertical">
+
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="300dp"
+                    android:id="@+id/logo" android:layout_gravity="center" android:src="@drawable/logo_ccu"
+                    android:layout_weight="1" android:padding="30dp"/>
+            <EditText
+                android:id="@+id/wifi_username"
+                android:singleLine="true"
+                android:maxLines="1"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:hint="@string/prompt_studentid" android:layout_weight="1"
+                android:inputType="text"/>
+
+            <EditText
+                android:id="@+id/wifi_password"
+                android:singleLine="true"
+                android:maxLines="1"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:hint="@string/prompt_password"
+                android:inputType="textPassword"
+                android:imeActionLabel="@string/action_sign"
+                android:imeActionId="@+id/login"
+                android:imeOptions="actionUnspecified" android:layout_weight="1"/>
+
+
+            <Button android:id="@+id/wifi_sign_in_button"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/action_sign"
+                android:paddingLeft="32dp"
+                android:paddingRight="32dp"
+                android:layout_gravity="right" android:layout_weight="1"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+</merge>

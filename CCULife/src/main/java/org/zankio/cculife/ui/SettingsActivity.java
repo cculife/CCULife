@@ -2,6 +2,7 @@ package org.zankio.cculife.ui;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -21,6 +22,7 @@ import android.text.TextUtils;
 
 import org.zankio.cculife.CCUService.ecourse.source.EcourseLocalSource;
 import org.zankio.cculife.CCUService.kiki.source.KikiLocalSource;
+import org.zankio.cculife.ui.WifiLoginActivity;
 import org.zankio.cculife.Debug;
 import org.zankio.cculife.R;
 import org.zankio.cculife.SessionManager;
@@ -53,10 +55,16 @@ public class SettingsActivity extends PreferenceActivity implements SessionManag
         }
 
         setPreferenceScreen(getPreferenceManager().createPreferenceScreen(this));
+
         PreferenceCategory fakeHeader = new PreferenceCategory(this);
         fakeHeader.setTitle(R.string.pref_header_account);
         getPreferenceScreen().addPreference(fakeHeader);
         addPreferencesFromResource(R.xml.pref_account);
+
+        fakeHeader = new PreferenceCategory(this);
+        fakeHeader.setTitle(R.string.pref_header_wifi);
+        getPreferenceScreen().addPreference(fakeHeader);
+        addPreferencesFromResource(R.xml.pref_wifi_account);
 
         fakeHeader = new PreferenceCategory(this);
         fakeHeader.setTitle(R.string.perf_header_offline);
@@ -93,9 +101,12 @@ public class SettingsActivity extends PreferenceActivity implements SessionManag
 
     private void loadAccountsSetting(){
         Preference loginout = findPreference("account_log_in_out");
+        Preference wifi_loginout = findPreference("account_wifi_log_in_out");
 
         assert loginout != null;
+        assert wifi_loginout != null;
         loginout.setOnPreferenceClickListener(onPreferenceClickListener);
+        wifi_loginout.setOnPreferenceClickListener(onPreferenceClickListener);
 
         onLoginStateChanged(sessionManager.isLogined());
     }
@@ -154,6 +165,10 @@ public class SettingsActivity extends PreferenceActivity implements SessionManag
         public boolean onPreferenceClick(Preference preference) {
             Context context = preference.getContext();
             String key = preference.getKey();
+            Debug debug = new Debug();
+            Debug.debug = true;
+            debug.info("Key: " + key);
+            Debug.debug = false;
 
             if (key == null || key.equals("")) return false;
             else if ("account_log_in_out".equals(key)) {
@@ -165,6 +180,14 @@ public class SettingsActivity extends PreferenceActivity implements SessionManag
                 ecourseLocalSource.clearData();
                 kikiLocalSource = new KikiLocalSource(null, context);
                 kikiLocalSource.clearData();
+            } else if ("account_wifi_log_in_out".equals(key)) {
+              Debug.debug = true;
+              debug.info("Start login activity");
+              Debug.debug = false;
+              Intent intent = new Intent(context, WifiLoginActivity.class);
+              intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+              intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+              context.startActivity(intent);
             } else if ("check_update".equals(key)) {
                 new Updater(context).checkUpdate(true);
             }
@@ -263,6 +286,25 @@ public class SettingsActivity extends PreferenceActivity implements SessionManag
 
         }
     }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public static class WifiAccountPreferenceFragment extends PreferenceFragment {
+
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.pref_wifi_account);
+
+            loadAccountsSetting();
+        }
+
+        private void loadAccountsSetting(){
+            Preference loginout = findPreference("account_wifi_log_in_out");
+            assert loginout != null;
+            loginout.setOnPreferenceClickListener(onPreferenceClickListener);
+        }
+    }
+
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class AboutPreferenceFragment extends PreferenceFragment {
         @Override
