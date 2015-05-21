@@ -26,20 +26,24 @@ import org.zankio.cculife.ui.WifiLoginActivity;
 import org.zankio.cculife.Debug;
 import org.zankio.cculife.R;
 import org.zankio.cculife.SessionManager;
+import org.zankio.cculife.WifiAutoLogin.WifiAccount;
 import org.zankio.cculife.Updater;
 
 import java.util.List;
 
-public class SettingsActivity extends PreferenceActivity implements SessionManager.onLoginStateChangedListener {
+public class SettingsActivity extends PreferenceActivity
+  implements SessionManager.onLoginStateChangedListener, WifiAccount.WifiAccountStateChangeListener {
 
     private static final boolean ALWAYS_SIMPLE_PREFS = false;
 
     private static SessionManager sessionManager;
+    private WifiAccount account;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sessionManager = SessionManager.getInstance(this);
+        account = WifiAccount.getInstance(this);
     }
 
     @Override
@@ -94,6 +98,7 @@ public class SettingsActivity extends PreferenceActivity implements SessionManag
             bindPreferenceSummaryToValue(findPreference("debug_ecourse_year"));
             bindPreferenceSummaryToValue(findPreference("debug_ecourse_term"));
         }
+        account.registerListener(this);
 
         sessionManager.setOnLoginStateChangedListener(this);
         loadAccountsSetting();
@@ -108,7 +113,24 @@ public class SettingsActivity extends PreferenceActivity implements SessionManag
         loginout.setOnPreferenceClickListener(onPreferenceClickListener);
         wifi_loginout.setOnPreferenceClickListener(onPreferenceClickListener);
 
+        onWifiAccountStateChange(account.isLogin());
         onLoginStateChanged(sessionManager.isLogined());
+    }
+
+    @Override
+    public void onWifiAccountStateChange(boolean is_login) {
+      Preference loginout = findPreference("account_wifi_log_in_out");
+      Preference user = findPreference("account_wifi_user");
+      assert user != null;
+      assert loginout != null;
+      if (is_login) {
+          String username = account.getUsername();
+          user.setSummary(username);
+          loginout.setTitle("登出");
+      } else {
+          user.setSummary("未登入");
+          loginout.setTitle("登入");
+      }
     }
 
     @Override
@@ -116,6 +138,7 @@ public class SettingsActivity extends PreferenceActivity implements SessionManag
         super.onDestroy();
         if(sessionManager != null)
             sessionManager.setOnLoginStateChangedListener(null);
+        account.unregisterListener();
     }
 
     @Override
@@ -181,9 +204,7 @@ public class SettingsActivity extends PreferenceActivity implements SessionManag
                 kikiLocalSource = new KikiLocalSource(null, context);
                 kikiLocalSource.clearData();
             } else if ("account_wifi_log_in_out".equals(key)) {
-              Debug.debug = true;
               debug.info("Start login activity");
-              Debug.debug = false;
               Intent intent = new Intent(context, WifiLoginActivity.class);
               intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
               intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

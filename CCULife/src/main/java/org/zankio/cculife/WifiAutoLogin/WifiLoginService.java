@@ -15,6 +15,9 @@ public class WifiLoginService extends IntentService {
   protected void onHandleIntent(Intent intent) {
     Debug debug = new Debug();
     WifiAccount account = WifiAccount.getInstance(this);
+    if(!account.isLogin()) {
+      return;
+    }
     LoginWifi login = new LoginWifi(account.getUsername(), account.getPassword());
     login.login(this);
   }
