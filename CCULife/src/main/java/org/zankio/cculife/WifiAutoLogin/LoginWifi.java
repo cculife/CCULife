@@ -14,6 +14,7 @@ import android.app.PendingIntent;
 
 import android.content.Intent;
 import android.content.Context;
+import android.content.res.Resources;
 
 import android.graphics.BitmapFactory;
 
@@ -123,18 +124,19 @@ public class LoginWifi {
       debug.info("post execute");
       NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
       PendingIntent contentIntent = PendingIntent.getActivity(context, 0, new Intent(), 0);
+      Resources resources = context.getResources();
       if(result.equals(true)) {
         Notification n = new Notification.Builder(context)
-          .setContentTitle("CCULife wifi auto login")
-          .setContentText("Successful login \"CCU\"")
+          .setContentTitle(resources.getString(R.string.app_name))
+          .setContentText(resources.getString(R.string.wifi_login_success))
           .setSmallIcon(R.drawable.ic_launcher)
           .setContentIntent(contentIntent)
           .getNotification();
         nm.notify("CCULife_Wifi_Auto_Login", 1, n);
       } else {
         Notification n = new Notification.Builder(context)
-          .setContentTitle("CCULife wifi auto login")
-          .setContentText("Please check wifi account setting")
+          .setContentTitle(resources.getString(R.string.app_name))
+          .setContentText(resources.getString(R.string.wifi_login_check_pw))
           .setSmallIcon(R.drawable.ic_launcher)
           .setContentIntent(contentIntent)
           .getNotification();

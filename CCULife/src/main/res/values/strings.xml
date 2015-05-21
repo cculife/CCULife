@@ -33,5 +33,6 @@
     <string name="action_classmatelist">修課同學</string>
     <string name="pref_header_custom">自訂</string>
     <string name="title_homework">作業</string>
-
+    <string name="wifi_login_success">成功登入 "CCU"</string>
+    <string name="wifi_login_check_pw">登入失敗！請檢查 wifi 帳號密碼</string>
 </resources>
