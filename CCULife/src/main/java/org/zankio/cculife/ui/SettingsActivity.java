@@ -354,8 +354,8 @@ public class SettingsActivity extends PreferenceActivity
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_about);
             findPreference("about_title").setSummary(getVersionName(this.getActivity()));
-            findPreference("check_update").setOnPreferenceClickListener(onPreferenceClickListener);
-            bindPreferenceSummaryToValue(findPreference("update_interval"));
+            //findPreference("check_update").setOnPreferenceClickListener(onPreferenceClickListener);
+            //bindPreferenceSummaryToValue(findPreference("update_interval"));
 
             if (Debug.debug) {
                 addPreferencesFromResource(R.xml.pref_debug);
