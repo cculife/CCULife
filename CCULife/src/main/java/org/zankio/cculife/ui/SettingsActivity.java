@@ -1,6 +1,7 @@
 package org.zankio.cculife.ui;
 
 import android.annotation.TargetApi;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -13,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.CheckBoxPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
@@ -23,6 +25,7 @@ import android.text.TextUtils;
 import org.zankio.cculife.CCUService.ecourse.source.EcourseLocalSource;
 import org.zankio.cculife.CCUService.kiki.source.KikiLocalSource;
 import org.zankio.cculife.ui.WifiLoginActivity;
+import org.zankio.cculife.ui.AutoLoginAlert;
 import org.zankio.cculife.Debug;
 import org.zankio.cculife.R;
 import org.zankio.cculife.SessionManager;
@@ -107,11 +110,25 @@ public class SettingsActivity extends PreferenceActivity
     private void loadAccountsSetting(){
         Preference loginout = findPreference("account_log_in_out");
         Preference wifi_loginout = findPreference("account_wifi_log_in_out");
+        CheckBoxPreference autologin_pref = (CheckBoxPreference)findPreference("autologin_enable");
 
         assert loginout != null;
         assert wifi_loginout != null;
+        assert autologin_pref != null;
         loginout.setOnPreferenceClickListener(onPreferenceClickListener);
         wifi_loginout.setOnPreferenceClickListener(onPreferenceClickListener);
+        autologin_pref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+          @TargetApi(11)
+          @Override
+          public boolean onPreferenceChange(Preference preference, Object new_value) {
+            boolean is_checked = (Boolean)new_value;
+            if(is_checked) {
+              DialogFragment dialog = new AutoLoginAlert();
+              dialog.show(getFragmentManager(), "autologin_enable");
+            }
+            return true;
+          }
+        });
 
         onWifiAccountStateChange(account.isLogin());
         onLoginStateChanged(sessionManager.isLogined());
