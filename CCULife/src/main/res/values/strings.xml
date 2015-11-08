@@ -33,5 +33,9 @@
     <string name="action_classmatelist">修課同學</string>
     <string name="pref_header_custom">自訂</string>
     <string name="title_homework">作業</string>
+    <string name="downloading">下載中...</string>
+    <string name="download_error">下載錯誤</string>
+    <string name="download_complete">下載完成</string>
+    <string name="download_file">下載:</string>
 
 </resources>
