@@ -15,7 +15,7 @@ import org.zankio.cculife.ui.UpdateUI;
 import org.zankio.cculife.ui.dialog.UpdateDialog;
 
 public class CheckUpdateService extends IntentService {
-    private static String GITHUB_RELEASE_URL = "https://api.github.com/repos/zankio/CCULife/releases";
+    private static String GITHUB_RELEASE_URL = "https://api.github.com/repos/Zankio/CCULife/releases/latest";
 
     public CheckUpdateService() {
         super("CheckUpdateService");
@@ -51,10 +51,9 @@ public class CheckUpdateService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         try {
-            JsonArray releases = Ion.with(this).load(GITHUB_RELEASE_URL).asJsonArray().get();
-            JsonObject lastest = releases.get(0).getAsJsonObject();
-            String tagname = lastest.get("tag_name").getAsString().substring(1);
-            String description = lastest.get("body").getAsString();
+            JsonObject latest = Ion.with(this).load(GITHUB_RELEASE_URL).asJsonObject().get();;
+            String tagname = latest.get("tag_name").getAsString().substring(1);
+            String description = latest.get("body").getAsString();
             String version = getVersion();
             if (tagname != version) {
                 if (hasNewer(version, tagname)) {
