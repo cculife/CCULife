@@ -105,6 +105,7 @@ public class DownloadService extends IntentService {
         data.putString("state", state);
 
         notifyIntent.putExtras(data);
+        if ("error".equals(state)) id = (id + 1) * -1;
         return PendingIntent.getService(this, id, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
