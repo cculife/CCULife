@@ -48,7 +48,7 @@ public class HomeActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_home);
-        ConnectionHelper.setSSLSocketFactory(Net.generateSSLSocketFactory(this));
+        ConnectionHelper.setContext(getApplicationContext());
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("CCULife");
         actionBar.setSubtitle("Enjoy your life!");
