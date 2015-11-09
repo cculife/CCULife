@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.zankio.cculife"
-    android:versionCode="14"
-    android:versionName="1.3.5" >
+    android:versionCode="17"
+    android:versionName="1.3.7.1" >
 
     <!-- <uses-sdk
         android:minSdkVersion="9"
@@ -75,6 +75,11 @@
             android:label="@string/title_activity_settings" >
         </activity>
         <activity
+            android:name="org.zankio.cculife.ui.UpdateUI"
+            android:label="@string/title_activity_settings"
+            android:theme="@style/AppDialog">
+        </activity>
+        <activity
             android:name="org.zankio.cculife.ui.AboutActivity"
             android:label="@string/title_activity_about" >
             <intent-filter>
@@ -87,6 +92,17 @@
             android:name="org.zankio.cculife.ui.Ecourse.CourseClassmateActivity"
             android:label="@string/title_activity_course_classmate" >
         </activity>
+        <service 
+            android:name=".services.DownloadService" 
+            android:exported="false" />
+
+        <service
+            android:name=".services.FileOpenService"
+            android:exported="false"
+            />
+        <service
+            android:name=".services.CheckUpdateService"
+            android:exported="false" />
     </application>
 
 </manifest>

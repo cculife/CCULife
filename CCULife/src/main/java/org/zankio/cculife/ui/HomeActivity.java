@@ -15,14 +15,15 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 
+import org.zankio.cculife.CCUService.base.helper.ConnectionHelper;
 import org.zankio.cculife.R;
 import org.zankio.cculife.SessionManager;
+import org.zankio.cculife.override.Net;
 import org.zankio.cculife.ui.Base.BaseActivity;
 import org.zankio.cculife.ui.CCUSchedule.CCUScheduleActivity;
 import org.zankio.cculife.ui.CourseSchedule.CourseTimeTableActivity;
 import org.zankio.cculife.ui.Ecourse.CourseListActivity;
 import org.zankio.cculife.ui.ScoreQuery.ScoreQueryActivity;
-
 
 public class HomeActivity extends BaseActivity {
 
@@ -45,8 +46,9 @@ public class HomeActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
 
+        setContentView(R.layout.activity_home);
+        ConnectionHelper.setSSLSocketFactory(Net.generateSSLSocketFactory(this));
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("CCULife");
         actionBar.setSubtitle("Enjoy your life!");
@@ -66,7 +68,6 @@ public class HomeActivity extends BaseActivity {
                 }
             }
         });
-
         // new Updater(this).checkUpdate();
     }
 

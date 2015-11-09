@@ -6,7 +6,6 @@ import org.jsoup.select.Elements;
 import org.zankio.cculife.CCUService.base.parser.BaseParser;
 import org.zankio.cculife.CCUService.ecourse.Ecourse;
 import org.zankio.cculife.CCUService.ecourse.model.Homework;
-import org.zankio.cculife.override.Exceptions;
 
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -195,6 +194,7 @@ public class EcourseParser extends BaseParser {
         boolean standFileTemplate = false;
 
         if (baseurl.startsWith("http://ecourse.ccu.edu.tw/php/textbook/course_menu.php")) standFileTemplate = true;
+        if (baseurl.startsWith("https://ecourse.ccu.edu.tw/php/textbook/course_menu.php")) standFileTemplate = true;
 
         files = document.select("a");
 
@@ -206,7 +206,7 @@ public class EcourseParser extends BaseParser {
 
             nodeHref = setBaseUrl(nodeHref, baseurl);
 
-            if (Pattern.matches("^http\\:\\/\\/ecourse(?:\\.elearning)\\.ccu\\.edu\\.tw\\/[^/]+\\/textbook\\/.+$", nodeHref)) {
+            if (Pattern.matches("^https?\\:\\/\\/ecourse(?:\\.elearning)?\\.ccu\\.edu\\.tw\\/[^/]+\\/textbook\\/.+$", nodeHref)) {
 
                 file = ecourse.new File();
                 file.Name = getFileName(nodeHref);

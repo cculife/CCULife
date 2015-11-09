@@ -6,13 +6,13 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.zankio.cculife.CCUService.base.authentication.CookieAuth;
-import org.zankio.cculife.CCUService.ecourse.Ecourse;
 import org.zankio.cculife.CCUService.base.helper.ConnectionHelper;
+import org.zankio.cculife.CCUService.base.parser.IParser;
+import org.zankio.cculife.CCUService.ecourse.Ecourse;
 import org.zankio.cculife.CCUService.ecourse.constant.Url;
 import org.zankio.cculife.CCUService.ecourse.model.Homework;
-import org.zankio.cculife.CCUService.kiki.Kiki;
 import org.zankio.cculife.CCUService.ecourse.parser.EcourseParser;
-import org.zankio.cculife.CCUService.base.parser.IParser;
+import org.zankio.cculife.CCUService.kiki.Kiki;
 import org.zankio.cculife.SessionManager;
 import org.zankio.cculife.override.Exceptions;
 import org.zankio.cculife.override.LoginErrorException;
@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.net.ssl.HttpsURLConnection;
 
 public class EcourseRemoteSource extends EcourseSource {
     private static final String SESSION_FIELD_NAME = "PHPSESSID";
@@ -39,6 +41,7 @@ public class EcourseRemoteSource extends EcourseSource {
         this.parser = (EcourseParser) parser;
         this.auth = new CookieAuth();
         this.connectionHelper = new ConnectionHelper(auth);
+        HttpsURLConnection.setDefaultSSLSocketFactory(ConnectionHelper.getSSLSocketFactory());
     }
 
     public void setLocalStorage(EcourseLocalSource ecourseLocalSource) {
@@ -66,7 +69,7 @@ public class EcourseRemoteSource extends EcourseSource {
             String url = connection.response().url().toString();
             String body = connection.response().body();
 
-            if (url.startsWith("http://ecourse.ccu.edu.tw/php/Courses_Admin/take_course.php")) {
+            if (url.startsWith("https://ecourse.ccu.edu.tw/php/Courses_Admin/take_course.php")) {
                 auth.setCookie(connection, SESSION_FIELD_NAME);
                 return true;
             } else if (url.startsWith(Url.LOGIN)) {

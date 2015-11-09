@@ -5,8 +5,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.zankio.cculife.CCUService.base.authentication.QueryStringAuth;
 import org.zankio.cculife.CCUService.base.helper.ConnectionHelper;
-import org.zankio.cculife.CCUService.kiki.Kiki;
 import org.zankio.cculife.CCUService.base.parser.IParser;
+import org.zankio.cculife.CCUService.kiki.Kiki;
 import org.zankio.cculife.CCUService.kiki.parser.KikiParser;
 import org.zankio.cculife.SessionManager;
 import org.zankio.cculife.override.Exceptions;
@@ -14,6 +14,8 @@ import org.zankio.cculife.override.LoginErrorException;
 
 import java.io.IOException;
 import java.util.Calendar;
+
+import javax.net.ssl.HttpsURLConnection;
 
 public class KikiRemoteSource extends KikiSource {
 
@@ -29,6 +31,7 @@ public class KikiRemoteSource extends KikiSource {
         this.auth = new QueryStringAuth();
         this.parser = (KikiParser) parser;
         this.connectionHelper = new ConnectionHelper(auth);
+        HttpsURLConnection.setDefaultSSLSocketFactory(ConnectionHelper.getSSLSocketFactory());
     }
 
     public void setLocalSource(KikiLocalSource kikiLocalSource) {
@@ -45,7 +48,7 @@ public class KikiRemoteSource extends KikiSource {
         Document document;
         Connection connection;
 
-        connection = Jsoup.connect("http://kiki.ccu.edu.tw/~ccmisp06/cgi-bin/class_new/bookmark.php");
+        connection = Jsoup.connect("https://kiki.ccu.edu.tw/~ccmisp06/cgi-bin/class_new/bookmark.php");
         ConnectionHelper.initTimeout(connection);
         connection.data("id", user)
                 .data("password", pass)
@@ -100,7 +103,7 @@ public class KikiRemoteSource extends KikiSource {
         else term = 2;
 
         result = getTimeTable(year, term);
-        if (kikiLocalSource != null)
+        if (kikiLocalSource != null && result != null)
             kikiLocalSource.storeTimeTable(result);
         return result;
 
@@ -110,7 +113,7 @@ public class KikiRemoteSource extends KikiSource {
         checkAuth();
 
         Connection connection;
-        connection = Jsoup.connect("http://kiki.ccu.edu.tw/~ccmisp06/cgi-bin/class_new/Selected_View00.cgi?" +
+        connection = Jsoup.connect("https://kiki.ccu.edu.tw/~ccmisp06/cgi-bin/class_new/Selected_View00.cgi?" +
                 (year > 0 && term > 0 ? ("year=" + year + "&term=" + term) : ""));
         connectionHelper.init(connection);
 
@@ -127,7 +130,7 @@ public class KikiRemoteSource extends KikiSource {
         checkAuth();
 
         Connection connection;
-        connection = Jsoup.connect("http://kiki.ccu.edu.tw/~ccmisp06/cgi-bin/class_new/Selected_View00.cgi?"+
+        connection = Jsoup.connect("https://kiki.ccu.edu.tw/~ccmisp06/cgi-bin/class_new/Selected_View00.cgi?"+
                 (year > 0 && term > 0 ? ("year=" + year + "&term=" + term) : ""));
         connectionHelper.init(connection);
 

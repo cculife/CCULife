@@ -2,10 +2,9 @@ package org.zankio.cculife.CCUService.kiki.parser;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
-import org.zankio.cculife.CCUService.kiki.Kiki;
 import org.zankio.cculife.CCUService.base.parser.BaseParser;
+import org.zankio.cculife.CCUService.kiki.Kiki;
 
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -107,7 +106,6 @@ public class KikiParser extends BaseParser {
             if (classTeacherIndex >= 0) classTeacher = fields.get(classTeacherIndex).text();
             if (classTimeIndex >= 0) classTime = fields.get(classTimeIndex).text();
             classColor = randomColor();
-            classColorTotal++;
 
             /*Format example:
                 一G 三G
@@ -173,6 +171,7 @@ public class KikiParser extends BaseParser {
 
                 result.days[processingTime].classList.add(mClass);
             }
+            classColorTotal++;
         }
         result.sort();
         return result;

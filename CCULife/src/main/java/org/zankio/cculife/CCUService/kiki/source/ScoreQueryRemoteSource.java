@@ -4,13 +4,15 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.zankio.cculife.CCUService.base.helper.ConnectionHelper;
-import org.zankio.cculife.CCUService.kiki.parser.ScoreQueryParser;
 import org.zankio.cculife.CCUService.kiki.ScoreQuery;
+import org.zankio.cculife.CCUService.kiki.parser.ScoreQueryParser;
 import org.zankio.cculife.SessionManager;
 import org.zankio.cculife.override.Exceptions;
 import org.zankio.cculife.override.LoginErrorException;
 
 import java.io.IOException;
+
+import javax.net.ssl.HttpsURLConnection;
 
 public class ScoreQueryRemoteSource extends ScoreQuerySource{
 
@@ -20,6 +22,7 @@ public class ScoreQueryRemoteSource extends ScoreQuerySource{
     public ScoreQueryRemoteSource(ScoreQueryParser parser) {
         this.parser = parser;
         this.data = null;
+        HttpsURLConnection.setDefaultSSLSocketFactory(ConnectionHelper.getSSLSocketFactory());
     }
 
     @Override
@@ -31,7 +34,7 @@ public class ScoreQueryRemoteSource extends ScoreQuerySource{
         Document document;
         String error;
 
-        connection = Jsoup.connect("http://kiki.ccu.edu.tw/~ccmisp06/cgi-bin/Query/Query_grade.php");
+        connection = Jsoup.connect("https://kiki.ccu.edu.tw/~ccmisp06/cgi-bin/Query/Query_grade.php");
         ConnectionHelper.initTimeout(connection);
 
         connection.data("id", sessionManager.getUserName())
