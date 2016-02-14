@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="Red_Course_Warring">#AAFF0000</color>
-    <color name="DrakBrown">#FF754C24</color>
+    <color name="DarkBrown">#FF754C24</color>
     <color name="White">#FFF</color>
     <color name="Gray">#FFADADAD</color>
     <color name="DarkGray">#FF4A4A4A</color>
