@@ -17,8 +17,17 @@ public class CookieAuth implements IAuth<Connection> {
         return this;
     }
 
+    public Connection Auth(Connection connection) {
+        connection.cookies(cookies);
+        return connection;
+    }
+
     public void clear() {
         cookies.clear();
+    }
+
+    public String getCookie(String key) {
+        return cookies.get(key);
     }
 
     public CookieAuth setCookie(Connection connection, String key) {
@@ -26,14 +35,5 @@ public class CookieAuth implements IAuth<Connection> {
         if(value != null)
             cookies.put(key, value);
         return this;
-    }
-
-    public String getCookie(String key) {
-        return cookies.get(key);
-    }
-
-    public Connection Auth(Connection connection) {
-        connection.cookies(cookies);
-        return connection;
     }
 }
