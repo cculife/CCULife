@@ -123,7 +123,8 @@ public class DownloadService extends IntentService {
 
         path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
+        if (!path.exists())
+            path.mkdir();
 
         mBuilder = new NotificationCompat.Builder(this);
         DownloadService.notify(this, mNotifyManager, mBuilder, currentId, filename);
