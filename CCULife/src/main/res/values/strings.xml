@@ -38,5 +38,6 @@
     <string name="download_complete">下載完成</string>
     <string name="download_file">下載:</string>
     <string name="new_version">新版本</string>
+    <string name="title_named">點名</string>
 
 </resources>
