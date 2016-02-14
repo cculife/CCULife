@@ -4,15 +4,11 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.koushikdutta.ion.Ion;
 
 import org.zankio.cculife.ui.UpdateUI;
-import org.zankio.cculife.ui.dialog.UpdateDialog;
 
 public class CheckUpdateService extends IntentService {
     private static String GITHUB_RELEASE_URL = "https://api.github.com/repos/Zankio/CCULife/releases/latest";

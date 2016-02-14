@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 
@@ -22,21 +21,14 @@ import org.zankio.cculife.R;
 
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
-import java.security.KeyManagementException;
 import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 import java.security.cert.Certificate;
-import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLException;
-import javax.net.ssl.SSLHandshakeException;
 import javax.net.ssl.TrustManagerFactory;
 
 public class DownloadService extends IntentService {
@@ -237,13 +229,7 @@ public class DownloadService extends IntentService {
             if(!checkSSL()) Ion.getDefault(this).getHttpClient().getSSLSocketMiddleware().setSSLContext(ssl_context);
 
 
-        } catch (CertificateException ignored) {
-        } catch (KeyStoreException ignored) {
-        } catch (KeyManagementException ignored) {
-        } catch (NoSuchAlgorithmException ignored) {
-        } catch (IOException ignored) {
-        } catch (Exception ignored) {
-        }
+        } catch (Exception ignored) { }
     }
 
 }

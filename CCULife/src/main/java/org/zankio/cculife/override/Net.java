@@ -55,11 +55,7 @@ public class Net {
 ;
             return ssl_context;
         }
-        catch (CertificateException e) {}
-        catch (KeyStoreException e) {}
-        catch (KeyManagementException e) {}
-        catch (NoSuchAlgorithmException e) {}
-        catch (IOException e) { }
+        catch (CertificateException | KeyManagementException | KeyStoreException | NoSuchAlgorithmException | IOException ignored) {}
 
         return null;
     }
@@ -94,11 +90,7 @@ public class Net {
 ;
             return ssl_context.getSocketFactory();
         }
-        catch (CertificateException e) {}
-        catch (KeyStoreException e) {}
-        catch (KeyManagementException e) {}
-        catch (NoSuchAlgorithmException e) {}
-        catch (IOException e) { }
+        catch (CertificateException | KeyStoreException | KeyManagementException | NoSuchAlgorithmException | IOException ignored) {}
 
         return null;
     }

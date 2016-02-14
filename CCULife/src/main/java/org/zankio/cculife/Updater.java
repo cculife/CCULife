@@ -132,8 +132,8 @@ public class Updater {
     private class UpdateTask extends AsyncTaskWithErrorHanding<Void, Void, Version> {
 
         @Override
-        protected void onError(String msg) {
-            super.onError(msg);
+        protected void onError(Exception e, String msg) {
+            super.onError(e, msg);
             Toast.makeText(context, "檢查更新錯誤: " + msg, Toast.LENGTH_LONG).show();
         }
 

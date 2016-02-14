@@ -6,33 +6,21 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.zankio.cculife.CCUService.base.BaseService;
 import org.zankio.cculife.CCUService.portal.service.BasePortal;
-import org.zankio.cculife.SessionManager;
+import org.zankio.cculife.UserManager;
 import org.zankio.cculife.override.Exceptions;
 import org.zankio.cculife.override.LoginErrorException;
 import org.zankio.cculife.override.Net;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Portal extends BaseService {
 
     public Context context;
-    private static HashMap<String, String> SSO_URL;
-    private static final String SSO_URL_BASE = "http://portal.ccu.edu.tw/ssoService.php?service=%s&linkId=%s";
-    public static final String SSO_ECOURSE = "0000";
-    public static final String SSO_SCORE = "0007";
-    private static final String SSO_ECOURSE_URL = "http://ecourse.ccu.edu.tw/php/getssoCcuRight.php";
-    private static final String SSO_SCORE_URL = "http://140.123.30.106/~ccmisp06/cgi-bin/library/SSO/Query_grade/getssoCcuRight.php";
     private static final String ERROR_WRONG_USERPASS = "錯誤代碼：LOGIN_001\\n帳號或密碼錯誤,請重新登錄！";
     private static final String ERROR_AUTOLOGOUT = "錯誤代碼：GLOBAL_001\\n您沒有權限，或是系統已自動登出，請重新登入！";
     private static final String ERROR_WORNG_AUTHCODE = "錯誤代碼：LOGIN_002\\n驗證碼錯誤,請重新登錄！";
-    static {
-        SSO_URL = new HashMap<String, String>();
-        SSO_URL.put(SSO_ECOURSE, SSO_ECOURSE_URL);
-        SSO_URL.put(SSO_SCORE, SSO_SCORE_URL);
-    }
 
     public Portal(Context context) {
         this.context = context;

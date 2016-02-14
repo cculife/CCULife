@@ -3,15 +3,14 @@ package org.zankio.cculife.ui;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.view.Menu;
-
 import org.zankio.cculife.Debug;
 import org.zankio.cculife.R;
-import org.zankio.cculife.ui.Base.BaseActivity;
+import org.zankio.cculife.ui.base.BaseActivity;
 
 public class AboutActivity extends BaseActivity {
 
@@ -69,7 +68,7 @@ public class AboutActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getSupportMenuInflater().inflate(R.menu.about, menu);
+        getMenuInflater().inflate(R.menu.about, menu);
         return true;
     }
     

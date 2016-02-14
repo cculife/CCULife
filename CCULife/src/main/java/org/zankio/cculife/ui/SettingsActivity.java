@@ -19,25 +19,23 @@ import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.text.TextUtils;
 
-import org.zankio.cculife.CCUService.ecourse.source.EcourseLocalSource;
-import org.zankio.cculife.CCUService.kiki.source.KikiLocalSource;
 import org.zankio.cculife.Debug;
 import org.zankio.cculife.R;
-import org.zankio.cculife.SessionManager;
 import org.zankio.cculife.Updater;
+import org.zankio.cculife.UserManager;
 
 import java.util.List;
 
-public class SettingsActivity extends PreferenceActivity implements SessionManager.onLoginStateChangedListener {
+public class SettingsActivity extends PreferenceActivity implements UserManager.onLoginStateChangedListener {
 
     private static final boolean ALWAYS_SIMPLE_PREFS = false;
 
-    private static SessionManager sessionManager;
+    private static UserManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sessionManager = SessionManager.getInstance(this);
+        sessionManager = UserManager.getInstance(this);
     }
 
     @Override
@@ -158,13 +156,8 @@ public class SettingsActivity extends PreferenceActivity implements SessionManag
             if (key == null || key.equals("")) return false;
             else if ("account_log_in_out".equals(key)) {
                 sessionManager.toggleLogin();
-                EcourseLocalSource ecourseLocalSource;
-                KikiLocalSource kikiLocalSource;
-
-                ecourseLocalSource = new EcourseLocalSource(null, context);
-                ecourseLocalSource.clearData();
-                kikiLocalSource = new KikiLocalSource(null, context);
-                kikiLocalSource.clearData();
+                org.zankio.cculife.CCUService.ecourse.source.local.DatabaseBaseSource.clearData(context);
+                org.zankio.cculife.CCUService.kiki.source.local.DatabaseBaseSource.clearData(context);
             } else if ("check_update".equals(key)) {
                 new Updater(context).checkUpdate(true);
             }
@@ -220,7 +213,7 @@ public class SettingsActivity extends PreferenceActivity implements SessionManag
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static class AccountPreferenceFragment extends PreferenceFragment implements SessionManager.onLoginStateChangedListener{
+    public static class AccountPreferenceFragment extends PreferenceFragment implements UserManager.onLoginStateChangedListener{
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -281,6 +274,7 @@ public class SettingsActivity extends PreferenceActivity implements SessionManag
             }
         }
     }
+
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class OfflinePreferenceFragment extends PreferenceFragment {
         @Override

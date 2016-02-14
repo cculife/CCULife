@@ -4,11 +4,11 @@ import android.os.AsyncTask;
 
 public abstract class AsyncTaskWithErrorHanding<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> {
 
-    private Exception exception;
+    protected Exception exception;
 
     protected abstract Result _doInBackground(Params... params) throws Exception;
 
-    protected void onError(String msg){ }
+    protected void onError(Exception e, String msg){ }
     protected void _onPostExecute(Result result) {};
 
     @Override
@@ -30,7 +30,7 @@ public abstract class AsyncTaskWithErrorHanding<Params, Progress, Result> extend
         if(exception == null) _onPostExecute(result);
         else {
             exception.printStackTrace();
-            onError(exception.getMessage());
+            onError(exception, exception.getMessage());
         }
     }
 }

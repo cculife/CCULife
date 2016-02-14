@@ -6,6 +6,7 @@ import android.annotation.TargetApi;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -14,18 +15,15 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockActivity;
-
-import org.zankio.cculife.CCUService.ecourse.source.EcourseLocalSource;
-import org.zankio.cculife.CCUService.ecourse.source.EcourseRemoteSource;
-import org.zankio.cculife.CCUService.kiki.source.KikiLocalSource;
+import org.zankio.cculife.CCUService.ecourse.source.local.DatabaseBaseSource;
+import org.zankio.cculife.CCUService.ecourse.source.remote.Authenticate;
 import org.zankio.cculife.CCUService.portal.Portal;
 import org.zankio.cculife.R;
-import org.zankio.cculife.SessionManager;
+import org.zankio.cculife.UserManager;
 import org.zankio.cculife.override.LoginErrorException;
 import org.zankio.cculife.override.NetworkErrorException;
 
-public class LoginActivity extends SherlockActivity {
+public class LoginActivity extends AppCompatActivity {
 
     private UserLoginTask mAuthTask = null;
 
@@ -149,7 +147,7 @@ public class LoginActivity extends SherlockActivity {
         @Override
         protected Boolean doInBackground(Void... params) {
             Portal portal;
-            EcourseRemoteSource ecourseRemoteSource;
+            Authenticate authenticate;
             try {
                 portal = new Portal(LoginActivity.this);
                 return portal.getSession(mStudentId, mPassword);
@@ -159,8 +157,13 @@ public class LoginActivity extends SherlockActivity {
                 return false;
             } catch (LoginErrorException e) {
                 try {
-                    ecourseRemoteSource = new EcourseRemoteSource(null, null);
-                    return ecourseRemoteSource.Authenticate(mStudentId, mPassword);
+                    boolean success;
+                    authenticate = new Authenticate(null);
+                    success = authenticate.fetch(Authenticate.TYPE, mStudentId, mPassword);
+                    if (success) {
+                        DatabaseBaseSource.clearData(LoginActivity.this);
+                    }
+                    return success;
                 } catch (LoginErrorException e1) {
                     if ("帳號或密碼錯誤".equals(e.getMessage())) {
                         message = e.getMessage();
@@ -184,17 +187,9 @@ public class LoginActivity extends SherlockActivity {
             showProgress(false);
 
             if (success) {
-                SessionManager.getInstance(LoginActivity.this)
+                UserManager.getInstance(LoginActivity.this)
                         .createLoginSession(mStudentId, mPassword, mRemeber);
                 setResult(RESULT_OK);
-
-                EcourseLocalSource ecourseLocalSource;
-                KikiLocalSource kikiLocalSource;
-
-                ecourseLocalSource = new EcourseLocalSource(null, LoginActivity.this);
-                ecourseLocalSource.clearData();
-                kikiLocalSource = new KikiLocalSource(null, LoginActivity.this);
-                kikiLocalSource.clearData();
 
                 finish();
             } else {

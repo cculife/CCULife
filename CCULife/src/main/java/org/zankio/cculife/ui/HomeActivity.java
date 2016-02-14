@@ -1,9 +1,10 @@
 package org.zankio.cculife.ui;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -12,27 +13,22 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.Menu;
-
-import org.zankio.cculife.CCUService.base.helper.ConnectionHelper;
 import org.zankio.cculife.R;
-import org.zankio.cculife.SessionManager;
-import org.zankio.cculife.override.Net;
-import org.zankio.cculife.ui.Base.BaseActivity;
+import org.zankio.cculife.UserManager;
 import org.zankio.cculife.ui.CCUSchedule.CCUScheduleActivity;
 import org.zankio.cculife.ui.CourseSchedule.CourseTimeTableActivity;
-import org.zankio.cculife.ui.Ecourse.CourseListActivity;
 import org.zankio.cculife.ui.ScoreQuery.ScoreQueryActivity;
+import org.zankio.cculife.ui.base.BaseActivity;
+import org.zankio.cculife.ui.ecourse.CourseActivity;
 
 public class HomeActivity extends BaseActivity {
 
     private static final int ACTIVITY_LOGIN = 1;
 
     private CCUService loadServices;
-    private SessionManager sessionManager;
+    private UserManager sessionManager;
     private CCUService[] ccuServices = {
-            new CCUService(CourseListActivity.class, "Ecourse", R.drawable.ecourse, true)
+            new CCUService(CourseActivity.class, "Ecourse", R.drawable.ecourse, true)
           , new CCUService(CourseTimeTableActivity.class, "課表", R.drawable.schedule, true)
           , new CCUService(ScoreQueryActivity.class, "成績查詢", R.drawable.score, true)
           , new CCUService(CCUScheduleActivity.class, "行事曆", R.drawable.ccuschedule)
@@ -48,12 +44,11 @@ public class HomeActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_home);
-        ConnectionHelper.setContext(getApplicationContext());
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("CCULife");
         actionBar.setSubtitle("Enjoy your life!");
 
-        sessionManager = SessionManager.getInstance(this);
+        sessionManager = UserManager.getInstance(this);
 
         GridView serviceView = (GridView)findViewById(R.id.gridView);
         serviceView.setAdapter(new CCUServiceAdaper(ccuServices));
@@ -83,7 +78,7 @@ public class HomeActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getSupportMenuInflater().inflate(R.menu.home, menu);
+        getMenuInflater().inflate(R.menu.home, menu);
         return true;
     }
 
@@ -129,8 +124,7 @@ public class HomeActivity extends BaseActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            LayoutInflater inflater = (LayoutInflater) HomeActivity.this
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = (LayoutInflater) LayoutInflater.from(HomeActivity.this);
             View view;
 
             CCUService service = services[position];
