@@ -15,7 +15,7 @@
 
     <TextView
             android:layout_width="0dp"
-            android:layout_height="30dip"
+            android:layout_height="wrap_content"
             android:text="CourseName"
             android:id="@+id/Name"
             android:layout_gravity="left|center_vertical"
