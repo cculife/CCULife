@@ -1,6 +1,5 @@
 package org.zankio.cculife.CCUService.base.source;
 
-public interface ISource {
-    public void closeSource();
-    public void openSource();
+public interface ISource<T> {
+    T fetch(String type, Object ...arg) throws Exception;
 }
