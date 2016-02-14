@@ -3,53 +3,57 @@ package org.zankio.cculife.ui.CourseSchedule;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.support.v7.app.ActionBar;
+import android.view.Menu;
 import android.widget.ArrayAdapter;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.Menu;
-
+import org.zankio.cculife.CCUService.base.listener.IOnUpdateListener;
+import org.zankio.cculife.CCUService.base.source.BaseSource;
 import org.zankio.cculife.CCUService.kiki.Kiki;
+import org.zankio.cculife.CCUService.kiki.model.TimeTable;
+import org.zankio.cculife.CCUService.kiki.source.remote.TimetableSource;
 import org.zankio.cculife.R;
-import org.zankio.cculife.override.AsyncTaskWithErrorHanding;
-import org.zankio.cculife.ui.Base.BaseFragmentActivity;
+import org.zankio.cculife.ui.base.BaseFragmentActivity;
 
-public class CourseTimeTableActivity extends BaseFragmentActivity implements ActionBar.OnNavigationListener {
+import java.util.ArrayList;
+
+public class CourseTimeTableActivity extends BaseFragmentActivity
+        implements ActionBar.OnNavigationListener, IGetTimeTableData, IOnUpdateListener<TimeTable>{
 
     //ToDo Don't reload on rotation.
     private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
-    public static Kiki.TimeTable timeTable;
-    private Kiki courseTimeTable;
-    private static TimeTableWeekPage timeTableWeekPage;
-    private static TimeTableDayPage timeTableDayPage;
+    private Kiki kiki;
+    private TimeTable timeTable;
+    private boolean loading;
+    private ArrayList<IOnUpdateListener<TimeTable>> listeners = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_timetable);
+        kiki = new Kiki(this);
 
         final ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
-        actionBar.setListNavigationCallbacks(
-                new ArrayAdapter<String>(
-                        getActionBarThemedContextCompat(),
-                        android.R.layout.simple_list_item_1,
-                        android.R.id.text1,
-                        new String[]{
-                                getString(R.string.title_timetable_day),
-                                getString(R.string.title_timetable_week)
-                        }),
-                this);
+            actionBar.setListNavigationCallbacks(
+                    new ArrayAdapter<>(
+                            getActionBarThemedContextCompat(),
+                            android.R.layout.simple_list_item_1,
+                            android.R.id.text1,
+                            new String[]{
+                                    getString(R.string.title_timetable_day),
+                                    getString(R.string.title_timetable_week)
+                            }),
+                    this);
+        }
 
 
         setMessageView(R.id.container);
-
-        new LoadTimeTableDataAsyncTask().execute();
+        loading = false;
     }
 
     private Context getActionBarThemedContextCompat() {
@@ -75,18 +79,18 @@ public class CourseTimeTableActivity extends BaseFragmentActivity implements Act
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getSupportMenuInflater().inflate(R.menu.course_schedule, menu);
+        getMenuInflater().inflate(R.menu.course_schedule, menu);
         return true;
     }
 
     @Override
     public boolean onNavigationItemSelected(int position, long id) {
-        Fragment fragment = new DummySectionFragment();
+        Fragment fragment;
         Bundle args = new Bundle();
         if(position == 0)
-            args.putInt(DummySectionFragment.ARG_PAGE_VIEW, R.layout.fragment_course_timetable_day);
-        else if(position == 1)
-            args.putInt(DummySectionFragment.ARG_PAGE_VIEW, R.layout.fragment_course_timetable_week);
+            fragment = new TimeTableDaysFragment();
+        else // if (position == 1)
+            fragment = new TimeTableWeekFragment();
 
         fragment.setArguments(args);
         getSupportFragmentManager().beginTransaction()
@@ -95,62 +99,42 @@ public class CourseTimeTableActivity extends BaseFragmentActivity implements Act
         return true;
     }
 
-
-    public static class DummySectionFragment extends Fragment {
-        private static final String ARG_PAGE_VIEW = "pageview";
-
-        public DummySectionFragment() {
-            super();
+    @Override
+    public boolean getTimeTable(IOnUpdateListener<TimeTable> listener) {
+        if (this.timeTable != null) {
+            listener.onNext(TimetableSource.TYPE, this.timeTable, null);
+            return false;
         }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            int layout = getArguments().getInt(ARG_PAGE_VIEW);
-
-            switch (layout) {
-                case R.layout.fragment_course_timetable_week:
-                    return (timeTableWeekPage = new TimeTableWeekPage(inflater, timeTable)).getView();
-                case R.layout.fragment_course_timetable_day:
-                    return (timeTableDayPage = new TimeTableDayPage(inflater, timeTable)).getView();
-            }
-            return inflater.inflate(layout, null);
+        listeners.add(listener);
+        if (loading) {
+            //Todo Race condition ?
+            return true;
         }
+        loading = true;
+        kiki.fetch(TimetableSource.TYPE, this);
+        return true;
     }
 
-    public class LoadTimeTableDataAsyncTask extends AsyncTaskWithErrorHanding<Void, Void, Kiki.TimeTable> {
+    @Override
+    public void onNext(String type, TimeTable timeTable, BaseSource source) {
+        loading = false;
+        this.timeTable = timeTable;
+        for (IOnUpdateListener<TimeTable> listener: listeners)
+            listener.onNext(type, timeTable, source);
 
-        @Override
-        protected void onError(String msg) {
-            showMessage(msg);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            showMessage("讀取中...", true);
-        }
-
-        @Override
-        protected Kiki.TimeTable _doInBackground(Void... params) throws Exception{
-            if(courseTimeTable == null) courseTimeTable = new Kiki(CourseTimeTableActivity.this);
-            return courseTimeTable.getTimeTable();
-        }
-
-        @Override
-        protected void _onPostExecute(Kiki.TimeTable timeTable) {
-            if (timeTable == null) {
-                showMessage("沒有課表");
-                return;
-            }
-            CourseTimeTableActivity.this.timeTable = timeTable;
-            onDataLoad();
-            hideMessage();
-        }
     }
 
-    private void onDataLoad() {
-        if(timeTableWeekPage != null) timeTableWeekPage.onDataLoaded(timeTable);
-        if(timeTableDayPage != null) timeTableDayPage.onDataLoaded(timeTable);
+    @Override
+    public void onError(String type, Exception err, BaseSource source) {
+        loading = false;
+        for (IOnUpdateListener listener: listeners)
+            listener.onError(type, err, source);
+
+    }
+
+    @Override
+    public void onComplete(String type) {
+        for (IOnUpdateListener listener: listeners)
+            listener.onComplete(type);
     }
 }

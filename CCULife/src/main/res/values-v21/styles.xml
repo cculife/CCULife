@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppBaseTheme.ActionBar" parent="Widget.AppCompat.Light.ActionBar">
+        <item name="android:icon">@drawable/icon</item>
+        <item name="logo">@drawable/ic_launcher</item>
+        <item name="android:homeAsUpIndicator">@null</item>
+        <item name="homeAsUpIndicator">@drawable/ic_ab_back_holo_light_am</item>
+        <item name="displayOptions">showHome|useLogo|showTitle</item>
+        <item name="titleTextStyle">@style/AppBaseTheme.ActionBar.Text</item>
+        <item name="android:background">@drawable/action_bar_background</item>
+    </style>
+</resources>

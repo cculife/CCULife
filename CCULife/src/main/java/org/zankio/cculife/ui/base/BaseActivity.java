@@ -1,15 +1,14 @@
-package org.zankio.cculife.ui.Base;
+package org.zankio.cculife.ui.base;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
 
 import org.zankio.cculife.CCUService.portal.Portal;
 import org.zankio.cculife.CCUService.portal.service.BasePortal;
@@ -17,7 +16,7 @@ import org.zankio.cculife.R;
 import org.zankio.cculife.override.AsyncTaskWithErrorHanding;
 import org.zankio.cculife.ui.SettingsActivity;
 
-public class BaseFragmentActivity extends SherlockFragmentActivity {
+public abstract class BaseActivity extends AppCompatActivity {
 
     protected View MainView;
     protected View messagePanel;
@@ -142,7 +141,7 @@ public class BaseFragmentActivity extends SherlockFragmentActivity {
         }
 
         @Override
-        protected void onError(String msg) {
+        protected void onError(Exception e, String msg) {
             toast = makeToast("載入失敗", toast);
         }
 
@@ -157,7 +156,7 @@ public class BaseFragmentActivity extends SherlockFragmentActivity {
             Portal portal;
             String launchURL[];
 
-            portal = new Portal(BaseFragmentActivity.this);
+            portal = new Portal(BaseActivity.this);
             portal.init();
             launchURL = portal.getSSOPortal(ssoService);
 
@@ -177,4 +176,5 @@ public class BaseFragmentActivity extends SherlockFragmentActivity {
             toast.cancel();
         }
     }
+
 }

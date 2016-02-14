@@ -19,7 +19,8 @@
     <ImageView android:layout_width="wrap_content"
                android:layout_height="wrap_content"
                android:layout_marginBottom="8dp"
-               android:id="@+id/icon"/>
+               android:id="@+id/icon"
+               android:visibility="gone"/>
     <TextView
             android:id="@+id/message"
             android:textAppearance="?android:attr/textAppearanceMedium"

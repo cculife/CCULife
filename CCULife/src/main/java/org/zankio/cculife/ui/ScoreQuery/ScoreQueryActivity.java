@@ -5,61 +5,109 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.Menu;
 
-import com.actionbarsherlock.view.Menu;
-
-import org.zankio.cculife.CCUService.kiki.ScoreQuery;
+import org.zankio.cculife.CCUService.base.listener.IOnUpdateListener;
+import org.zankio.cculife.CCUService.base.source.BaseSource;
+import org.zankio.cculife.CCUService.sourcequery.ScoreQueryNew;
+import org.zankio.cculife.CCUService.sourcequery.model.Grade;
+import org.zankio.cculife.CCUService.sourcequery.source.remote.GradesInquiriesSource;
 import org.zankio.cculife.R;
-import org.zankio.cculife.override.AsyncTaskWithErrorHanding;
-import org.zankio.cculife.ui.Base.BaseFragmentActivity;
+import org.zankio.cculife.ui.base.BaseFragmentActivity;
 
-public class ScoreQueryActivity extends BaseFragmentActivity {
+import java.util.HashMap;
+import java.util.Map;
 
-    SectionsPagerAdapter mSectionsPagerAdapter;
+public class ScoreQueryActivity extends BaseFragmentActivity
+        implements IOnUpdateListener<Grade[]>, IGetGradeData{
+
+    GradePageAdapter mGradePageAdapter;
 
     ViewPager mViewPager;
-    private ScoreQuery scoreQuery;
-    private ScoreQuery.Grade[] grades;
-    private GradePage[] gradePages;
+    private ScoreQueryNew scoreQuery;
+    private Grade[] grades;
+    private HashMap<Integer, IOnUpdateListener> listeners;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scorequery);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        mGradePageAdapter = new GradePageAdapter(getSupportFragmentManager());
 
         mViewPager = (ViewPager) findViewById(R.id.pager);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setAdapter(mGradePageAdapter);
 
         setMessageView(R.id.pager);
         setSSOService(new org.zankio.cculife.CCUService.portal.service.ScoreQuery());
-        new LoadGradeDataAsyncTask().execute();
+
+        showMessage("讀取中...", true);
+        scoreQuery = new ScoreQueryNew(this);
+        scoreQuery.fetch(GradesInquiriesSource.TYPE, this);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getSupportMenuInflater().inflate(R.menu.score, menu);
+        getMenuInflater().inflate(R.menu.score, menu);
         return true;
     }
 
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    @Override
+    public void onComplete(String type) {
 
-        public SectionsPagerAdapter(FragmentManager fm) {
+    }
+
+    @Override
+    public void onError(String type, Exception err, BaseSource source) {
+        showMessage(err.getMessage());
+    }
+
+    @Override
+    public void onNext(String type, Grade[] grades, BaseSource source) {
+        this.grades = grades;
+        hideMessage();
+
+        if(grades == null || grades.length == 0) {
+            showMessage("沒有成績");
+            return;
+        }
+
+        mGradePageAdapter.notifyDataSetChanged();
+
+        if (listeners != null) {
+            for (Map.Entry<Integer, IOnUpdateListener> listenerEntry : listeners.entrySet()) {
+                int key = listenerEntry.getKey();
+                IOnUpdateListener listener = listeners.remove(key);
+                if (listener != null)
+                    listener.onNext(null, grades[key], null);
+            }
+        }
+
+    }
+
+    @Override
+    public void getGrade(int i, IOnUpdateListener listener) {
+        if (listeners == null) listeners = new HashMap<>();
+        listeners.put(i, listener);
+
+        if (this.grades != null) {
+            listener = listeners.remove(i);
+            if (listener != null) {
+                listener.onNext(null, grades[i], null);
+            }
+        }
+    }
+
+    public class GradePageAdapter extends FragmentPagerAdapter {
+        public GradePageAdapter(FragmentManager fm) {
             super(fm);
         }
 
         @Override
         public Fragment getItem(int position) {
-            DummySectionFragment.gradePages = gradePages;
-            DummySectionFragment.grades = grades;
-
-            Fragment fragment = new DummySectionFragment();
+            Fragment fragment = new GradePageFragment();
             Bundle args = new Bundle();
-            args.putInt(DummySectionFragment.ARG_POSITION, position);
+            args.putInt(GradePageFragment.ARG_GRADE, position);
             fragment.setArguments(args);
             return fragment;
         }
@@ -71,72 +119,7 @@ public class ScoreQueryActivity extends BaseFragmentActivity {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return grades[position].Grade;
-        }
-    }
-
-    public static class DummySectionFragment extends Fragment {
-
-        public static final String ARG_POSITION = "position";
-        private static ScoreQuery.Grade[] grades;
-        private static GradePage[] gradePages;
-
-        public DummySectionFragment() {
-        }
-
-        /* public DummySectionFragment(ScoreQuery.Grade[] grades, GradePage[] gradePages) {
-            this.grades = grades;
-            this.gradePages = gradePages;
-        } */
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            int index = getArguments().getInt(ARG_POSITION);
-            GradePage gradePage = new GradePage(inflater, grades[index]);
-            gradePages[index] = gradePage;
-            return gradePage.getView();
-        }
-    }
-
-    public class LoadGradeDataAsyncTask extends AsyncTaskWithErrorHanding<Void, Void, ScoreQuery.Grade[]> {
-
-        @Override
-        protected void onError(String msg) {
-            showMessage(msg);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            showMessage("讀取中...", true);
-        }
-
-        @Override
-        protected ScoreQuery.Grade[] _doInBackground(Void... params) throws Exception {
-            if(scoreQuery == null) scoreQuery = new ScoreQuery(ScoreQueryActivity.this);
-            return scoreQuery.getGrades();
-        }
-
-        @Override
-        protected void _onPostExecute(ScoreQuery.Grade[] grades) {
-            if(grades == null || grades.length == 0) {
-                showMessage("沒有成績");
-                return;
-            }
-
-            ScoreQueryActivity.this.grades = grades;
-            ScoreQueryActivity.this.gradePages = new GradePage[grades.length];
-            onDataLoad();
-            hideMessage();
-        }
-    }
-
-    private void onDataLoad() {
-
-        mSectionsPagerAdapter.notifyDataSetChanged();
-        for (int i = 0; i < gradePages.length; i++) {
-            if(gradePages[i] != null) gradePages[i].onDataLoaded(grades[i]);
+            return grades[position].grade;
         }
     }
 
