@@ -13,4 +13,6 @@ public class Url {
     public static final String COURSE_ANNOUNCE_CONTENT = "https://ecourse.ccu.edu.tw/php/news/%s";
     public static final String COURSE_HOMEWORK = "https://ecourse.ccu.edu.tw/php/Testing_Assessment/show_allwork.php";
     public static final String COURSE_HOMEWORK_CONTENT = "https://ecourse.ccu.edu.tw/php/Testing_Assessment/show_allwork.php?work_id=%d&action=showwork";
+    public static final String COURSE_ROLLCALL = "https://ecourse.ccu.edu.tw/php/Trackin/ShowStudentRollBook.php";
+
 }
