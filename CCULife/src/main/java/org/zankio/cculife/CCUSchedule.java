@@ -4,10 +4,12 @@ import android.content.Context;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -86,7 +88,20 @@ public class CCUSchedule {
     }
 
     public class Item {
+        private static final String weekName = "日一二三四五六";
         public Calendar Date;
         public String Title;
+
+        public String toDateString() {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM / dd", Locale.US);
+            return String.format("%s (%s)",
+                    simpleDateFormat.format(this.Date.getTime()),
+                    weekName.charAt(this.Date.get(Calendar.DAY_OF_WEEK) - 1));
+        }
+
+        public boolean isToday(int today_year, int today_day_of_year) {
+            return this.Date.get(Calendar.YEAR) == today_year
+                    && this.Date.get(Calendar.DAY_OF_YEAR) == today_day_of_year;
+        }
     }
 }
