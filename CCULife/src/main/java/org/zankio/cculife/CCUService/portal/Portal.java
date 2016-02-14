@@ -40,9 +40,8 @@ public class Portal extends BaseService {
 
     @Override
     public boolean getSession() throws Exception {
-        SessionManager sessionManager = SessionManager.getInstance(context);
+        UserManager sessionManager = UserManager.getInstance(context);
         return getSession(sessionManager.getUserName(), sessionManager.getPassword());
-
     }
 
     public boolean getSession(String user, String pass) throws Exception {

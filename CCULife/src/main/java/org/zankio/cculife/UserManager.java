@@ -8,7 +8,7 @@ import org.zankio.cculife.ui.LoginActivity;
 
 import java.util.HashMap;
 
-public class SessionManager {
+public class UserManager {
 
 
     private final static String KEY_ISLOGIN = "IsLogined";
@@ -28,15 +28,15 @@ public class SessionManager {
 
     private onLoginStateChangedListener onLoginStateChangedListener;
 
-    private static SessionManager Instance = null;
+    private static UserManager Instance = null;
 
-    public static SessionManager getInstance() {
-        if(Instance == null) throw new IllegalArgumentException("SessionManager is Uninitialized");
+    public static UserManager getInstance() {
+        if(Instance == null) throw new IllegalArgumentException("UserManager is Uninitialized");
         return Instance;
     }
 
-    public static SessionManager getInstance(Context context){
-        if(Instance == null) Instance = new SessionManager(context.getApplicationContext());
+    public static UserManager getInstance(Context context){
+        if(Instance == null) Instance = new UserManager(context.getApplicationContext());
         return Instance;
     }
 
@@ -44,7 +44,7 @@ public class SessionManager {
      * 管理帳號密碼資料
      * @param context
      */
-    public SessionManager(Context context){
+    public UserManager(Context context){
         this.context = context;
         this.preferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         this.save = preferences.getBoolean(KEY_SAVE, false);
@@ -132,7 +132,7 @@ public class SessionManager {
         return save;
     }
 
-    public SessionManager.onLoginStateChangedListener getOnLoginStateChangedListener() {
+    public UserManager.onLoginStateChangedListener getOnLoginStateChangedListener() {
         return onLoginStateChangedListener;
     }
 
@@ -140,7 +140,7 @@ public class SessionManager {
      * 設定當登入資訊改變時的Callback
      * @param onLoginStateChangedListener
      */
-    public void setOnLoginStateChangedListener(SessionManager.onLoginStateChangedListener onLoginStateChangedListener) {
+    public void setOnLoginStateChangedListener(UserManager.onLoginStateChangedListener onLoginStateChangedListener) {
         this.onLoginStateChangedListener = onLoginStateChangedListener;
     }
 
