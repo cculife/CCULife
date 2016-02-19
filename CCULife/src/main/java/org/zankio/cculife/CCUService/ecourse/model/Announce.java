@@ -45,19 +45,12 @@ public class Announce {
     }
 
     //Todo: cancal task;
-    public void getContent(final IOnUpdateListener listener) {
+    public void getContent(IOnUpdateListener<Announce> listener) {
         if (this.content != null) {
             listener.onNext(AnnounceContentSource.TYPE, this, null);
             return;
         }
 
-        IOnUpdateListener cacheListener = new OnUpdateListener() {
-            @Override
-            public void onNext(String type, Object data, BaseSource source) {
-                Announce.this.content = (String) data;
-                super.onNext(type, data, source);
-            }
-        };
-        ecourse.fetch(AnnounceContentSource.TYPE, cacheListener, this);
+        ecourse.fetch(AnnounceContentSource.TYPE, listener, this);
     }
 }
