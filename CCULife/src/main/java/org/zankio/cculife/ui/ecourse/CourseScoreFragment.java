@@ -20,6 +20,7 @@ import org.zankio.cculife.CCUService.ecourse.model.Score;
 import org.zankio.cculife.CCUService.ecourse.model.ScoreGroup;
 import org.zankio.cculife.R;
 import org.zankio.cculife.services.DownloadService;
+import org.zankio.cculife.ui.base.BaseMessageFragment;
 import org.zankio.cculife.ui.base.IGetCourseData;
 
 

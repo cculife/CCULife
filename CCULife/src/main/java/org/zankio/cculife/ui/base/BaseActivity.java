@@ -1,8 +1,13 @@
 package org.zankio.cculife.ui.base;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -18,6 +23,7 @@ import org.zankio.cculife.ui.SettingsActivity;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
+    private boolean toolbarInited = false;
     protected View MainView;
     protected View messagePanel;
     protected TextView messageView;
@@ -43,6 +49,24 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Nullable
+    @Override
+    public android.support.v7.app.ActionBar getSupportActionBar() {
+        if (!toolbarInited) initToolbar();
+        return super.getSupportActionBar();
+    }
+
+    private void initToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbarInited = true;
     }
 
     public void setSSOService (BasePortal Service) {

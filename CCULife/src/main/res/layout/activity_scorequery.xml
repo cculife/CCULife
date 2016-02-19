@@ -1,25 +1,36 @@
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
-       xmlns:tools="http://schemas.android.com/tools"
-       tools:context=".ScoreActivity">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ScoreActivity"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
 
-    <include layout="@layout/layout_msg_panel" />
+    <include layout="@layout/toolbar" android:id="@+id/toolbar"/>
+
+    <FrameLayout
+        android:layout_below="@id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+        <include android:id="@+id/message_panel"
+            layout="@layout/layout_msg_panel"/>
+    </FrameLayout>
 
     <android.support.v4.view.ViewPager
-            android:id="@+id/pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
+        android:id="@+id/pager"
+        android:layout_below="@id/toolbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        >
 
         <android.support.v4.view.PagerTitleStrip
-                android:id="@+id/pager_title_strip"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top"
-                android:background="#33b5e5"
-                android:paddingBottom="4dp"
-                android:paddingTop="4dp"
-                android:textColor="#fff" />
+            android:id="@+id/pager_title_strip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:background="#33b5e5"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp"
+            android:textColor="#fff" />
 
     </android.support.v4.view.ViewPager>
-</merge>
+</RelativeLayout>
 

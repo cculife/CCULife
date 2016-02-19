@@ -15,6 +15,7 @@ import org.zankio.cculife.CCUService.base.source.BaseSource;
 import org.zankio.cculife.CCUService.ecourse.model.Course;
 import org.zankio.cculife.CCUService.ecourse.model.RollCall;
 import org.zankio.cculife.R;
+import org.zankio.cculife.ui.base.BaseMessageFragment;
 import org.zankio.cculife.ui.base.IGetCourseData;
 
 

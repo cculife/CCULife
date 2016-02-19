@@ -12,6 +12,34 @@
         <item name="android:background">#AAFF0000</item>
     </style>
 
+    <style name="NewAppTheme"
+        parent="NewAppBaseTheme" >
+    </style>
+
+    <style name="NewAppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:colorBackground">@android:color/white</item>
+        <item name="colorPrimary">@color/White</item>
+        <item name="colorPrimaryDark">#A1887F</item>
+        <item name="colorAccent">#8d6e63</item>
+        <item name="logo">@drawable/ic_launcher</item>
+        <item name="toolbarStyle">@style/NewAppBaseTheme.Toolbar</item>
+    </style>
+
+    <style name="NewAppBaseTheme.Toolbar" parent="@style/Widget.AppCompat.Toolbar">
+        <item name="titleTextAppearance">@style/NewAppBaseTheme.Toolbar.Title</item>
+        <item name="subtitleTextAppearance">@style/NewAppBaseTheme.Toolbar.Subtitle</item>
+        <item name="titleMarginStart">10dp</item>
+    </style>
+    <style name="NewAppBaseTheme.Toolbar.Title" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textColor">@color/DarkBrown</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+    <style name="NewAppBaseTheme.Toolbar.Subtitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
+        <item name="android:textColor">@color/DarkGray</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+
     <style
         name="AppTheme"
         parent="AppBaseTheme" >

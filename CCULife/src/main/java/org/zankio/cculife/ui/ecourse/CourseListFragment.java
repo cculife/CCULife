@@ -26,6 +26,7 @@ import org.zankio.cculife.CCUService.kiki.Kiki;
 import org.zankio.cculife.Debug;
 import org.zankio.cculife.R;
 import org.zankio.cculife.ui.base.BaseFragmentActivity;
+import org.zankio.cculife.ui.base.BaseMessageFragment;
 
 public class CourseListFragment extends BaseMessageFragment implements IOnUpdateListener<Course[]>{
 

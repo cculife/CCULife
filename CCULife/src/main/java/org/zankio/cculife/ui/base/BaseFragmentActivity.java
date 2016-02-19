@@ -3,6 +3,7 @@ package org.zankio.cculife.ui.base;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -24,6 +25,7 @@ public class BaseFragmentActivity extends AppCompatActivity {
     protected ProgressBar messageLoaging;
     protected ImageView messageIcon;
     protected BasePortal ssoService = null;
+    private boolean toolbarInited;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -43,6 +45,17 @@ public class BaseFragmentActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public android.support.v7.app.ActionBar getSupportActionBar() {
+        if (!toolbarInited) initToolbar();
+        return super.getSupportActionBar();
+    }
+
+    private void initToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbarInited = true;
     }
 
     public void setSSOService (BasePortal Service) {

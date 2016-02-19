@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -24,9 +25,9 @@ import org.zankio.cculife.ui.base.IGetCourseData;
 
 import java.util.Locale;
 
-public class CourseFragment extends Fragment implements ActionBar.TabListener {
+public class CourseFragment extends Fragment {
 
-    private static Page[] pages = new Page[0];
+    private Page[] pages;// = new Page[0];
 
     //ToDo Don't reload on rotation.
     CoursePagerAdapter mSectionsPagerAdapter;
@@ -51,6 +52,7 @@ public class CourseFragment extends Fragment implements ActionBar.TabListener {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
         pages = new Page[]{
                 new Page(R.string.title_announce, new CourseAnnounceFragment()),
                 new Page(R.string.title_score, new CourseScoreFragment()),
@@ -65,7 +67,6 @@ public class CourseFragment extends Fragment implements ActionBar.TabListener {
         this.course = courseDataContext.getCourse(id);
         actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
             actionBar.setTitle(course.name);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
@@ -77,14 +78,6 @@ public class CourseFragment extends Fragment implements ActionBar.TabListener {
         }
 
         mSectionsPagerAdapter.notifyDataSetChanged();
-
-        actionBar.removeAllTabs();
-        for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
-            actionBar.addTab(
-                    actionBar.newTab()
-                            .setText(mSectionsPagerAdapter.getPageTitle(i))
-                            .setTabListener(this));
-        }
 
         ((BaseFragmentActivity)getActivity()).setSSOService(new org.zankio.cculife.CCUService.portal.service.Ecourse().setCourseID(course.courseid));
     }
@@ -111,15 +104,10 @@ public class CourseFragment extends Fragment implements ActionBar.TabListener {
         super.onViewCreated(view, savedInstanceState);
 
 
+        TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tab);
         mViewPager = (ViewPager) view.findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-
-        mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                actionBar.setSelectedNavigationItem(position);
-            }
-        });
+        tabLayout.setupWithViewPager(mViewPager);
 
     }
 
@@ -128,7 +116,6 @@ public class CourseFragment extends Fragment implements ActionBar.TabListener {
         super.onDestroyView();
         final ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
             actionBar.setTitle("Course");
         }
 
@@ -168,16 +155,6 @@ public class CourseFragment extends Fragment implements ActionBar.TabListener {
 
         return super.onOptionsItemSelected(item);
     }
-
-    @Override
-    public void onTabSelected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) {
-        if (mViewPager != null) mViewPager.setCurrentItem(tab.getPosition());
-    }
-
-    @Override
-    public void onTabUnselected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) { }
-    @Override
-    public void onTabReselected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) { }
 
     public class CoursePagerAdapter extends FragmentPagerAdapter {
 

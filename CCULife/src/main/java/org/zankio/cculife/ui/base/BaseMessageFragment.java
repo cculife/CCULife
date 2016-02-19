@@ -1,4 +1,4 @@
-package org.zankio.cculife.ui.ecourse;
+package org.zankio.cculife.ui.base;
 
 import android.support.v4.app.Fragment;
 import android.util.Log;

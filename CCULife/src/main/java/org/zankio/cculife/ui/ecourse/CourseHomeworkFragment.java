@@ -29,6 +29,7 @@ import org.zankio.cculife.CCUService.ecourse.model.Course;
 import org.zankio.cculife.CCUService.ecourse.model.Homework;
 import org.zankio.cculife.CCUService.ecourse.source.remote.HomeworkContentSource;
 import org.zankio.cculife.R;
+import org.zankio.cculife.ui.base.BaseMessageFragment;
 import org.zankio.cculife.ui.base.IGetCourseData;
 
 

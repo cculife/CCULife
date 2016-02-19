@@ -14,7 +14,7 @@ import org.zankio.cculife.CCUService.base.listener.IOnUpdateListener;
 import org.zankio.cculife.CCUService.base.source.BaseSource;
 import org.zankio.cculife.CCUService.kiki.model.TimeTable;
 import org.zankio.cculife.R;
-import org.zankio.cculife.ui.ecourse.BaseMessageFragment;
+import org.zankio.cculife.ui.base.BaseMessageFragment;
 import org.zankio.cculife.view.LessionView;
 
 import java.util.Calendar;
