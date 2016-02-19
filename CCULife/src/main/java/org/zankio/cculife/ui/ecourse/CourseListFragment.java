@@ -139,7 +139,7 @@ public class CourseListFragment extends BaseMessageFragment implements IOnUpdate
         private boolean ignore_ecourse_warnning;
 
         public void setCourses(Course[] courses){
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
             this.ignore_ecourse_warnning = preferences.getBoolean("ignore_ecourse_warnning", false);
 
             this.courses = courses;
