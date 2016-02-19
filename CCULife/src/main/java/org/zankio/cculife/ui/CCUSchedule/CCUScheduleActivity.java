@@ -148,7 +148,7 @@ public class CCUScheduleActivity extends BaseActivity {
 
             // is today
             if (item.isToday(TODAY_YEAR, TODAY_DAY_OF_YEAR))
-                background = inflater.getContext().getResources().getColor(R.color.Today, null);
+                background = inflater.getContext().getResources().getColor(R.color.Today);
 
             // date is same as prev item
             if (position != 0 && item.Date.compareTo(items[position - 1].Date) == 0)
