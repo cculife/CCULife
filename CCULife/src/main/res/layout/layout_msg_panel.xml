@@ -1,32 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:visibility="gone"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_gravity="center"
-              android:gravity="center_horizontal"
-              android:orientation="vertical"
-              android:id="@+id/message_panel">
+    android:visibility="gone"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:id="@+id/message_panel">
 
-    <ProgressBar style="?android:attr/progressBarStyleLarge"
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:visibility="gone"
-        android:id="@+id/loading"/>
+        android:id="@+id/loading" />
 
-    <ImageView android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:layout_marginBottom="8dp"
-               android:id="@+id/icon"
-               android:visibility="gone"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:id="@+id/icon"
+        android:visibility="gone" />
+
     <TextView
-            android:id="@+id/message"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/Gray"
-            android:fontFamily="sans-serif-light"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp" />
+        android:id="@+id/message"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/Gray"
+        android:fontFamily="sans-serif-light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp" />
 </LinearLayout>

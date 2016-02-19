@@ -1,38 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true">
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
 
         <ImageView
-                android:layout_width="102dp"
-                android:layout_height="102dp"
-                android:id="@+id/icon"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/ecourse"
-                android:maxHeight="70dp"
-                android:maxWidth="70dp"
-                android:adjustViewBounds="true"
-                android:layout_margin="10dp"
-                android:layout_gravity="center_horizontal"
-            android:scaleType="center" />
+            android:id="@+id/icon"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="102dp"
+            android:layout_height="102dp"
+            android:layout_margin="10dp"
+            android:maxHeight="70dp"
+            android:maxWidth="70dp"
+            android:scaleType="center"
+            android:adjustViewBounds="true"
+            android:src="@drawable/ecourse" />
 
         <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="New Text"
-                android:id="@+id/title"
-                android:layout_below="@+id/icon"
-                android:layout_centerHorizontal="true"
-                android:layout_margin="10dp"
-                android:textSize="20sp"
-                android:layout_gravity="center_horizontal"/>
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="10dp"
+            android:textSize="20sp"
+            android:text="Action" />
     </LinearLayout>
 </RelativeLayout>

@@ -6,8 +6,9 @@
     android:orientation="vertical"
     android:background="#FFE5E5E5">
 
-    <include layout="@layout/toolbar"
-        android:id="@+id/toolbar"/>
+    <include
+        layout="@layout/toolbar"
+        android:id="@+id/toolbar" />
 
     <ScrollView
         android:layout_margin="16dp"
@@ -18,7 +19,7 @@
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
@@ -37,7 +38,7 @@
                 android:id="@+id/title" />
 
             <TextView
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/author_say"
                 android:layout_below="@+id/scrollView"
@@ -53,7 +54,7 @@
                 android:autoLink="web" />
 
             <TextView
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Web"
                 android:layout_below="@+id/scrollView"
@@ -68,7 +69,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/web"
                 android:layout_below="@+id/scrollView"
@@ -85,7 +86,7 @@
                 android:id="@+id/textView" />
 
             <TextView
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Github"
                 android:layout_below="@+id/scrollView"
@@ -100,7 +101,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/opensource"
                 android:layout_below="@+id/scrollView"
@@ -116,7 +117,7 @@
                 android:autoLink="web" />
 
             <TextView
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Third Party Library"
                 android:layout_below="@+id/scrollView"
@@ -131,7 +132,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/third_party"
                 android:typeface="sans"
@@ -145,7 +146,7 @@
                 android:textSize="20sp" />
 
             <TextView
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Logo"
                 android:layout_below="@+id/scrollView"
@@ -159,7 +160,7 @@
                 android:padding="20dp"
                 android:textStyle="bold" />
 
-            <include layout="@layout/about_logo"/>
+            <include layout="@layout/about_logo" />
 
         </LinearLayout>
     </ScrollView>

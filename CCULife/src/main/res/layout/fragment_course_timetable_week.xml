@@ -1,116 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="30dp">
-        <TextView
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:id="@+id/ind"
-                android:layout_weight=".2"
-                android:gravity="center"/>
-        <TextView
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:text="@string/monday"
-                android:id="@+id/mon"
-                android:layout_weight="1"
-                android:gravity="center"/>
+        android:layout_width="match_parent"
+        android:layout_height="30dp">
 
         <TextView
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:text="@string/tuesday"
-                android:id="@+id/tue"
-                android:layout_weight="1"
-                android:gravity="center"/>
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:id="@+id/ind"
+            android:layout_weight=".2"
+            android:gravity="center" />
 
         <TextView
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:text="@string/wedensday"
-                android:id="@+id/wed"
-                android:layout_weight="1"
-                android:gravity="center"/>
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="@string/monday"
+            android:id="@+id/mon"
+            android:layout_weight="1"
+            android:gravity="center" />
 
         <TextView
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:text="@string/thursday"
-                android:id="@+id/thu"
-                android:layout_weight="1"
-                android:gravity="center"/>
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="@string/tuesday"
+            android:id="@+id/tue"
+            android:layout_weight="1"
+            android:gravity="center" />
 
         <TextView
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:text="@string/friday"
-                android:id="@+id/fri"
-                android:layout_weight="1"
-                android:gravity="center"/>
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="@string/wedensday"
+            android:id="@+id/wed"
+            android:layout_weight="1"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="@string/thursday"
+            android:id="@+id/thu"
+            android:layout_weight="1"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="@string/friday"
+            android:id="@+id/fri"
+            android:layout_weight="1"
+            android:gravity="center" />
     </LinearLayout>
 
     <ScrollView
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:id="@+id/scrollView">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/scrollView">
 
         <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/weekIndex"
-                    android:layout_weight=".3">
-            </LinearLayout>
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/weekIndex"
+                android:layout_weight=".3"></LinearLayout>
 
             <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/weekMonday"
-                    android:layout_weight="1">
-            </LinearLayout>
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/weekMonday"
+                android:layout_weight="1"></LinearLayout>
 
             <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/weekTueday"
-                    android:layout_weight="1">
-            </LinearLayout>
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/weekTueday"
+                android:layout_weight="1"></LinearLayout>
 
             <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/weekWednesday"
-                    android:layout_weight="1">
-            </LinearLayout>
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/weekWednesday"
+                android:layout_weight="1"></LinearLayout>
 
             <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/weekThursday"
-                    android:layout_weight="1">
-            </LinearLayout>
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/weekThursday"
+                android:layout_weight="1"></LinearLayout>
 
             <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/weekFriday"
-                    android:layout_weight="1">
-            </LinearLayout>
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/weekFriday"
+                android:layout_weight="1"></LinearLayout>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

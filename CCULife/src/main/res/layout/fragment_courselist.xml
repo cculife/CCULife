@@ -7,8 +7,8 @@
     <include layout="@layout/layout_msg_panel" />
 
     <ListView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/list"
-            tools:listitem="@android:layout/simple_expandable_list_item_2"/>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/list"
+        tools:listitem="@android:layout/simple_expandable_list_item_2" />
 </FrameLayout>

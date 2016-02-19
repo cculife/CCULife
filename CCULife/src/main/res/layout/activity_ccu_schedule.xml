@@ -5,8 +5,9 @@
     android:orientation="vertical"
     tools:context=".CCUScheduleActivity">
 
-    <include layout="@layout/toolbar"
-        android:id="@+id/toolbar"/>
+    <include
+        layout="@layout/toolbar"
+        android:id="@+id/toolbar" />
 
     <ListView
         android:layout_margin="16dp"

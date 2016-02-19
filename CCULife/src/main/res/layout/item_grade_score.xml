@@ -1,43 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="horizontal"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
-    <TextView
-            android:layout_width="0dp"
-            android:layout_height="30dip"
-            android:text="CourseID"
-            android:id="@+id/CourseID"
-            android:layout_gravity="left|center_vertical"
-            android:layout_weight="1.5"
-            android:gravity="center_vertical"/>
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="CourseName"
-            android:id="@+id/Name"
-            android:layout_gravity="left|center_vertical"
-            android:layout_weight="3"
-            android:gravity="center_vertical"/>
+        android:id="@+id/CourseID"
+        android:layout_width="0dp"
+        android:layout_height="30dip"
+        android:layout_gravity="start|center_vertical"
+        android:layout_weight="1.5"
+        android:gravity="center_vertical"
+        android:text="CourseID" />
 
     <TextView
-            android:layout_width="0dp"
-            android:layout_height="30dip"
-            android:text="Credit"
-            android:id="@+id/Credit"
-            android:layout_gravity="center"
-            android:layout_weight=".7"
-            android:gravity="center_vertical"/>
+        android:id="@+id/Name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|center_vertical"
+        android:layout_weight="3"
+        android:gravity="center_vertical"
+        android:text="CourseName" />
 
     <TextView
-            android:layout_width="0dp"
-            android:layout_height="30dip"
-            android:text="Score"
-            android:id="@+id/Score"
-            android:layout_gravity="center"
-            android:layout_weight=".7"
-            android:gravity="center_vertical"/>
+        android:id="@+id/Credit"
+        android:layout_width="0dp"
+        android:layout_height="30dip"
+        android:layout_gravity="center"
+        android:layout_weight=".7"
+        android:gravity="center_vertical"
+        android:text="Credit" />
+
+    <TextView
+        android:id="@+id/Score"
+        android:layout_width="0dp"
+        android:layout_height="30dip"
+        android:layout_gravity="center"
+        android:layout_weight=".7"
+        android:gravity="center_vertical"
+        android:text="Score" />
 
 </LinearLayout>

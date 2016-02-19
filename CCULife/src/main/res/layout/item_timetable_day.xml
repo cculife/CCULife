@@ -10,6 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:padding="3dp"
         android:text="CourseName"
@@ -17,18 +18,19 @@
 
     <TextView
         android:id="@+id/ClassInfo"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_below="@+id/CourseName"
-        android:ellipsize="marquee"
         android:paddingLeft="3dp"
         android:paddingRight="3dp"
         android:scrollHorizontally="true"
-        android:text="ClassInfo"
         android:singleLine="true"
+        android:ellipsize="marquee"
         android:marqueeRepeatLimit="1"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/Gray"/>
+        android:text="ClassInfo"
+        android:textColor="@color/Gray"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </RelativeLayout>
