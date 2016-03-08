@@ -36,7 +36,9 @@ public abstract class BaseRepo<TIdentify> {
     public Connection buildConnection(String url) {
         Connection connection = Jsoup.connect(url);
         connection.timeout(CONNECT_TIMEOUT);
-        session.buildConnection(connection);
+        if (session != null)
+            session.buildConnection(connection);
+
         return connection;
     }
 
