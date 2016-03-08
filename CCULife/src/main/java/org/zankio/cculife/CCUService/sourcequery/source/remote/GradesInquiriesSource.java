@@ -11,7 +11,7 @@ import org.zankio.cculife.CCUService.sourcequery.ScoreQueryNew;
 import org.zankio.cculife.CCUService.sourcequery.model.Grade;
 import org.zankio.cculife.CCUService.sourcequery.model.Score;
 
-public class GradesInquiriesSource extends BaseSource<Grade[]>{
+public class GradesInquiriesSource extends BaseSource<Grade[]> {
     public final static String TYPE = "GRADES_INQUIRIES";
     public final static String[] DATA_TYPES = { TYPE };
     public final static SourceProperty property;

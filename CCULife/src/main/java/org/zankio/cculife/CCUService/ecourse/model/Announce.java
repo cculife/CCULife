@@ -1,8 +1,6 @@
 package org.zankio.cculife.CCUService.ecourse.model;
 
 import org.zankio.cculife.CCUService.base.listener.IOnUpdateListener;
-import org.zankio.cculife.CCUService.base.listener.OnUpdateListener;
-import org.zankio.cculife.CCUService.base.source.BaseSource;
 import org.zankio.cculife.CCUService.ecourse.Ecourse;
 import org.zankio.cculife.CCUService.ecourse.source.remote.AnnounceContentSource;
 

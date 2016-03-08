@@ -35,11 +35,14 @@ public class TimetableSource extends BaseSource<TimeTable> {
 
     public TimeTable parserTimeTable(Document document) {
         Elements classes, fields, table;
-        String fieldText, className = "", classTime = "", classRoom = "", classTeacher = "";
+        String fieldText,
+                className = "",
+                classTime = "",
+                classRoom = "",
+                classTeacher = "",
+                classID = "",
+                classCourseID = "";
 
-        String weekName = "日一二三四五六";
-        String[] daylist;
-        String[] timelist;
 
         TimeTable result;
         TimeTable.Class mClass;

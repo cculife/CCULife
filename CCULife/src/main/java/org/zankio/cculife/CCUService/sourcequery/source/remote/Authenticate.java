@@ -12,7 +12,7 @@ import org.zankio.cculife.override.LoginErrorException;
 
 import java.io.IOException;
 
-public class Authenticate extends BaseSource<Boolean>{
+public class Authenticate extends BaseSource<Boolean> {
     public final static String TYPE = "AUTH";
     public final static String[] DATA_TYPES = { TYPE };
     public final static SourceProperty property;

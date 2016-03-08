@@ -10,6 +10,7 @@ import android.view.Menu;
 import org.zankio.cculife.CCUService.base.listener.IOnUpdateListener;
 import org.zankio.cculife.CCUService.base.source.BaseSource;
 import org.zankio.cculife.CCUService.sourcequery.ScoreQueryNew;
+import org.zankio.cculife.CCUService.portal.service.ScoreQuery;
 import org.zankio.cculife.CCUService.sourcequery.model.Grade;
 import org.zankio.cculife.CCUService.sourcequery.source.remote.GradesInquiriesSource;
 import org.zankio.cculife.R;
@@ -19,14 +20,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ScoreQueryActivity extends BaseFragmentActivity
-        implements IOnUpdateListener<Grade[]>, IGetGradeData{
+        implements IOnUpdateListener<Grade[]>, IGetGradeData {
 
-    GradePageAdapter mGradePageAdapter;
 
-    ViewPager mViewPager;
+    private GradePageAdapter mGradePageAdapter;
+    private ViewPager mViewPager;
     private ScoreQueryNew scoreQuery;
     private Grade[] grades;
-    private HashMap<Integer, IOnUpdateListener> listeners;
+    private HashMap<Integer, IOnUpdateListener<Grade>> listeners;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +40,7 @@ public class ScoreQueryActivity extends BaseFragmentActivity
         mViewPager.setAdapter(mGradePageAdapter);
 
         setMessageView(R.id.pager);
-        setSSOService(new org.zankio.cculife.CCUService.portal.service.ScoreQuery());
+        setSSOService(new ScoreQuery());
 
         showMessage("讀取中...", true);
         scoreQuery = new ScoreQueryNew(this);
@@ -75,9 +76,9 @@ public class ScoreQueryActivity extends BaseFragmentActivity
         mGradePageAdapter.notifyDataSetChanged();
 
         if (listeners != null) {
-            for (Map.Entry<Integer, IOnUpdateListener> listenerEntry : listeners.entrySet()) {
+            for (Map.Entry<Integer, IOnUpdateListener<Grade>> listenerEntry : listeners.entrySet()) {
                 int key = listenerEntry.getKey();
-                IOnUpdateListener listener = listeners.remove(key);
+                IOnUpdateListener<Grade> listener = listeners.remove(key);
                 if (listener != null)
                     listener.onNext(null, grades[key], null);
             }
@@ -86,7 +87,7 @@ public class ScoreQueryActivity extends BaseFragmentActivity
     }
 
     @Override
-    public void getGrade(int i, IOnUpdateListener listener) {
+    public void getGrade(int i, IOnUpdateListener<Grade> listener) {
         if (listeners == null) listeners = new HashMap<>();
         listeners.put(i, listener);
 

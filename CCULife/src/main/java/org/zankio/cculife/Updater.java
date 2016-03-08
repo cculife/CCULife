@@ -331,7 +331,7 @@ public class Updater {
         if(elements != null && elements.size() > 0) {
             try {
                 return Integer.parseInt(elements.text());
-            } catch (NumberFormatException e) {}
+            } catch (NumberFormatException ignored) {}
         }
         return -1;
     }

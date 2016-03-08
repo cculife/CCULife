@@ -1,10 +1,8 @@
 package org.zankio.cculife.ui.base;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -59,11 +57,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Nullable
     @Override
     public android.support.v7.app.ActionBar getSupportActionBar() {
-        if (!toolbarInited) initToolbar();
+        initToolbar();
         return super.getSupportActionBar();
     }
 
-    private void initToolbar() {
+    protected void initToolbar() {
+        if (toolbarInited) return;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbarInited = true;
