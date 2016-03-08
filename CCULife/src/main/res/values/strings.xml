@@ -5,6 +5,10 @@
     <string name="title_activity_home">CCULife</string>
     <string name="action_settings">設定</string>
     <string name="title_activity_ecourse">Ecourse</string>
+    <string name="ecourse">Ecourse</string>
+    <string name="course">Course</string>
+    <string name="setting">設定</string>
+    <string name="classmate">修課同學</string>
     <string name="title_activity_course_list">CourseList</string>
     <string name="title_activity_course">Course</string>
     <string name="title_announce">公告</string>

@@ -2,7 +2,6 @@ package org.zankio.cculife.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -27,26 +26,29 @@ public class HomeActivity extends BaseActivity {
 
     private CCUService loadServices;
     private UserManager sessionManager;
-    private CCUService[] ccuServices = {
-            new CCUService(CourseActivity.class, "Ecourse", R.drawable.ecourse, true)
-          , new CCUService(CourseTimeTableActivity.class, "課表", R.drawable.schedule, true)
-          , new CCUService(ScoreQueryActivity.class, "成績查詢", R.drawable.score, true)
-          , new CCUService(CCUScheduleActivity.class, "行事曆", R.drawable.ccuschedule)
-          //, new CCUService(null, "飲食", null)
-          //, new CCUService(null, "選課", null, true)
-          //, new CCUService(null, "工讀生", null, true)
-          //, new CCUService(null, "Wifi 自動連線", null)
+    private CCUService[] ccuServices;
 
-    };
+    private void initMenu() {
+        ccuServices = new CCUService[]{
+                new CCUService(CourseActivity.class, getString(R.string.ecourse), R.drawable.ecourse, true)
+                , new CCUService(CourseTimeTableActivity.class, getString(R.string.timetable), R.drawable.timetable, true)
+                , new CCUService(ScoreQueryActivity.class, getString(R.string.score_query), R.drawable.score, true)
+                , new CCUService(CCUScheduleActivity.class, getString(R.string.schedule), R.drawable.ccuschedule)
+                , new CCUService(TransportActivity.class, getString(R.string.transport), R.drawable.trans)
+                , new CCUService(SettingsActivity.class, getString(R.string.setting), R.drawable.setting)
+                //, new CCUService(null, "飲食", null)
+                //, new CCUService(null, "選課", null, true)
+                //, new CCUService(null, "工讀生", null, true)
+                //, new CCUService(null, "Wifi 自動連線", null)
+
+        };
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_home);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("CCULife");
-        actionBar.setSubtitle("Enjoy your life!");
+        initMenu();
 
         sessionManager = UserManager.getInstance(this);
 
@@ -124,18 +126,15 @@ public class HomeActivity extends BaseActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            LayoutInflater inflater = (LayoutInflater) LayoutInflater.from(HomeActivity.this);
-            View view;
-
+            LayoutInflater inflater = LayoutInflater.from(HomeActivity.this);
             CCUService service = services[position];
-            if (convertView == null)
-                view = inflater.inflate(R.layout.item_home, null);
-            else
-                view = convertView;
 
-            ((TextView)view.findViewById(R.id.title)).setText(service.Title);
-            ((ImageView)view.findViewById(R.id.icon)).setImageResource(service.Image);
-            return view;
+            if (convertView == null)
+                convertView = inflater.inflate(R.layout.item_home, parent, false);
+
+            ((TextView)convertView.findViewById(R.id.title)).setText(service.Title);
+            ((ImageView)convertView.findViewById(R.id.icon)).setImageResource(service.Image);
+            return convertView;
         }
     }
 

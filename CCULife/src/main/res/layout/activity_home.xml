@@ -1,23 +1,51 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    android:maxHeight="740dp"
     tools:context=".HomeActivity">
 
-    <include
-        android:id="@+id/toolbar"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:layout_alignParentTop="true"
-        layout="@layout/toolbar" />
 
-    <GridView
-        android:layout_below="@id/toolbar"
-        android:layout_width="wrap_content"
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2.7"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/icon"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.5"
+        android:minHeight="100dp"
+        android:text="@string/app_name"
+        android:textColor="@color/DarkBrown"
+        android:gravity="center"
+        android:textSize="40sp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/gridView"
-        android:numColumns="auto_fit"
-        android:layout_centerInParent="true"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp" />
-</RelativeLayout>
+        android:background="#5d4037"
+        android:orientation="vertical" >
+        <GridView
+            android:id="@+id/gridView"
+            android:gravity="center"
+            android:layout_width="350dp"
+            android:layout_height="210dp"
+            android:layout_gravity="center"
+            android:horizontalSpacing="0dp"
+            android:verticalSpacing="0dp"
+            android:numColumns="3"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:layout_marginTop="14dp"
+            android:layout_marginBottom="6dp"
+            tools:listitem="@layout/item_home"
+            />
+    </LinearLayout>
+
+</LinearLayout>
