@@ -126,10 +126,16 @@ public class DatabaseCourseListSource extends DatabaseBaseSource<Course[]> imple
             @Override
             public void onNext(String type, Course[] courses, BaseSource source) {
                 super.onNext(type, courses, source);
-                if (source == null || source.getClass().equals(this.getClass())) return;
 
-                if (TYPE.equals(type))
-                    storeCourse(courses);
+                if (source == null || source.getClass().equals(DatabaseCourseListSource.this.getClass())) return;
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        if (TYPE.equals(type))
+                            storeCourse(courses);
+                    }
+                }).start();
             }
         };
     }

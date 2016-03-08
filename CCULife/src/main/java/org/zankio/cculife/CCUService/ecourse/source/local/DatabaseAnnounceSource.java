@@ -218,7 +218,7 @@ public class DatabaseAnnounceSource extends DatabaseBaseSource<Announce[]> imple
             @Override
             public void onNext(String type, Announce[] announces, BaseSource source) {
                 super.onNext(type, announces, source);
-                if (source == null || source.getClass().equals(this.getClass())) return;
+                if (source == null || source.getClass().equals(DatabaseAnnounceSource.this.getClass())) return;
 
                 storeAnnounce(announces, parameter);
             }
