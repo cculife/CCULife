@@ -5,8 +5,8 @@ import org.zankio.cculife.CCUService.base.source.BaseSource;
 public interface IOnUpdateListener<TData> {
 
     void onNext(String type, TData data, BaseSource source);
-    void onComplete(String type);
     void onError(String type, Exception err, BaseSource source);
+    void onComplete(String type);
 }
 
 
