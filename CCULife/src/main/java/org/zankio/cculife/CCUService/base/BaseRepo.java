@@ -19,7 +19,7 @@ import java.util.HashMap;
 
 public abstract class BaseRepo<TIdentify> {
 
-    private static final int CONNECT_TIMEOUT = 10000;
+    private static final int CONNECT_TIMEOUT = 15000;
     protected HashMap<String, ArrayList<BaseSource<Object>>> sourceMap;
     protected HashMap<String, ArrayList<IGetListener>> listenerGetter;
 
