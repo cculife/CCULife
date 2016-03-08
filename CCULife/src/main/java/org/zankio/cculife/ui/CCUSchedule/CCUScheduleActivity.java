@@ -1,6 +1,7 @@
 package org.zankio.cculife.ui.CCUSchedule;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -23,6 +24,7 @@ public class CCUScheduleActivity extends BaseActivity {
     private ListView listView;
     private int TODAY_DAY_OF_YEAR = -1;
     private int TODAY_YEAR = -1;
+    private int last_scroll_item = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,18 @@ public class CCUScheduleActivity extends BaseActivity {
         TODAY_YEAR = today.get(Calendar.YEAR);
 
         new LoadDataAsyncTask().execute();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt("scroll_item", listView.getFirstVisiblePosition());
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        last_scroll_item = savedInstanceState.getInt("scroll_item", -1);
     }
 
     public class LoadDataAsyncTask extends AsyncTaskWithErrorHanding<Void, Void, CCUSchedule.Schedule[]> {
@@ -103,7 +117,9 @@ public class CCUScheduleActivity extends BaseActivity {
         for (i = list.length - 1; i >= 0; i--) {
             if (now.after(list[i].Date)) break;
         }
-        listView.setSelection(i >= 0 ? i + 1 : 0);
+        if (last_scroll_item == -1)
+            last_scroll_item = i >= 0 ? i + 1 : 0;
+        listView.setSelection(last_scroll_item);
     }
 
 
