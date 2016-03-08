@@ -124,7 +124,7 @@ public class DatabaseCourseListSource extends DatabaseBaseSource<Course[]> imple
     public IOnUpdateListener getListener(String type, Object... parameter) {
         return new OnUpdateListener<Course[]>() {
             @Override
-            public void onNext(String type, Course[] courses, BaseSource source) {
+            public void onNext(final String type, final Course[] courses, BaseSource source) {
                 super.onNext(type, courses, source);
 
                 if (source == null || source.getClass().equals(DatabaseCourseListSource.this.getClass())) return;
@@ -138,5 +138,3 @@ public class DatabaseCourseListSource extends DatabaseBaseSource<Course[]> imple
                 }).start();
             }
         };
-    }
-}

@@ -188,11 +188,16 @@ public class DatabaseScoreSource
     public IOnUpdateListener getListener(String type, Object... parameter) {
         return new BindParamOnUpdateListener<ScoreGroup[], Course>((Course) parameter[0]) {
             @Override
-            public void onNext(String type, ScoreGroup[] data, BaseSource source) {
+            public void onNext(String type, final ScoreGroup[] data, BaseSource source) {
                 super.onNext(type, data, source);
                 if (source == null || source.getClass().equals(this.getClass())) return;
 
-                storeScoreGroup(data, this.parameter);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        storeScoreGroup(data, parameter);
+                    }
+                }).start();
             }
         };
     }

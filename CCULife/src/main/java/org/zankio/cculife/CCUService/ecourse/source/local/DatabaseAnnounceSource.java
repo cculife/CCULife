@@ -216,11 +216,16 @@ public class DatabaseAnnounceSource extends DatabaseBaseSource<Announce[]> imple
     public IOnUpdateListener getAnnounceListener(Course course) {
         return new BindParamOnUpdateListener<Announce[], Course>(course) {
             @Override
-            public void onNext(String type, Announce[] announces, BaseSource source) {
+            public void onNext(String type, final Announce[] announces, BaseSource source) {
                 super.onNext(type, announces, source);
                 if (source == null || source.getClass().equals(DatabaseAnnounceSource.this.getClass())) return;
 
-                storeAnnounce(announces, parameter);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        storeAnnounce(announces, parameter);
+                    }
+                }).start();
             }
         };
     }

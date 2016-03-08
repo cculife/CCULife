@@ -174,12 +174,19 @@ public class DatabaseTimeTableSource extends DatabaseBaseSource<TimeTable> imple
     public IOnUpdateListener getListener(String type, Object... parameter) {
         return new OnUpdateListener<TimeTable>() {
             @Override
-            public void onNext(String type, TimeTable timeTable, BaseSource source) {
+            public void onNext(String type, final TimeTable timeTable, BaseSource source) {
                 super.onNext(type, timeTable, source);
                 if (source == null || source.getClass().equals(this.getClass())) return;
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
 
-                if (timeTable != null) storeTimeTable(timeTable);
+                        if (timeTable != null) storeTimeTable(timeTable);
+                    }
+                }).start();
+
             }
         };
     }
+
 }
