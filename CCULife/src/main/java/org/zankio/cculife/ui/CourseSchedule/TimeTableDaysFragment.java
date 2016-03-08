@@ -118,8 +118,8 @@ public class TimeTableDaysFragment extends BaseMessageFragment
 
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    if (old != null) old.findViewById(R.id.ClassInfo).setSelected(false);
-                    view.findViewById(R.id.ClassInfo).setSelected(true);
+                    if (old != null) old.findViewById(R.id.course_id).setSelected(false);
+                    view.findViewById(R.id.course_id).setSelected(true);
                     old = view;
                 }
             });
@@ -199,8 +199,8 @@ public class TimeTableDaysFragment extends BaseMessageFragment
             if (convertView == null) view = inflater.inflate(R.layout.item_timetable_day, parent, false);
             else view = convertView;
 
-            ((TextView)view.findViewById(R.id.CourseName)).setText(course.name);
-            ((TextView)view.findViewById(R.id.ClassInfo)).setText(
+            ((TextView)view.findViewById(R.id.name)).setText(course.name);
+            ((TextView)view.findViewById(R.id.course_id)).setText(
                     String.format(
                             "%s / %s-%s / %s",
                             course.classroom,
@@ -216,7 +216,7 @@ public class TimeTableDaysFragment extends BaseMessageFragment
 
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
-            v.findViewById(R.id.ClassInfo).setSelected(hasFocus);
+            v.findViewById(R.id.course_id).setSelected(hasFocus);
         }
     }
 
