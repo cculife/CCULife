@@ -23,16 +23,19 @@ import java.util.Locale;
 import static org.zankio.cculife.CCUService.kiki.database.KikiDatabaseHelper.TABLE_TIMETABLE;
 import static org.zankio.cculife.CCUService.kiki.database.KikiDatabaseHelper.TIME_COLUMN_CLASSROOM;
 import static org.zankio.cculife.CCUService.kiki.database.KikiDatabaseHelper.TIME_COLUMN_COLORID;
+import static org.zankio.cculife.CCUService.kiki.database.KikiDatabaseHelper.TIME_COLUMN_COURSEID;
 import static org.zankio.cculife.CCUService.kiki.database.KikiDatabaseHelper.TIME_COLUMN_DAYOFWEEK;
 import static org.zankio.cculife.CCUService.kiki.database.KikiDatabaseHelper.TIME_COLUMN_ENDTIME;
 import static org.zankio.cculife.CCUService.kiki.database.KikiDatabaseHelper.TIME_COLUMN_NAME;
 import static org.zankio.cculife.CCUService.kiki.database.KikiDatabaseHelper.TIME_COLUMN_STARTTIME;
 import static org.zankio.cculife.CCUService.kiki.database.KikiDatabaseHelper.TIME_COLUMN_TEACHER;
+import static org.zankio.cculife.CCUService.kiki.database.KikiDatabaseHelper.TIME_COLUMN_USERADD;
 import static org.zankio.cculife.ui.CourseSchedule.TimeTableWeekFragment.randomColor;
 
 public class DatabaseTimeTableSource extends DatabaseBaseSource<TimeTable> implements IGetListener {
     public final static String TYPE = TimetableSource.TYPE;
-    public final static String[] DATA_TYPES = { TYPE };
+    public final static String TYPE_USERADD = "TIMETABLE_USERADD";
+    public final static String[] DATA_TYPES = { TYPE, TYPE_USERADD};
     public final static SourceProperty property;
     static  {
         property = new SourceProperty(
@@ -48,14 +51,16 @@ public class DatabaseTimeTableSource extends DatabaseBaseSource<TimeTable> imple
         super(context, property);
     }
 
-    private String[] timetableColumn = {
+    private final static String[] timetableColumn = {
+            TIME_COLUMN_COURSEID,
             TIME_COLUMN_NAME,
             TIME_COLUMN_TEACHER,
             TIME_COLUMN_CLASSROOM,
             TIME_COLUMN_STARTTIME,
             TIME_COLUMN_ENDTIME,
             TIME_COLUMN_DAYOFWEEK,
-            TIME_COLUMN_COLORID
+            TIME_COLUMN_COLORID,
+            TIME_COLUMN_USERADD
     };
 
 
@@ -85,39 +90,53 @@ public class DatabaseTimeTableSource extends DatabaseBaseSource<TimeTable> imple
 
     private TimeTable.Class cursorToClass(Cursor cursor, TimeTable timeTable) {
         TimeTable.Class mClass = timeTable.new Class();
-        mClass.name = cursor.getString(0);
-        mClass.teacher = cursor.getString(1);
-        mClass.classroom = cursor.getString(2);
-        mClass.start = parseClassTime(cursor.getString(3));
-        mClass.end = parseClassTime(cursor.getString(4));
-        mClass.colorid = cursor.getInt(6);
+        mClass.course_id = cursor.getString(0);
+        mClass.name = cursor.getString(1);
+        mClass.teacher = cursor.getString(2);
+        mClass.classroom = cursor.getString(3);
+        mClass.start = parseClassTime(cursor.getString(4));
+        mClass.end = parseClassTime(cursor.getString(5));
+        mClass.colorid = cursor.getInt(7);
+        mClass.userAdd = cursor.getInt(8);
 
         return mClass;
     }
 
     public void storeTimeTable(TimeTable timeTable) {
+        storeTimeTable(timeTable, false);
+    }
+
+    public void storeTimeTable(TimeTable timeTable, boolean all) {
         SQLiteDatabase database = getDatabase();
         if(timeTable == null || !database.isOpen() || database.isReadOnly()) return;
-        database.delete(TABLE_TIMETABLE, null, null);
+        database.beginTransaction();
+        try {
+            database.delete(TABLE_TIMETABLE, all ? null : TIME_COLUMN_USERADD + " = 0", null);
 
-        ContentValues values = new ContentValues();
+            ContentValues values = new ContentValues();
 
-        TimeTable.Day[] days = timeTable.days;
-        for (int i = 0; i < days.length; i++) {
-            TimeTable.Day day = days[i];
-            ArrayList<TimeTable.Class> classList = day.classList;
-            for (TimeTable.Class mClass : classList) {
-                values.clear();
-                values.put(TIME_COLUMN_NAME, mClass.name);
-                values.put(TIME_COLUMN_CLASSROOM, mClass.classroom);
-                values.put(TIME_COLUMN_TEACHER, mClass.teacher);
-                values.put(TIME_COLUMN_STARTTIME, formatClassTime(mClass.start));
-                values.put(TIME_COLUMN_ENDTIME, formatClassTime(mClass.end));
-                values.put(TIME_COLUMN_DAYOFWEEK, i);
-                values.put(TIME_COLUMN_COLORID, mClass.colorid);
+            TimeTable.Day[] days = timeTable.days;
+            for (int i = 0; i < days.length; i++) {
+                TimeTable.Day day = days[i];
+                ArrayList<TimeTable.Class> classList = day.classList;
+                for (TimeTable.Class mClass : classList) {
+                    values.clear();
+                    values.put(TIME_COLUMN_COURSEID, mClass.course_id);
+                    values.put(TIME_COLUMN_NAME, mClass.name);
+                    values.put(TIME_COLUMN_CLASSROOM, mClass.classroom);
+                    values.put(TIME_COLUMN_TEACHER, mClass.teacher);
+                    values.put(TIME_COLUMN_STARTTIME, formatClassTime(mClass.start));
+                    values.put(TIME_COLUMN_ENDTIME, formatClassTime(mClass.end));
+                    values.put(TIME_COLUMN_DAYOFWEEK, i);
+                    values.put(TIME_COLUMN_COLORID, mClass.colorid);
+                    values.put(TIME_COLUMN_USERADD, mClass.userAdd);
 
-                database.insert(TABLE_TIMETABLE, null, values);
+                    database.insert(TABLE_TIMETABLE, null, values);
+                }
             }
+            database.setTransactionSuccessful();
+        } finally {
+            database.endTransaction();
         }
     }
 
@@ -132,10 +151,15 @@ public class DatabaseTimeTableSource extends DatabaseBaseSource<TimeTable> imple
         int dayOfWeek, size;
         int[] colors;
 
+        String where;
+        if (TYPE_USERADD.equals(type)) where = TIME_COLUMN_USERADD + " = 1";
+        else
+            where = TIME_COLUMN_USERADD + " = 0";
+
         Cursor cursor = database.query(
                 TABLE_TIMETABLE,
                 timetableColumn,
-                null, null, null, null, null);
+                where, null, null, null, null);
 
         cursor.moveToFirst();
         size = cursor.getCount();
@@ -150,7 +174,7 @@ public class DatabaseTimeTableSource extends DatabaseBaseSource<TimeTable> imple
                 colors[mClass.colorid] = randomColor();
             mClass.color = colors[mClass.colorid];
 
-            dayOfWeek = cursor.getInt(5);
+            dayOfWeek = cursor.getInt(6);
 
             result.days[dayOfWeek].classList.add(mClass);
 
@@ -176,7 +200,8 @@ public class DatabaseTimeTableSource extends DatabaseBaseSource<TimeTable> imple
             @Override
             public void onNext(String type, final TimeTable timeTable, BaseSource source) {
                 super.onNext(type, timeTable, source);
-                if (source == null || source.getClass().equals(this.getClass())) return;
+                if (source == null || source.getClass().equals(DatabaseTimeTableSource.this.getClass())) return;
+
                 new Thread(new Runnable() {
                     @Override
                     public void run() {

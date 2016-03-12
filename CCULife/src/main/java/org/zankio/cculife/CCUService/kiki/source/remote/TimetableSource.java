@@ -50,12 +50,16 @@ public class TimetableSource extends BaseSource<TimeTable> {
         String classNameHeader = "科目名稱"
                 , classTimeHeader = "星期節次"
                 , classRoomHeader = "教室"
-                , classTeacherHeader = "授課教師";
+                , classTeacherHeader = "授課教師"
+                , classIDHeader = "班別"
+                , classCourseIDHeader =	"科目代碼";
 
         int classNameIndex = -1
                 , classTimeIndex = -1
                 , classRoomIndex = -1
-                , classTeacherIndex = -1;
+                , classTeacherIndex = -1
+                , classIDIndex = -1
+                , classCourseIDIndex = -1;
 
         int classColor, classColorTotal = 0;
         //TODO only use select
@@ -79,6 +83,10 @@ public class TimetableSource extends BaseSource<TimeTable> {
                 classTeacherIndex = i;
             else if (classTimeHeader.equals(fieldText))
                 classTimeIndex = i;
+            else if (classIDHeader.equals(fieldText))
+                classIDIndex = i;
+            else if (classCourseIDHeader.equals(fieldText))
+                classCourseIDIndex = i;
         }
 
         for (int i = 1; i < classes.size(); i++) {
@@ -89,80 +97,27 @@ public class TimetableSource extends BaseSource<TimeTable> {
             if (classRoomIndex >= 0) classRoom = fields.get(classRoomIndex).text();
             if (classTeacherIndex >= 0) classTeacher = fields.get(classTeacherIndex).text();
             if (classTimeIndex >= 0) classTime = fields.get(classTimeIndex).text();
+            if (classIDIndex >= 0) classID = fields.get(classIDIndex).text();
+            if (classCourseIDIndex >= 0) classCourseID = fields.get(classCourseIDIndex).text();
             classColor = randomColor();
 
-            /*Format example:
-                一G 三G
-                四12,13,14
-                五C,D
-            */
-            int k = 0, m;
-            int processingTime = -1;
+            mClass = result.new Class();
 
-            //先去掉空白
-            classTime = classTime.replaceAll(" ", "");
+            mClass.course_id = String.format("%s_%s", classCourseID, classID);
+            mClass.name = className;
+            mClass.classroom = classRoom;
+            mClass.color = classColor;
+            mClass.colorid = classColorTotal;
+            mClass.teacher = classTeacher;
+            parseClassTime(result, mClass, classTime);
 
-            //把每天切開
-            daylist = classTime.split("[日一二三四五六]");
-            for (int j = 1; j < daylist.length; j++) {
-
-                //把每節課分開
-                timelist = daylist[j].split(",");
-
-                //sort for time
-                // 一10,7,8,9
-                for (m = 0; m < timelist.length; m++) {
-                    if (timelist[m].length() <= 1) {
-                        break;
-                    }
-                }
-                if (m != 0) {
-                    String[] tmp;
-                    tmp = new String[timelist.length];
-                    int idx = 0;
-                    for (; m < timelist.length; m++) {
-                        tmp[idx++] = timelist[m];
-                    }
-                    for (m = 0; idx < timelist.length; idx++, m++) {
-                        tmp[idx] = timelist[m];
-                    }
-                    for (idx = 0; idx < timelist.length; idx++) {
-                        timelist[idx] = tmp[idx];
-                    }
-                }
-
-                for (; k < classTime.length(); k++) {
-                    //依序找到星期幾
-                    if ((processingTime = weekName.indexOf(classTime.substring(k, k + 1))) > -1) {
-                        k++;
-                        break;
-                    }
-                }
-
-                if (processingTime == -1) continue;
-                mClass = result.new Class();
-                mClass.name = className;
-                mClass.classroom = classRoom;
-                mClass.color = classColor;
-                mClass.colorid = classColorTotal;
-                mClass.teacher = classTeacher;
-
-                // 轉換時間代碼為 h:m
-                parseClassTime(mClass, processingTime, timelist[0]);
-                for (int l = 1; l < timelist.length; l++) {
-                    mergeClassTime(mClass, processingTime, timelist[l]);
-                }
-
-                result.days[processingTime].classList.add(mClass);
-            }
             classColorTotal++;
         }
         result.sort();
         return result;
     }
 
-
-    private void mergeClassTime(TimeTable.Class mClass, int dayofweek, String time){
+    private static void mergeClassTime(TimeTable.Class mClass, int dayofweek, String time){
         int endHour, endMinute;
 
         int origTime;
@@ -194,7 +149,75 @@ public class TimetableSource extends BaseSource<TimeTable> {
         mClass.end.set(Calendar.DAY_OF_WEEK, dayofweek);
     }
 
-    private void parseClassTime(TimeTable.Class mClass, int dayofweek, String time) {
+    public static void parseClassTime(TimeTable timeTable, TimeTable.Class mClass, String classTime) {
+        /*Format example:
+            一G 三G
+            四12,13,14
+            五C,D
+        */
+        String weekName = "日一二三四五六";
+        String[] daylist;
+        String[] timelist;
+
+        int k = 0, m;
+        int processingTime = -1;
+
+        //先去掉空白
+        classTime = classTime.replaceAll(" ", "");
+
+        //把每天切開
+        daylist = classTime.split("[日一二三四五六]");
+        for (int j = 1; j < daylist.length; j++) {
+
+            //把每節課分開
+            timelist = daylist[j].split(",");
+
+            //sort for time
+            // 一10,7,8,9
+            for (m = 0; m < timelist.length; m++) {
+                if (timelist[m].length() <= 1) {
+                    break;
+                }
+            }
+            if (m != 0) {
+                String[] tmp;
+                tmp = new String[timelist.length];
+                int idx = 0;
+                for (; m < timelist.length; m++) {
+                    tmp[idx++] = timelist[m];
+                }
+                for (m = 0; idx < timelist.length; idx++, m++) {
+                    tmp[idx] = timelist[m];
+                }
+                for (idx = 0; idx < timelist.length; idx++) {
+                    timelist[idx] = tmp[idx];
+                }
+            }
+
+            for (; k < classTime.length(); k++) {
+                //依序找到星期幾
+                if ((processingTime = weekName.indexOf(classTime.substring(k, k + 1))) > -1) {
+                    k++;
+                    break;
+                }
+            }
+
+            if (processingTime == -1) continue;
+
+            mClass = timeTable.new Class(mClass);
+
+            // 轉換時間代碼為 h:m
+            convertClassTime(mClass, processingTime, timelist[0]);
+            for (int l = 1; l < timelist.length; l++) {
+                mergeClassTime(mClass, processingTime, timelist[l]);
+            }
+
+            timeTable.days[processingTime].classList.add(mClass);
+        }
+
+    }
+
+    public static void convertClassTime(TimeTable.Class mClass, int dayofweek, String time) {
         int startHour, startMinute;
         int endHour, endMinute;
 

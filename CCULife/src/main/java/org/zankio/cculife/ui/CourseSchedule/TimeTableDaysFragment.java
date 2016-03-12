@@ -1,10 +1,12 @@
 package org.zankio.cculife.ui.CourseSchedule;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +15,11 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.zankio.cculife.CCUService.base.BaseRepo;
 import org.zankio.cculife.CCUService.base.listener.IOnUpdateListener;
 import org.zankio.cculife.CCUService.base.source.BaseSource;
 import org.zankio.cculife.CCUService.kiki.model.TimeTable;
+import org.zankio.cculife.CCUService.kiki.source.local.DatabaseTimeTableSource;
 import org.zankio.cculife.R;
 import org.zankio.cculife.ui.base.BaseMessageFragment;
 
@@ -25,7 +29,7 @@ import java.util.Calendar;
 import java.util.Locale;
 
 public class TimeTableDaysFragment extends BaseMessageFragment
-        implements IOnUpdateListener<TimeTable> {
+        implements IOnUpdateListener<TimeTable>, View.OnClickListener {
     private IGetTimeTableData timeTableDataContext;
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private TimeTableAdapter[] adapter;
@@ -33,6 +37,7 @@ public class TimeTableDaysFragment extends BaseMessageFragment
     private TimeTable timeTable;
     private boolean loading;
     private ViewPager mViewPager;
+    private int lastPage = -1;
 
     @Override
     public void onAttach(Context context) {
@@ -54,7 +59,18 @@ public class TimeTableDaysFragment extends BaseMessageFragment
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        Context context = getActivity();
+        if (context != null) {
+            ((IGetListener) context).registerListener(this);
+            lastPage = ((IGetInteger) context).getInt(TimetableDataFragment.LAST_PAGE);
+        }
+
         mViewPager = (ViewPager) view.findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
@@ -62,12 +78,13 @@ public class TimeTableDaysFragment extends BaseMessageFragment
         list = new ListView[7];
 
         this.loading = timeTableDataContext.getTimeTable(this);
+        view.findViewById(R.id.add).setOnClickListener(this);
     }
 
     @Override
     public void onError(String type, Exception err, BaseSource source) {
         this.loading = false;
-        showMessage(err.getMessage());
+        message().show(err.getMessage());
     }
 
     @Override
@@ -79,6 +96,23 @@ public class TimeTableDaysFragment extends BaseMessageFragment
 
     @Override
     public void onComplete(String type) {
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        AddCourseFragment dialog = new AddCourseFragment();
+        dialog.show(getFragmentManager(), "dialog");
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Context context = getActivity();
+        if (context != null) {
+            ((IGetListener) context).unregisterListener(this);
+            ((IGetInteger) context).setInt(TimetableDataFragment.LAST_PAGE, mViewPager.getCurrentItem());
+        }
 
     }
 
@@ -107,8 +141,8 @@ public class TimeTableDaysFragment extends BaseMessageFragment
         }
 
         @Override
-        public Object instantiateItem (ViewGroup container, int position) {
-            int week = position + 1;
+        public Object instantiateItem (final ViewGroup container, int position) {
+            final int week = position + 1;
             View view = inflater.inflate(R.layout.fragment_course_timetable_day, null);
 
             adapter[week] = new TimeTableAdapter(getWeekClasses(week));
@@ -121,6 +155,36 @@ public class TimeTableDaysFragment extends BaseMessageFragment
                     if (old != null) old.findViewById(R.id.course_id).setSelected(false);
                     view.findViewById(R.id.course_id).setSelected(true);
                     old = view;
+                }
+            });
+            list[week].setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                    final TimeTable.Class course = (TimeTable.Class) parent.getAdapter().getItem(position);
+                    if (course.userAdd == 0) return false;
+
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("刪除旁聽課程?")
+                            .setPositiveButton("確定", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    timeTable.remove(course);
+                                    new DatabaseTimeTableSource(new BaseRepo(getContext()) {
+                                        @Override
+                                        protected BaseSource[] getSources() {
+                                            return new BaseSource[0];
+                                        }
+                                    }).storeTimeTable(timeTable, true);
+                                    updateTimeTable(mViewPager.getCurrentItem());
+                                }
+                            })
+                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            }).create().show();
+                    return false;
                 }
             });
             container.addView(view, 0);
@@ -141,14 +205,18 @@ public class TimeTableDaysFragment extends BaseMessageFragment
     }
 
     private void updateTimeTable() {
+        if (lastPage == -1) lastPage = Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 2;
+        updateTimeTable(lastPage);
+        lastPage = -1;
+    }
+
+    private void updateTimeTable(int week) {
         for (int i = 1; i <= 5; i++) {
             if(adapter[i] != null)
                 adapter[i].setClass(getWeekClasses(i));
         }
 
         if (timeTable != null) {
-            int week = Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 2;
-
             if(week < 5 && week >= 0)
                 mViewPager.setCurrentItem(week);
         }

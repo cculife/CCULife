@@ -8,30 +8,23 @@ import android.view.Menu;
 import android.widget.ArrayAdapter;
 
 import org.zankio.cculife.CCUService.base.listener.IOnUpdateListener;
-import org.zankio.cculife.CCUService.base.source.BaseSource;
-import org.zankio.cculife.CCUService.kiki.Kiki;
 import org.zankio.cculife.CCUService.kiki.model.TimeTable;
-import org.zankio.cculife.CCUService.kiki.source.remote.TimetableSource;
 import org.zankio.cculife.R;
 import org.zankio.cculife.ui.base.BaseFragmentActivity;
 
-import java.util.ArrayList;
-
 public class CourseTimeTableActivity extends BaseFragmentActivity
-        implements ActionBar.OnNavigationListener, IGetTimeTableData, IOnUpdateListener<TimeTable>{
+        implements ActionBar.OnNavigationListener,
+        IGetTimeTableData,
+        IGetListener<TimeTable>,
+        IGetInteger {
 
-    //ToDo Don't reload on rotation.
     private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
-    private Kiki kiki;
-    private TimeTable timeTable;
     private boolean loading;
-    private ArrayList<IOnUpdateListener<TimeTable>> listeners = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_timetable);
-        kiki = new Kiki(this);
 
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -101,40 +94,38 @@ public class CourseTimeTableActivity extends BaseFragmentActivity
 
     @Override
     public boolean getTimeTable(IOnUpdateListener<TimeTable> listener) {
-        if (this.timeTable != null) {
-            listener.onNext(TimetableSource.TYPE, this.timeTable, null);
-            return false;
-        }
-        listeners.add(listener);
-        if (loading) {
-            //Todo Race condition ?
-            return true;
-        }
-        loading = true;
-        kiki.fetch(TimetableSource.TYPE, this);
-        return true;
+        TimetableDataFragment dataFragment;
+        dataFragment = TimetableDataFragment.getFragment(getSupportFragmentManager());
+        dataFragment.init(this);
+
+        return  dataFragment.getTimeTable(listener);
     }
 
-    @Override
-    public void onNext(String type, TimeTable timeTable, BaseSource source) {
-        loading = false;
-        this.timeTable = timeTable;
-        for (IOnUpdateListener<TimeTable> listener: listeners)
-            listener.onNext(type, timeTable, source);
+    public IOnUpdateListener<TimeTable> getUpdateListener() {
+        return TimetableDataFragment.getFragment(getSupportFragmentManager());
 
     }
 
     @Override
-    public void onError(String type, Exception err, BaseSource source) {
-        loading = false;
-        for (IOnUpdateListener listener: listeners)
-            listener.onError(type, err, source);
-
+    public void registerListener(IOnUpdateListener<TimeTable> listener) {
+        TimetableDataFragment.getFragment(getSupportFragmentManager()).registerListener(listener);
     }
 
     @Override
-    public void onComplete(String type) {
-        for (IOnUpdateListener listener: listeners)
-            listener.onComplete(type);
+    public void unregisterListener(IOnUpdateListener<TimeTable> listener) {
+        if (isFinishing()) return;
+        TimetableDataFragment fragment = TimetableDataFragment.getFragment(getSupportFragmentManager(), true);
+        if (fragment != null) fragment.unregisterListener(listener);
     }
+
+    @Override
+    public int getInt(String key) {
+        return TimetableDataFragment.getFragment(getSupportFragmentManager()).getInt(key);
+    }
+
+    @Override
+    public void setInt(String key, int value) {
+        TimetableDataFragment.getFragment(getSupportFragmentManager()).setInt(key, value);
+    }
+
 }

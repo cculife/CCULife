@@ -65,6 +65,9 @@ public class TimeTableWeekFragment extends BaseMessageFragment
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        IGetListener<TimeTable> listenerGetter = (IGetListener) getActivity();
+        if (listenerGetter != null) listenerGetter.registerListener(this);
+
         week = new LinearLayout[]{
                 null,
                 (LinearLayout) view.findViewById(R.id.weekMonday),
@@ -107,7 +110,14 @@ public class TimeTableWeekFragment extends BaseMessageFragment
     @Override
     public void onError(String type, Exception err, BaseSource source) {
         this.loading = false;
-        showMessage(err.getMessage());
+        message().show(err.getMessage());
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        IGetListener<TimeTable> listenerGetter = (IGetListener) getActivity();
+        if (listenerGetter != null) listenerGetter.unregisterListener(this);
     }
 
     public void updateTimeTable() {
@@ -124,10 +134,23 @@ public class TimeTableWeekFragment extends BaseMessageFragment
             TimeTable.Day day = timeTable.days[i];
             for (int j = 0; j < day.classList.size(); j++) {
                 TimeTable.Class mClass;
+                TimeTable.Class prevClass;
+                TimeTable.Class tmpClass;
+
                 LinearLayout.LayoutParams layoutParams;
                 LessionView lessionView;
 
                 mClass = day.classList.get(j);
+                if (mClass.userAdd == 1) continue;
+
+                prevClass = null;
+                for (int k = j - 1; k >= 0; k--) {
+                    tmpClass = day.classList.get(k);
+                    if (tmpClass.userAdd != 1) {
+                        prevClass = tmpClass;
+                        break;
+                    }
+                }
 
                 lessionView = new LessionView(getContext());
                 lessionView.setClassName(mClass.name);
@@ -139,10 +162,10 @@ public class TimeTableWeekFragment extends BaseMessageFragment
 
                 layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (getTimeDiffInMinute(mClass.start, mClass.end) * minuteToPixel));
 
-                if(j == 0)
+                if(prevClass == null)
                     layoutParams.setMargins(0, (int) (getTimeDiffInMinute(firstClass, mClass.start) * minuteToPixel), 0, 0);
                 else
-                    layoutParams.setMargins(0, (int) (getTimeDiffInMinute(day.classList.get(j - 1).end, mClass.start) * minuteToPixel), 0, 0);
+                    layoutParams.setMargins(0, (int) (getTimeDiffInMinute(prevClass.end, mClass.start) * minuteToPixel), 0, 0);
 
                 lessionView.setLayoutParams(layoutParams);
                 //new GregorianCalendar().clear();

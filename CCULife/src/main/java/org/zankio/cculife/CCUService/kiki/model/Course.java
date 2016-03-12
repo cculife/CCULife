@@ -15,9 +15,10 @@ public class Course {
     public String Teacher;
     public int Credit;
     public String CreditType;
-    public Time[] Time;
+    public String Time;
     public String ClassRoom;
     public String OutlineLink;
+    public String Dept;
     public int term;
     public int year;
 
