@@ -115,6 +115,12 @@ public class CourseFragment extends Fragment {
 
         tabLayout.setupWithViewPager(mViewPager);
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        for (Page p : pages) {
+            p.fragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 
     @Override

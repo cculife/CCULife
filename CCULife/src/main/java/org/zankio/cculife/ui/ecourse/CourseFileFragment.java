@@ -1,8 +1,11 @@
 package org.zankio.cculife.ui.ecourse;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,13 +22,17 @@ import org.zankio.cculife.CCUService.ecourse.model.Course;
 import org.zankio.cculife.CCUService.ecourse.model.File;
 import org.zankio.cculife.CCUService.ecourse.model.FileGroup;
 import org.zankio.cculife.R;
+import org.zankio.cculife.Utils;
 import org.zankio.cculife.services.DownloadService;
 import org.zankio.cculife.ui.base.BaseMessageFragment;
 import org.zankio.cculife.ui.base.IGetCourseData;
 
+import java.util.ArrayList;
+import java.util.List;
 
 public class CourseFileFragment extends BaseMessageFragment
         implements ExpandableListView.OnChildClickListener, IOnUpdateListener<FileGroup[]> {
+    private List<File> download_list;
     private Course course;
     private FileAdapter adapter;
     private ExpandableListView list;
@@ -116,13 +123,42 @@ public class CourseFileFragment extends BaseMessageFragment
         String filename;
         file = (File) parent.getExpandableListAdapter().getChild(groupPosition, childPosition);
         assert file != null;
-        filename = file.name != null ? file.name : URLUtil.guessFileName(file.url, null, null);
-        DownloadService.downloadFile(getContext(), file.url, filename);
+        if (Utils.checkWritePermission(getParentFragment())) {
+            filename = file.name != null ? file.name : URLUtil.guessFileName(file.url, null, null);
+            DownloadService.downloadFile(getContext(), file.url, filename);
 
-        Toast.makeText(getContext(), "下載 : " + filename, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "下載 : " + filename, Toast.LENGTH_SHORT).show();
+        } else {
+            if (download_list == null) download_list = new ArrayList<>();
+            download_list.add(file);
+        }
         return false;
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case Utils.REQUEST_CODE_WRITE_EXTERNAL_STORAGE:
+                if (download_list == null) return;
+                if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(getContext(), "沒有儲存權限!!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                String filename;
+
+                for (File file : download_list) {
+                    filename = file.name != null ? file.name : URLUtil.guessFileName(file.url, null, null);
+                    DownloadService.downloadFile(getContext(), file.url, filename);
+                    Toast.makeText(getContext(), "下載 : " + filename, Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
+
+    }
+
+    }
     public class FileAdapter extends BaseExpandableListAdapter {
         private FileGroup[] filelists;
         private LayoutInflater inflater;
