@@ -1,41 +1,19 @@
 package org.zankio.cculife.ui.base;
 
-import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.view.View;
-import android.widget.TextView;
-
 import org.zankio.cculife.R;
+import org.zankio.cculife.ui.base.helper.Message;
 
-public class BaseMessageFragment extends Fragment {
-
-    public void hideMessage() {
-        View view = getView();
-        if (view == null) return;
-
-        view.findViewById(R.id.list).setVisibility(View.VISIBLE);
-        view.findViewById(R.id.message_panel).setVisibility(View.GONE);
+public class BaseMessageFragment extends DebugFragment {
+    private final Message mMessage;
+    public BaseMessageFragment() {
+        mMessage = new Message(
+                this,
+                R.id.message,
+                R.id.loading,
+                R.id.message_panel,
+                R.id.list
+        );
     }
 
-    public void showMessage(String msg) {
-        showMessage(msg, false);
-    }
-
-    public void showMessage(String msg, boolean loading) {
-        View view = getView();
-        if (view == null) return;
-
-        //view.findViewById(R.id.icon).setVisibility(loading ? View.GONE : View.VISIBLE);
-        ((TextView) view.findViewById(R.id.message)).setText(msg);
-        view.findViewById(R.id.loading).setVisibility(loading ? View.VISIBLE : View.GONE);
-
-        view.findViewById(R.id.message_panel).setVisibility(View.VISIBLE);
-        view.findViewById(R.id.list).setVisibility(View.GONE);
-    }
-
-    @Override
-    public void onStop() {
-        Log.d("F", "onStop");
-        super.onStop();
-    }
+    public Message message() { return mMessage; }
 }
