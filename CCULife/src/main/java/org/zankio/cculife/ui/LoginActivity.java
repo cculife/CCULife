@@ -6,7 +6,6 @@ import android.annotation.TargetApi;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -22,8 +21,9 @@ import org.zankio.cculife.R;
 import org.zankio.cculife.UserManager;
 import org.zankio.cculife.override.LoginErrorException;
 import org.zankio.cculife.override.NetworkErrorException;
+import org.zankio.cculife.ui.base.BaseActivity;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends BaseActivity {
 
     private UserLoginTask mAuthTask = null;
 

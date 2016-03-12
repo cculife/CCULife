@@ -1,20 +1,31 @@
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
-       xmlns:tools="http://schemas.android.com/tools"
-       tools:context=".LoginActivity">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".LoginActivity"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
 
-    <!-- Login progress -->
-    <LinearLayout android:id="@+id/login_status"
-                  android:visibility="gone"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_gravity="center"
-                  android:gravity="center_horizontal"
-                  android:orientation="vertical">
-        <ProgressBar style="?android:attr/progressBarStyleLarge"
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:layout_marginBottom="8dp"/>
-        <TextView
+    <include
+        layout="@layout/toolbar"
+        android:id="@+id/toolbar" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar">
+
+        <!-- Login progress -->
+        <LinearLayout android:id="@+id/login_status"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+            <ProgressBar style="?android:attr/progressBarStyleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"/>
+            <TextView
                 android:id="@+id/login_status_message"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:fontFamily="sans-serif-light"
@@ -22,13 +33,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:text="@string/login_progress_signing_in" />
-    </LinearLayout>
+        </LinearLayout>
+
+    </FrameLayout>
 
     <!-- Login form -->
     <ScrollView
-            android:id="@+id/login_form"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        android:id="@+id/login_form"
+        android:layout_below="@id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <LinearLayout
 
@@ -87,4 +101,4 @@
         </LinearLayout>
 
     </ScrollView>
-</merge>
+</RelativeLayout>
