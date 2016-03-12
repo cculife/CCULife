@@ -22,7 +22,6 @@ import java.util.Map;
 public class ScoreQueryActivity extends BaseFragmentActivity
         implements IOnUpdateListener<Grade[]>, IGetGradeData {
 
-
     private GradePageAdapter mGradePageAdapter;
     private ViewPager mViewPager;
     private ScoreQueryNew scoreQuery;
@@ -43,8 +42,13 @@ public class ScoreQueryActivity extends BaseFragmentActivity
         setSSOService(new ScoreQuery());
 
         showMessage("讀取中...", true);
-        scoreQuery = new ScoreQueryNew(this);
-        scoreQuery.fetch(GradesInquiriesSource.TYPE, this);
+        Grade[] grades = ScoreDataFragment.getFragment(getSupportFragmentManager()).getGrades();
+        if (grades == null) {
+            scoreQuery = new ScoreQueryNew(this);
+            scoreQuery.fetch(GradesInquiriesSource.TYPE, this);
+        } else {
+            this.onNext(GradesInquiriesSource.TYPE, grades, null);
+        }
     }
 
     @Override
@@ -65,7 +69,9 @@ public class ScoreQueryActivity extends BaseFragmentActivity
 
     @Override
     public void onNext(String type, Grade[] grades, BaseSource source) {
+        ScoreDataFragment.getFragment(getSupportFragmentManager()).setGrades(grades);
         this.grades = grades;
+
         hideMessage();
 
         if(grades == null || grades.length == 0) {
