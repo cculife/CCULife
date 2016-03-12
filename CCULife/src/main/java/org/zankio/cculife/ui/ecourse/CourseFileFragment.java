@@ -30,14 +30,17 @@ import org.zankio.cculife.ui.base.IGetCourseData;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class CourseFileFragment extends BaseMessageFragment
-        implements ExpandableListView.OnChildClickListener, IOnUpdateListener<FileGroup[]> {
+        implements ExpandableListView.OnChildClickListener, IOnUpdateListener<FileGroup[]>, IGetLoading {
     private List<File> download_list;
     private Course course;
     private FileAdapter adapter;
     private ExpandableListView list;
     private boolean loading;
     private IGetCourseData context;
+    private boolean loaded;
+    private IOnUpdateListener<Boolean> loadedListener;
 
     @Override
     public void onAttach(Context context) {
@@ -80,8 +83,10 @@ public class CourseFileFragment extends BaseMessageFragment
 
         loading = course.getFiles(this);
 
-        if (loading)
-            showMessage("讀取中...", true);
+        if (loading) {
+            setLoaded(false);
+            message().show("讀取中...", true);
+        }
     }
 
     @Override
@@ -93,28 +98,27 @@ public class CourseFileFragment extends BaseMessageFragment
     @Override
     public void onError(String type, Exception err, BaseSource source) {
         this.loading = false;
-        showMessage(err.getMessage());
+        setLoaded(true);
+        message().show(err.getMessage());
     }
 
     @Override
     public void onComplete(String type) {
-
+        setLoaded(true);
     }
 
     private void onFileUpdate(FileGroup[] fileGroups) {
         if (fileGroups == null || fileGroups.length == 0) {
-            showMessage("沒有檔案");
+            message().show("沒有檔案");
             return;
         }
-
         adapter.setFiles(fileGroups);
         if (fileGroups.length == 1) {
             list.setGroupIndicator(null);
             list.expandGroup(0);
 
         }
-        hideMessage();
-
+        message().hide();
     }
 
     @Override
@@ -158,7 +162,21 @@ public class CourseFileFragment extends BaseMessageFragment
 
     }
 
+    public void setLoaded(boolean loaded) {
+        this.loaded = loaded;
+        if (loadedListener != null) loadedListener.onNext(null, loaded, null);
     }
+
+    @Override
+    public boolean isLoading() {
+        return !this.loaded;
+    }
+
+    @Override
+    public void setLoadedListener(IOnUpdateListener<Boolean> listener) {
+        this.loadedListener = listener;
+    }
+
     public class FileAdapter extends BaseExpandableListAdapter {
         private FileGroup[] filelists;
         private LayoutInflater inflater;

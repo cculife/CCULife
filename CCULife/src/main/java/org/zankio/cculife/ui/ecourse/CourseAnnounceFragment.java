@@ -2,6 +2,7 @@ package org.zankio.cculife.ui.ecourse;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -31,21 +32,22 @@ import org.zankio.cculife.ui.base.IGetCourseData;
 
 public class CourseAnnounceFragment
         extends BaseMessageFragment
-        implements AdapterView.OnItemClickListener, IOnUpdateListener<Announce[]> {
+        implements AdapterView.OnItemClickListener, IOnUpdateListener<Announce[]>, IGetLoading {
     private Course course;
     private AnnounceAdapter adapter;
     private boolean loading;
-    private IGetCourseData courseDataContext;
+    private boolean loaded;
+    private IGetCourseData context;
+    private IOnUpdateListener<Boolean> loadedListener;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        Log.e("course", "onAttach");
-
         try {
-            courseDataContext = (IGetCourseData) context;
+            this.context = (IGetCourseData) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + " must implement IGetCourseData");
+            throw new ClassCastException(context.toString()
+                    + " must implement IGetCourseData");
         }
     }
 
@@ -53,7 +55,6 @@ public class CourseAnnounceFragment
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.e("course", "onCreate");
-        adapter = new AnnounceAdapter(getActivity());
     }
 
     @Nullable
@@ -66,6 +67,7 @@ public class CourseAnnounceFragment
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         Log.e("course", "onViewCreated");
+        adapter = new AnnounceAdapter(getActivity());
         ListView list = (ListView) view.findViewById(R.id.list);
         list.setAdapter(adapter);
         list.setOnItemClickListener(this);
@@ -79,11 +81,18 @@ public class CourseAnnounceFragment
     }
 
     public void courseChange(String id) {
-        course = courseDataContext.getCourse(id);
+        course = context.getCourse(id);
+        if (course == null) {
+            getFragmentManager().popBackStack("list", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            return;
+        }
+
         loading = course.getAnnounces(this);
 
-        if (loading)
-            showMessage("讀取中...", true);
+        if (loading) {
+            setLoaded(false);
+            message().show("讀取中...", true);
+        }
     }
 
     @Override
@@ -110,11 +119,14 @@ public class CourseAnnounceFragment
     @Override
     public void onError(String type, Exception err, BaseSource source) {
         this.loading = false;
-        showMessage(err.getMessage());
+        setLoaded(true);
+        message().show(err.getMessage());
     }
 
     @Override
-    public void onComplete(String type) { }
+    public void onComplete(String type) {
+        setLoaded(true);
+    }
 
     private void onAnnounceContentUpdate(Announce announce) {
         Context context = getContext();
@@ -146,11 +158,26 @@ public class CourseAnnounceFragment
 
     private void onAnnounceUpdate(Announce[] announces) {
         if(announces == null || announces.length == 0) {
-            showMessage("沒有公告");
+            message().show("沒有公告");
             return;
         }
         adapter.setAnnounces(announces);
-        hideMessage();
+        message().hide();
+    }
+
+    @Override
+    public boolean isLoading() {
+        return !this.loaded;
+    }
+
+    @Override
+    public void setLoadedListener(IOnUpdateListener<Boolean> listener) {
+        this.loadedListener = listener;
+    }
+
+    public void setLoaded(boolean loaded) {
+        this.loaded = loaded;
+        if (this.loadedListener != null) loadedListener.onNext(null, loaded, null);
     }
 
     public class AnnounceAdapter extends BaseAdapter {

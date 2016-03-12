@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
@@ -24,22 +25,21 @@ import android.widget.Toast;
 import org.zankio.cculife.CCUService.base.listener.IOnUpdateListener;
 import org.zankio.cculife.CCUService.base.listener.OnUpdateListener;
 import org.zankio.cculife.CCUService.base.source.BaseSource;
-import org.zankio.cculife.CCUService.ecourse.Ecourse;
 import org.zankio.cculife.CCUService.ecourse.model.Course;
 import org.zankio.cculife.CCUService.ecourse.model.Homework;
-import org.zankio.cculife.CCUService.ecourse.source.remote.HomeworkContentSource;
 import org.zankio.cculife.R;
 import org.zankio.cculife.ui.base.BaseMessageFragment;
 import org.zankio.cculife.ui.base.IGetCourseData;
 
 
 public class CourseHomeworkFragment extends BaseMessageFragment
-        implements IOnUpdateListener<Homework[]>, AdapterView.OnItemClickListener {
+        implements IOnUpdateListener<Homework[]>, AdapterView.OnItemClickListener, IGetLoading{
     private Course course;
-    private Ecourse ecourse;
     private HomeworkAdapter adapter;
     private boolean loading;
     private IGetCourseData context;
+    private boolean loaded;
+    private IOnUpdateListener<Boolean> loadedListener;
 
     @Override
     public void onAttach(Context context) {
@@ -79,8 +79,10 @@ public class CourseHomeworkFragment extends BaseMessageFragment
 
         loading = course.getHomework(this);
 
-        if (loading)
-            showMessage("讀取中...", true);
+        if (loading) {
+            setLoaded(false);
+            message().show("讀取中...", true);
+        }
     }
 
     @Override
@@ -92,11 +94,14 @@ public class CourseHomeworkFragment extends BaseMessageFragment
     @Override
     public void onError(String type, Exception err, BaseSource source) {
         this.loading = false;
-        showMessage(err.getMessage());
+        setLoaded(true);
+        message().show(err.getMessage());
     }
 
     @Override
-    public void onComplete(String type) { }
+    public void onComplete(String type) {
+        setLoaded(true);
+    }
 
     private IOnUpdateListener<Homework> homeworkContentListener = new OnUpdateListener<Homework>() {
         @Override
@@ -160,12 +165,12 @@ public class CourseHomeworkFragment extends BaseMessageFragment
 
     private void onHomewrokUpdate(Homework[] homework) {
         if(homework == null || homework.length == 0) {
-            showMessage("沒有作業");
+            message().show("沒有作業");
             return;
         }
 
         adapter.setHomeworks(homework);
-        hideMessage();
+        message().hide();
     }
 
     @Override
@@ -173,6 +178,20 @@ public class CourseHomeworkFragment extends BaseMessageFragment
         Homework homework = (Homework) parent.getAdapter().getItem(position);
         homework.getContent(homeworkContentListener);
     }
+
+    public void setLoaded(boolean loaded) {
+        this.loaded = loaded;
+        if (loadedListener != null) loadedListener.onNext(null, loaded, null);
+    }
+
+    @Override
+    public boolean isLoading() {
+        return !this.loaded;
+    }
+
+    @Override
+    public void setLoadedListener(IOnUpdateListener<Boolean> listener) {
+        this.loadedListener = listener;
     }
 
     public class HomeworkAdapter extends BaseAdapter {

@@ -105,6 +105,8 @@ public class CourseListFragment extends BaseMessageFragment implements IOnUpdate
 
         fetchCourseList();
 
+        if (loading)
+            message().show("讀取中...", true);
     }
 
     @Override
@@ -116,29 +118,24 @@ public class CourseListFragment extends BaseMessageFragment implements IOnUpdate
     @Override
     public void onResume() {
         super.onResume();
-
-        fetchCourseList();
-
-        if (loading)
-            showMessage("讀取中...", true);
     }
 
     @Override
     public void onNext(String type, Course[] courses, BaseSource source) {
         this.loading = false;
         if(courses == null || courses.length == 0) {
-            showMessage("沒有課程");
+            message().show("沒有課程");
             return;
         }
 
         adapter.setCourses(courses);
-        hideMessage();
+        message().hide();
     }
 
     @Override
     public void onError(String type, Exception err, BaseSource source) {
         this.loading = false;
-        showMessage(err.getMessage());
+        message().show(err.getMessage());
     }
 
     @Override

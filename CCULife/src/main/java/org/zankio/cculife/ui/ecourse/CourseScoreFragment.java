@@ -3,6 +3,7 @@ package org.zankio.cculife.ui.ecourse;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,12 +26,14 @@ import org.zankio.cculife.ui.base.IGetCourseData;
 
 
 public class CourseScoreFragment extends BaseMessageFragment
-        implements ExpandableListView.OnChildClickListener, IOnUpdateListener<ScoreGroup[]> {
+        implements ExpandableListView.OnChildClickListener, IOnUpdateListener<ScoreGroup[]>, IGetLoading {
     private Course course;
     private ScoreAdapter adapter;
     private ExpandableListView list;
     private boolean loading;
+    private boolean loaded;
     private IGetCourseData context;
+    private IOnUpdateListener<Boolean> loadedListener;
 
     @Override
     public void onAttach(Context context) {
@@ -73,15 +76,17 @@ public class CourseScoreFragment extends BaseMessageFragment
 
         loading = course.getScore(this);
 
-        if (loading)
-            showMessage("讀取中...", true);
+        if (loading) {
+            setLoaded(false);
+            message().show("讀取中...", true);
+        }
     }
 
     @Override
     public void onNext(String type, ScoreGroup[] scoreGroups, BaseSource source) {
         this.loading = false;
         if (scoreGroups == null || scoreGroups.length == 0) {
-            showMessage("沒有成績");
+            message().show("沒有成績");
             return;
         }
 
@@ -91,17 +96,19 @@ public class CourseScoreFragment extends BaseMessageFragment
             list.expandGroup(i);
         }
 
-        hideMessage();
+        message().hide();
     }
 
     @Override
     public void onComplete(String type) {
+        setLoaded(true);
     }
 
     @Override
     public void onError(String type, Exception err, BaseSource source) {
         this.loading = false;
-        showMessage(err.getMessage());
+        setLoaded(true);
+        message().show(err.getMessage());
     }
 
     @Override
@@ -115,6 +122,21 @@ public class CourseScoreFragment extends BaseMessageFragment
 
         Toast.makeText(getContext(), "下載 : " + filename, Toast.LENGTH_SHORT).show();
         return false;
+    }
+
+    @Override
+    public boolean isLoading() {
+        return this.loading;
+    }
+
+    @Override
+    public void setLoadedListener(IOnUpdateListener<Boolean> listener) {
+        this.loadedListener = listener;
+    }
+
+    public void setLoaded(boolean loaded) {
+        this.loaded = loaded;
+        if(loadedListener != null) loadedListener.onNext(null, loaded, null);
     }
 
     public class ScoreAdapter extends BaseExpandableListAdapter {

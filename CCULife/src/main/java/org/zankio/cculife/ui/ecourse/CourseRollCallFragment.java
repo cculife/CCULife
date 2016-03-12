@@ -3,6 +3,7 @@ package org.zankio.cculife.ui.ecourse;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +20,14 @@ import org.zankio.cculife.ui.base.BaseMessageFragment;
 import org.zankio.cculife.ui.base.IGetCourseData;
 
 
-public class CourseRollCallFragment extends BaseMessageFragment implements IOnUpdateListener<RollCall[]> {
-    private Course course;
+public class CourseRollCallFragment extends BaseMessageFragment implements IOnUpdateListener<RollCall[]> , IGetLoading{
     private IGetCourseData context;
     private RollCallAdapter adapter;
+    private Course course;
     private ListView list;
     private boolean loading;
+    private boolean loaded;
+    private IOnUpdateListener<Boolean> loadedListener;
 
     @Override
     public void onAttach(Context context) {
@@ -71,8 +74,10 @@ public class CourseRollCallFragment extends BaseMessageFragment implements IOnUp
 
         loading = course.getRollCall(this);
 
-        if (loading)
-            showMessage("讀取中...", true);
+        if (loading) {
+            setLoaded(false);
+            message().show("讀取中...", true);
+        }
     }
 
     @Override
@@ -80,23 +85,40 @@ public class CourseRollCallFragment extends BaseMessageFragment implements IOnUp
         this.loading = false;
 
         if (rollCalls == null || rollCalls.length == 0) {
-            showMessage("沒有點名");
+            message().show("沒有點名");
             return;
         }
 
         adapter.setRollCall(rollCalls);
 
-        hideMessage();
+        message().hide();
     }
 
     @Override
     public void onError(String type, Exception err, BaseSource source) {
         this.loading = false;
-        showMessage(err.getMessage());
+        setLoaded(true);
+        message().show(err.getMessage());
     }
 
     @Override
     public void onComplete(String type) {
+        setLoaded(true);
+    }
+
+    public void setLoaded(boolean loaded) {
+        this.loaded = loaded;
+        if (loadedListener != null) loadedListener.onNext(null, loaded, null);
+    }
+
+    @Override
+    public boolean isLoading() {
+        return !this.loaded;
+    }
+
+    @Override
+    public void setLoadedListener(IOnUpdateListener<Boolean> listener) {
+        this.loadedListener = listener;
 
     }
 

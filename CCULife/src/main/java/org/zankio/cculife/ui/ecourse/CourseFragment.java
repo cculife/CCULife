@@ -1,5 +1,8 @@
 package org.zankio.cculife.ui.ecourse;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,6 +20,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.zankio.cculife.CCUService.base.listener.IOnUpdateListener;
+import org.zankio.cculife.CCUService.base.listener.OnUpdateListener;
+import org.zankio.cculife.CCUService.base.source.BaseSource;
 import org.zankio.cculife.CCUService.ecourse.model.Course;
 import org.zankio.cculife.R;
 import org.zankio.cculife.CCUService.portal.service.Ecourse;
@@ -26,15 +32,18 @@ import org.zankio.cculife.ui.base.IGetCourseData;
 import java.util.Locale;
 
 public class CourseFragment extends Fragment {
-
     private Page[] pages;// = new Page[0];
 
-    //ToDo Don't reload on rotation.
     CoursePagerAdapter mPagerAdapter;
     protected Course course;
     ViewPager mViewPager;
     ActionBar actionBar;
     private IGetCourseData context;
+    private ValueAnimator loadingAnimator;
+    private ValueAnimator transAnimator;
+    private int tab_loading_form;
+    private int tab_loading_to;
+    TabLayout tabLayout;
 
     @Override
     public void onAttach(Context context) {
@@ -46,13 +55,17 @@ public class CourseFragment extends Fragment {
             throw new ClassCastException(context.toString()
                     + " must implement IGetCourseData");
         }
-
+        tab_loading_form = getResources().getColor(R.color.tab_loading_from);
+        tab_loading_to = getResources().getColor(R.color.tab_loading_to);
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        setRetainInstance(true);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -104,16 +117,63 @@ public class CourseFragment extends Fragment {
             mViewPager.addOnPageChangeListener(pageChangeListener);
         }
 
+        pageChangeListener.onPageSelected(0);
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
+    private ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
+        @Override
+        public void onPageSelected(int position) {
+            IGetLoading fragment = (IGetLoading) mPagerAdapter.getItem(position);
+            fragment.setLoadedListener(loadedListener);
+            setLoading(fragment.isLoading());
+        }
+    };
+
+    private IOnUpdateListener<Boolean> loadedListener = new OnUpdateListener<Boolean>() {
+        @Override
+        public void onNext(String type, Boolean loaded, BaseSource source) {
+            super.onNext(type, loaded, source);
+            setLoading(!loaded);
+        }
+    };
+
+    private void setLoading(boolean loading) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
+            if (loadingAnimator == null) {
+                loadingAnimator = ObjectAnimator.ofInt(
+                        tabLayout,
+                        "selectedTabIndicatorColor",
+                        tab_loading_form,
+                        tab_loading_to
+                );
+
+                loadingAnimator.setEvaluator(new ArgbEvaluator());
+                loadingAnimator.setDuration(1500);
+                loadingAnimator.setRepeatCount(ValueAnimator.INFINITE);
+                loadingAnimator.setRepeatMode(ValueAnimator.REVERSE);
+            }
+
+            boolean running = loadingAnimator.isRunning();
+
+            if (running && !loading) {
+                loadingAnimator.cancel();
+
+                transAnimator = ObjectAnimator.ofInt(
+                        tabLayout,
+                        "selectedTabIndicatorColor",
+                        tab_loading_to,
+                        tab_loading_form
+                );
+                long currentPlayTime = loadingAnimator.getCurrentPlayTime();
+                transAnimator.setEvaluator(new ArgbEvaluator());
+                transAnimator.setCurrentPlayTime(currentPlayTime);
+                transAnimator.setDuration(500);
+                transAnimator.start();
+            } else if (!running && loading) {
+                loadingAnimator.start();
+            }
+        }
     }
-
-
-
-        tabLayout.setupWithViewPager(mViewPager);
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
