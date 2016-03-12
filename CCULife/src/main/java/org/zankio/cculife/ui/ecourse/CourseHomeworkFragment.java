@@ -98,10 +98,10 @@ public class CourseHomeworkFragment extends BaseMessageFragment
     @Override
     public void onComplete(String type) { }
 
-    private IOnUpdateListener homeworkContentListener = new OnUpdateListener() {
+    private IOnUpdateListener<Homework> homeworkContentListener = new OnUpdateListener<Homework>() {
         @Override
-        public void onNext(String type, Object data, BaseSource source) {
-            onHomewrokContentUpdate(null, (Homework) data);
+        public void onNext(String type, Homework data, BaseSource source) {
+            onHomewrokContentUpdate(null, data);
         }
 
         @Override
@@ -171,7 +171,8 @@ public class CourseHomeworkFragment extends BaseMessageFragment
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Homework homework = (Homework) parent.getAdapter().getItem(position);
-        HomeworkContentSource.fetch(ecourse, homeworkContentListener, course, homework);
+        homework.getContent(homeworkContentListener);
+    }
     }
 
     public class HomeworkAdapter extends BaseAdapter {
