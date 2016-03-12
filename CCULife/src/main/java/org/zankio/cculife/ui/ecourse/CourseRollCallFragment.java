@@ -21,9 +21,9 @@ import org.zankio.cculife.ui.base.IGetCourseData;
 
 public class CourseRollCallFragment extends BaseMessageFragment implements IOnUpdateListener<RollCall[]> {
     private Course course;
+    private IGetCourseData context;
     private RollCallAdapter adapter;
     private ListView list;
-    private IGetCourseData courseDataContext;
     private boolean loading;
 
     @Override
@@ -31,17 +31,16 @@ public class CourseRollCallFragment extends BaseMessageFragment implements IOnUp
         super.onAttach(context);
 
         try {
-            courseDataContext = (IGetCourseData) context;
+            this.context = (IGetCourseData) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + " must implement IGetCourseData");
+            throw new ClassCastException(context.toString()
+                    + " must implement IGetCourseData");
         }
-
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        adapter = new RollCallAdapter(getActivity());
     }
 
     @Nullable
@@ -52,6 +51,7 @@ public class CourseRollCallFragment extends BaseMessageFragment implements IOnUp
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        adapter = new RollCallAdapter();
         list = (ListView) view.findViewById(R.id.list);
         list.setAdapter(adapter);
     }
@@ -63,11 +63,13 @@ public class CourseRollCallFragment extends BaseMessageFragment implements IOnUp
     }
 
     public void courseChange(String id) {
-        loading = true;
-        course = courseDataContext.getCourse(id);
+        course = context.getCourse(id);
+        if (course == null) {
+            getFragmentManager().popBackStack("list", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            return;
+        }
 
-        if (!course.getRollCall(this))
-            loading = false;
+        loading = course.getRollCall(this);
 
         if (loading)
             showMessage("讀取中...", true);
@@ -102,8 +104,8 @@ public class CourseRollCallFragment extends BaseMessageFragment implements IOnUp
         private LayoutInflater inflater;
         private RollCall[] rollcalls;
 
-        public RollCallAdapter(Context context) {
-            this.inflater = LayoutInflater.from(context);
+        public RollCallAdapter() {
+            this.inflater = LayoutInflater.from(getContext());
         }
 
         public void setRollCall(RollCall[] rollCall){

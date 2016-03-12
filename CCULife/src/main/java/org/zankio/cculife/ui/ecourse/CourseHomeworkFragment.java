@@ -38,21 +38,19 @@ public class CourseHomeworkFragment extends BaseMessageFragment
     private Course course;
     private Ecourse ecourse;
     private HomeworkAdapter adapter;
-    private IGetCourseData courseDataContext;
     private boolean loading;
+    private IGetCourseData context;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
 
         try {
-            courseDataContext = (IGetCourseData) context;
+            this.context = (IGetCourseData) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + " must implement IGetCourseData");
+            throw new ClassCastException(context.toString()
+                    + " must implement IGetCourseData");
         }
-        this.ecourse = courseDataContext.getEcourse();
-
-        adapter = new HomeworkAdapter(context);
     }
 
     @Nullable
@@ -63,6 +61,7 @@ public class CourseHomeworkFragment extends BaseMessageFragment
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        adapter = new HomeworkAdapter();
         ListView list = (ListView) view.findViewById(R.id.list);
         list.setAdapter(adapter);
         list.setOnItemClickListener(this);
@@ -71,7 +70,13 @@ public class CourseHomeworkFragment extends BaseMessageFragment
     }
 
     public void courseChange(String id) {
-        course = courseDataContext.getCourse(id);
+        course = context.getCourse(id);
+
+        if (course == null) {
+            getFragmentManager().popBackStack("list", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            return;
+        }
+
         loading = course.getHomework(this);
 
         if (loading)
@@ -174,8 +179,8 @@ public class CourseHomeworkFragment extends BaseMessageFragment
         private Homework[] homeworks;
         private LayoutInflater inflater;
 
-        public HomeworkAdapter(Context context) {
-            this.inflater = LayoutInflater.from(context);
+        public HomeworkAdapter() {
+            this.inflater = LayoutInflater.from(getContext());
         }
 
         public void setHomeworks(Homework[] homework){

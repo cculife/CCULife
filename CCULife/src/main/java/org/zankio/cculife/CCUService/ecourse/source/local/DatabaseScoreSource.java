@@ -19,12 +19,7 @@ import org.zankio.cculife.CCUService.ecourse.source.remote.ScoreSource;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.zankio.cculife.CCUService.ecourse.database.EcourseDatabaseHelper.SCORE_COLUMN_COURSEID;
-import static org.zankio.cculife.CCUService.ecourse.database.EcourseDatabaseHelper.SCORE_COLUMN_HEADER;
-import static org.zankio.cculife.CCUService.ecourse.database.EcourseDatabaseHelper.SCORE_COLUMN_NAME;
-import static org.zankio.cculife.CCUService.ecourse.database.EcourseDatabaseHelper.SCORE_COLUMN_PERCENT;
-import static org.zankio.cculife.CCUService.ecourse.database.EcourseDatabaseHelper.SCORE_COLUMN_RANK;
-import static org.zankio.cculife.CCUService.ecourse.database.EcourseDatabaseHelper.SCORE_COLUMN_SCORE;
+import static org.zankio.cculife.CCUService.ecourse.database.EcourseDatabaseHelper.*;
 
 public class DatabaseScoreSource
         extends DatabaseBaseSource<ScoreGroup[]>
@@ -45,7 +40,7 @@ public class DatabaseScoreSource
         super(context, property);
     }
 
-    private String[] scoreColumns = {
+    private String[] scoreColumns = new String[]{
             SCORE_COLUMN_COURSEID,
             SCORE_COLUMN_NAME,
             SCORE_COLUMN_PERCENT,
@@ -85,36 +80,42 @@ public class DatabaseScoreSource
         if(scores == null || database == null || !database.isOpen() || database.isReadOnly()) return scores;
 
         int i = 1;
+        database.beginTransaction();
 
-        database.delete(
-                EcourseDatabaseHelper.TABLE_ECOURSE_SCORE,
-                SCORE_COLUMN_COURSEID + "=\"" + course.courseid + "\"",
-                null
-        );
+        try {
+            database.delete(
+                    TABLE_ECOURSE_SCORE,
+                    SCORE_COLUMN_COURSEID + "=\"" + course.courseid + "\"",
+                    null
+            );
 
-        ContentValues values = new ContentValues();
-        for(ScoreGroup scoreHeader : scores) {
-            values.clear();
-            values.put(SCORE_COLUMN_NAME, scoreHeader.name);
-            values.put(SCORE_COLUMN_SCORE, scoreHeader.score);
-            values.put(SCORE_COLUMN_RANK, scoreHeader.rank);
-            values.put(SCORE_COLUMN_COURSEID, course.courseid);
-            values.put(SCORE_COLUMN_HEADER, -i);
-            database.insert(EcourseDatabaseHelper.TABLE_ECOURSE_SCORE, null, values);
+            ContentValues values = new ContentValues();
+            for(ScoreGroup scoreHeader : scores) {
+                values.clear();
+                values.put(SCORE_COLUMN_NAME, scoreHeader.name);
+                values.put(SCORE_COLUMN_SCORE, scoreHeader.score);
+                values.put(SCORE_COLUMN_RANK, scoreHeader.rank);
+                values.put(SCORE_COLUMN_COURSEID, course.courseid);
+                values.put(SCORE_COLUMN_HEADER, -i);
+                database.insert(TABLE_ECOURSE_SCORE, null, values);
 
-            if(scoreHeader.scores != null) {
-                for(Score score: scoreHeader.scores) {
-                    values.clear();
-                    values.put(SCORE_COLUMN_NAME, score.name);
-                    values.put(SCORE_COLUMN_SCORE, score.score);
-                    values.put(SCORE_COLUMN_RANK, score.rank);
-                    values.put(SCORE_COLUMN_PERCENT, score.percent);
-                    values.put(SCORE_COLUMN_COURSEID, course.courseid);
-                    values.put(SCORE_COLUMN_HEADER, i);
-                    database.insert(EcourseDatabaseHelper.TABLE_ECOURSE_SCORE, null, values);
+                if(scoreHeader.scores != null) {
+                    for(Score score: scoreHeader.scores) {
+                        values.clear();
+                        values.put(SCORE_COLUMN_NAME, score.name);
+                        values.put(SCORE_COLUMN_SCORE, score.score);
+                        values.put(SCORE_COLUMN_RANK, score.rank);
+                        values.put(SCORE_COLUMN_PERCENT, score.percent);
+                        values.put(SCORE_COLUMN_COURSEID, course.courseid);
+                        values.put(SCORE_COLUMN_HEADER, i);
+                        database.insert(TABLE_ECOURSE_SCORE, null, values);
+                    }
                 }
+                i++;
             }
-            i++;
+            database.setTransactionSuccessful();
+        } finally {
+            database.endTransaction();
         }
 
         return scores;
@@ -134,7 +135,7 @@ public class DatabaseScoreSource
         ScoreGroup now;
 
         cursorHeader = database.query(
-                EcourseDatabaseHelper.TABLE_ECOURSE_SCORE,
+                TABLE_ECOURSE_SCORE,
                 scoreColumns,
                 SCORE_COLUMN_HEADER + "<0 AND " +
                         SCORE_COLUMN_COURSEID + "=\"" + course.courseid + "\"",
@@ -147,7 +148,7 @@ public class DatabaseScoreSource
 
             int idHeader = (-cursorHeader.getInt(cursorHeader.getColumnIndex(SCORE_COLUMN_HEADER)));
             cursorScore = database.query(
-                    EcourseDatabaseHelper.TABLE_ECOURSE_SCORE,
+                    TABLE_ECOURSE_SCORE,
                     scoreColumns,
                     SCORE_COLUMN_HEADER + "=" + idHeader + " AND " +
                             SCORE_COLUMN_COURSEID + "=\"" + course.courseid + "\"",
@@ -190,7 +191,7 @@ public class DatabaseScoreSource
             @Override
             public void onNext(String type, final ScoreGroup[] data, BaseSource source) {
                 super.onNext(type, data, source);
-                if (source == null || source.getClass().equals(this.getClass())) return;
+                if (source == null || source.getClass().equals(DatabaseScoreSource.this.getClass())) return;
 
                 new Thread(new Runnable() {
                     @Override

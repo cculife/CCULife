@@ -20,8 +20,19 @@ public abstract class CourseSource<T> extends Arg1Source<T, Course> {
     }
 
     public static void authenticate(@NonNull Ecourse context, @NonNull BaseSession session) throws Exception {
-        if (!session.isAuthenticated())
-            context.fetchSync(Authenticate.TYPE, context.getUsername(), context.getPassword());
+        Log.d("CourseSource", "authenticate");
+        session.getLock().readLock().lock();
+        if (!session.isAuthenticated()) {
+            session.getLock().readLock().unlock();
+            session.getLock().writeLock().lock();
+            try {
+                context.fetchSync(Authenticate.TYPE, context.getUsername(), context.getPassword());
+                session.getLock().readLock().lock();
+            } finally {
+                session.getLock().writeLock().unlock();
+            }
+        }
+        session.getLock().readLock().unlock();
     }
 
     public static void changeCourse(@NonNull BaseRepo context, @NonNull BaseSession session, @NonNull ReadWriteLock lock, @NonNull Course course) throws Exception {

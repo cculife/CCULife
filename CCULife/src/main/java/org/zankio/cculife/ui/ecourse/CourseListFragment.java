@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,36 +34,44 @@ public class CourseListFragment extends BaseMessageFragment implements IOnUpdate
     public static Ecourse ecourse;
     private CourseAdapter adapter = null;
     private boolean loading;
+    private OnCourseSelectedListener context;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+
+        try {
+            this.context = (OnCourseSelectedListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement IGetCourseData");
+        }
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
-        adapter = new CourseAdapter();
-
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((BaseFragmentActivity)getActivity()).setSSOService(new org.zankio.cculife.CCUService.portal.service.Ecourse());
-
     }
 
     public void fetchCourseList() {
-        ecourse = new Ecourse(getActivity());
+        Log.d("CourseListFragment", "fetch Course List");
+        loading = true;
+        if (ecourse != null && adapter != null && adapter.getCount() != 0) {
+            loading = false;
+            adapter.notifyDataSetChanged();
+            return;
+        }
+        ecourse = new org.zankio.cculife.CCUService.ecourse.Ecourse(getContext());
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         if (Debug.debug && preferences.getBoolean("debug_ecourse_custom", false)) {
             int year, term;
 
             year = Integer.parseInt(preferences.getString("debug_ecourse_year", "-1"));
             term = Integer.parseInt(preferences.getString("debug_ecourse_term", "-1"));
-            ecourse.fetch(CustomCourseListSource.TYPE, this, year, term, new Kiki(getActivity()));
+            ecourse.fetch(CustomCourseListSource.TYPE, this, year, term, new Kiki(getContext()));
         } else {
-
             ecourse.fetch(CourseListSource.TYPE, this);
         }
 
@@ -78,13 +87,17 @@ public class CourseListFragment extends BaseMessageFragment implements IOnUpdate
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((BaseFragmentActivity)getActivity()).setSSOService(new org.zankio.cculife.CCUService.portal.service.Ecourse());
+
+        adapter = new CourseAdapter();
         ListView courselist = (ListView)view.findViewById(R.id.list);
         courselist.setAdapter(adapter);
         courselist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(final AdapterView<?> parent, View view, final int position, long id) {
                 final Course course = (Course) parent.getAdapter().getItem(position);
-                ((OnCourseSelectedListener) getActivity()).onCourseSelected(ecourse, course);
+                context.onCourseSelected(ecourse, course);
             }
         });
 
@@ -137,11 +150,12 @@ public class CourseListFragment extends BaseMessageFragment implements IOnUpdate
 
         Course[] courses = null;
         private boolean ignore_ecourse_warnning;
-
-        public void setCourses(Course[] courses){
+        public CourseAdapter() {
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
             this.ignore_ecourse_warnning = preferences.getBoolean("ignore_ecourse_warnning", false);
+        }
 
+        public void setCourses(Course[] courses){
             this.courses = courses;
             this.notifyDataSetChanged();
         }

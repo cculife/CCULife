@@ -69,21 +69,26 @@ public class DatabaseCourseListSource extends DatabaseBaseSource<Course[]> imple
         SQLiteDatabase database = getDatabase();
         if(courses == null || !database.isOpen() || database.isReadOnly()) return courses;
 
-        database.delete(TABLE_ECOURSE, null, null);
+        database.beginTransaction();
+        try {
+            database.delete(TABLE_ECOURSE, null, null);
 
-        ContentValues values = new ContentValues();
-        for(Course course : courses) {
-            values.clear();
-            values.put(LIST_COLUMN_COURSEID, course.courseid);
-            values.put(LIST_COLUMN_NAME, course.name);
-            values.put(LIST_COLUMN_TEACHER, course.teacher);
-            values.put(LIST_COLUMN_HOMEWORK, course.homework);
-            values.put(LIST_COLUMN_NOTICE, course.notice);
-            values.put(LIST_COLUMN_EXAM, course.exam);
-            values.put(LIST_COLUMN_WARNING, course.warning ? 1 : 0);
-            database.insert(TABLE_ECOURSE, null, values);
+            ContentValues values = new ContentValues();
+            for(Course course : courses) {
+                values.clear();
+                values.put(LIST_COLUMN_COURSEID, course.courseid);
+                values.put(LIST_COLUMN_NAME, course.name);
+                values.put(LIST_COLUMN_TEACHER, course.teacher);
+                values.put(LIST_COLUMN_HOMEWORK, course.homework);
+                values.put(LIST_COLUMN_NOTICE, course.notice);
+                values.put(LIST_COLUMN_EXAM, course.exam);
+                values.put(LIST_COLUMN_WARNING, course.warning ? 1 : 0);
+                database.insert(TABLE_ECOURSE, null, values);
+            }
+            database.setTransactionSuccessful();
+        } finally {
+            database.endTransaction();
         }
-
         return courses;
     }
 

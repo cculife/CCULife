@@ -16,7 +16,7 @@ import org.zankio.cculife.override.Exceptions;
 import java.io.IOException;
 import java.util.concurrent.locks.ReadWriteLock;
 
-public class HomeworkContentSource extends BaseSource<Void> {
+public class HomeworkContentSource extends BaseSource<Homework> {
     public final static String TYPE = "HOMEWORK_CONTENT";
     public final static String[] DATA_TYPES = { TYPE };
     public final static SourceProperty property;
@@ -47,7 +47,7 @@ public class HomeworkContentSource extends BaseSource<Void> {
     }
 
     @Override
-    public Void fetch(String type, Object... arg) throws Exception {
+    public Homework fetch(String type, Object... arg) throws Exception {
         if (arg.length < 2) throw new Exception("arg is miss");
 
         Ecourse context = (Ecourse) this.context;
@@ -80,7 +80,7 @@ public class HomeworkContentSource extends BaseSource<Void> {
             } else {
                 parseHomeworkContent(connection.response().parse(), homework);
             }
-            return null;
+            return homework;
         } catch (IOException e) {
             e.printStackTrace();
             throw Exceptions.getNetworkException(e);

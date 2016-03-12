@@ -8,6 +8,7 @@ public class KikiDatabaseHelper extends SQLiteOpenHelper{
 
     public static final String TABLE_TIMETABLE = "timetable";
     public static final String TIME_COLUMN_ID = "_id";
+    public static final String TIME_COLUMN_COURSEID = "course_id";
     public static final String TIME_COLUMN_NAME = "name";
     public static final String TIME_COLUMN_TEACHER = "teacher";
     public static final String TIME_COLUMN_COLORID = "colorid";
@@ -15,9 +16,10 @@ public class KikiDatabaseHelper extends SQLiteOpenHelper{
     public static final String TIME_COLUMN_STARTTIME = "start_time";
     public static final String TIME_COLUMN_ENDTIME = "end_time";
     public static final String TIME_COLUMN_DAYOFWEEK = "day_of_week";
+    public static final String TIME_COLUMN_USERADD = "user_add";
 
     public static final String DATABASE_NAME = "kiki.db";
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
 
     public KikiDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -27,13 +29,15 @@ public class KikiDatabaseHelper extends SQLiteOpenHelper{
     public void onCreate(SQLiteDatabase db) {
         String DATABASE_CREATE = "create table " + TABLE_TIMETABLE + "(" +
                 TIME_COLUMN_ID + " integer primary key autoincrement, " +
+                TIME_COLUMN_COURSEID + " text not null, " +
                 TIME_COLUMN_NAME + " text not null, " +
                 TIME_COLUMN_CLASSROOM + " text not null, " +
                 TIME_COLUMN_TEACHER + " text not null, " +
                 TIME_COLUMN_STARTTIME + " int not null, " +
                 TIME_COLUMN_ENDTIME + " int not null," +
                 TIME_COLUMN_DAYOFWEEK + " int not null," +
-                TIME_COLUMN_COLORID + " integer not null);";
+                TIME_COLUMN_COLORID + " integer not null," +
+                TIME_COLUMN_USERADD + " int not null default 0);";
 
         db.execSQL(DATABASE_CREATE);
     }

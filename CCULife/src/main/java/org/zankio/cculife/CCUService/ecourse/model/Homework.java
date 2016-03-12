@@ -1,5 +1,6 @@
 package org.zankio.cculife.CCUService.ecourse.model;
 
+import org.zankio.cculife.CCUService.base.listener.IOnUpdateListener;
 import org.zankio.cculife.CCUService.ecourse.Ecourse;
 import org.zankio.cculife.CCUService.ecourse.source.remote.HomeworkContentSource;
 
@@ -24,12 +25,12 @@ public class Homework {
         return -1;
     }
 
-    public String getContent() {
-        try {
-            return (String) ecourse.fetchSync(HomeworkContentSource.TYPE, course, this);
-        } catch (Exception e) {
-            e.printStackTrace();
+    public void getContent(IOnUpdateListener<Homework> listener) {
+        if (this.content != null) {
+            listener.onNext(HomeworkContentSource.TYPE, this, null);
+            return;
         }
-        return null;
+
+        HomeworkContentSource.fetch(ecourse, listener, course, this);
     }
 }

@@ -9,15 +9,13 @@ import org.zankio.cculife.R;
 import org.zankio.cculife.ui.base.BaseFragmentActivity;
 import org.zankio.cculife.ui.base.IGetCourseData;
 
-public class CourseActivity extends BaseFragmentActivity implements CourseListFragment.OnCourseSelectedListener, IGetCourseData{
-
-    private Ecourse ecourse;
-    private Course course;
+public class CourseActivity extends BaseFragmentActivity
+    implements CourseListFragment.OnCourseSelectedListener, IGetCourseData{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_course_new);
+        setContentView(R.layout.activity_course);
 
         if (findViewById(R.id.container) != null) {
             if (savedInstanceState != null) {
@@ -32,10 +30,20 @@ public class CourseActivity extends BaseFragmentActivity implements CourseListFr
     }
 
     @Override
-    public void onCourseSelected(Ecourse ecourse, Course course) {
-        this.ecourse = ecourse;
-        this.course = course;
+    public Ecourse getEcourse() {
+        return CourseDataFragment.getFragment(getSupportFragmentManager()).getEcourse();
+    }
 
+    @Override
+    public Course getCourse(String id) {
+        return CourseDataFragment.getFragment(getSupportFragmentManager()).getCourse(id);
+    }
+
+    @Override
+    public void onCourseSelected(Ecourse ecourse, Course course) {
+        CourseDataFragment.getFragment(getSupportFragmentManager()).onCourseSelected(ecourse, course);
+
+        // change course
         CourseFragment fragment = new CourseFragment();
         Bundle data = new Bundle();
         data.putString("id", course.courseid);
@@ -44,20 +52,8 @@ public class CourseActivity extends BaseFragmentActivity implements CourseListFr
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         transaction.replace(R.id.container, fragment);
-        transaction.addToBackStack(null);
+        transaction.addToBackStack("list");
 
-        transaction.commit();
-    }
-
-    @Override
-    public Ecourse getEcourse() {
-        return ecourse;
-    }
-
-    @Override
-    public Course getCourse(String id) {
-        return course;
-        /*if (id != null && id.equals(course.courseid)) return course;
-        else return null;*/
+        transaction.commitAllowingStateLoss();
     }
 }

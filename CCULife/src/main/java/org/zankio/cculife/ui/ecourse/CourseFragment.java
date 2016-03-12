@@ -1,7 +1,6 @@
 package org.zankio.cculife.ui.ecourse;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -20,6 +19,7 @@ import android.view.ViewGroup;
 
 import org.zankio.cculife.CCUService.ecourse.model.Course;
 import org.zankio.cculife.R;
+import org.zankio.cculife.CCUService.portal.service.Ecourse;
 import org.zankio.cculife.ui.base.BaseFragmentActivity;
 import org.zankio.cculife.ui.base.IGetCourseData;
 
@@ -30,20 +30,21 @@ public class CourseFragment extends Fragment {
     private Page[] pages;// = new Page[0];
 
     //ToDo Don't reload on rotation.
-    CoursePagerAdapter mSectionsPagerAdapter;
+    CoursePagerAdapter mPagerAdapter;
     protected Course course;
-    IGetCourseData courseDataContext;
     ViewPager mViewPager;
     ActionBar actionBar;
+    private IGetCourseData context;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
 
         try {
-            courseDataContext = (IGetCourseData) context;
+            this.context = (IGetCourseData) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + " must implement IGetCourseData");
+            throw new ClassCastException(context.toString()
+                    + " must implement IGetCourseData");
         }
 
     }
@@ -52,23 +53,30 @@ public class CourseFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_course, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         pages = new Page[]{
                 new Page(R.string.title_announce, new CourseAnnounceFragment()),
                 new Page(R.string.title_score, new CourseScoreFragment()),
                 new Page(R.string.title_file, new CourseFileFragment()),
                 new Page(R.string.title_homework, new CourseHomeworkFragment()),
-                new Page(R.string.title_named, new CourseRollCallFragment()),
+                new Page(R.string.title_roll_call, new CourseRollCallFragment()),
         };
 
-        mSectionsPagerAdapter = new CoursePagerAdapter(getFragmentManager());
-
         String id = getArguments().getString("id");
-        this.course = courseDataContext.getCourse(id);
-        actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setTitle(course.name);
-            actionBar.setDisplayHomeAsUpEnabled(true);
+        this.course = context.getCourse(id);
+
+        if (course == null) {
+            getFragmentManager().popBackStack("list", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            return;
         }
 
         for (Page page : pages) {
@@ -77,21 +85,25 @@ public class CourseFragment extends Fragment {
             page.fragment.setArguments(data);
         }
 
-        mSectionsPagerAdapter.notifyDataSetChanged();
+        mPagerAdapter = new CoursePagerAdapter(getChildFragmentManager());
+        mPagerAdapter.notifyDataSetChanged();
 
-        ((BaseFragmentActivity)getActivity()).setSSOService(new org.zankio.cculife.CCUService.portal.service.Ecourse().setCourseID(course.courseid));
-    }
+        ((BaseFragmentActivity)getActivity()).setSSOService(new Ecourse().setCourseID(course.courseid));
 
-    @Override
-    public void onStart() {
-        super.onStart();
+        actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(course.name);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
-    }
+        tabLayout = (TabLayout) view.findViewById(R.id.tab);
+        mViewPager = (ViewPager) view.findViewById(R.id.pager);
+        mViewPager.setAdapter(mPagerAdapter);
+        tabLayout.setupWithViewPager(mViewPager);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
+            mViewPager.addOnPageChangeListener(pageChangeListener);
+        }
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_course, container, false);
     }
 
     @Override
@@ -99,14 +111,8 @@ public class CourseFragment extends Fragment {
         super.onStop();
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
 
 
-        TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tab);
-        mViewPager = (ViewPager) view.findViewById(R.id.pager);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
         tabLayout.setupWithViewPager(mViewPager);
 
     }
@@ -118,21 +124,7 @@ public class CourseFragment extends Fragment {
         if (actionBar != null) {
             actionBar.setTitle("Course");
         }
-
-        for (Page page : pages) {
-           getFragmentManager().beginTransaction().remove(page.fragment).commit();
-        }
     }
-
-    /*
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_course);
-
-        if (CourseListFragment.ecourse == null) {finish(); return;}
-        course = CourseListFragment.ecourse.nowCourse;
-    }*/
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -142,14 +134,19 @@ public class CourseFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent;
-
         switch (item.getItemId()){
             case R.id.action_classmate:
-                CourseClassmateActivity.course = course;
+                Fragment fragment = new CourseClassmateFragment();
+                Bundle data = new Bundle();
+                data.putString("id", course.courseid);
+                fragment.setArguments(data);
 
-                intent = new Intent(getContext(), CourseClassmateActivity.class);
-                startActivity(intent);
+                FragmentManager fm = getFragmentManager();
+                fm.beginTransaction()
+                        .replace(R.id.container, fragment)
+                        .addToBackStack(null)
+                        .commit();
+
                 return true;
         }
 

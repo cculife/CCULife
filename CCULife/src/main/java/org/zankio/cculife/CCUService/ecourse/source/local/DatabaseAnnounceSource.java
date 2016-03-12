@@ -17,21 +17,14 @@ import org.zankio.cculife.CCUService.ecourse.model.Announce;
 import org.zankio.cculife.CCUService.ecourse.model.Course;
 import org.zankio.cculife.CCUService.ecourse.source.remote.AnnounceContentSource;
 import org.zankio.cculife.CCUService.ecourse.source.remote.AnnounceSource;
+import org.zankio.cculife.CCUService.ecourse.database.EcourseDatabaseHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static org.zankio.cculife.CCUService.ecourse.database.EcourseDatabaseHelper.ANNOUNCE_COLUMN_BROWSECOUNT;
-import static org.zankio.cculife.CCUService.ecourse.database.EcourseDatabaseHelper.ANNOUNCE_COLUMN_CONTENT;
-import static org.zankio.cculife.CCUService.ecourse.database.EcourseDatabaseHelper.ANNOUNCE_COLUMN_COURSEID;
-import static org.zankio.cculife.CCUService.ecourse.database.EcourseDatabaseHelper.ANNOUNCE_COLUMN_DATE;
-import static org.zankio.cculife.CCUService.ecourse.database.EcourseDatabaseHelper.ANNOUNCE_COLUMN_IMPORTANT;
-import static org.zankio.cculife.CCUService.ecourse.database.EcourseDatabaseHelper.ANNOUNCE_COLUMN_NEW;
-import static org.zankio.cculife.CCUService.ecourse.database.EcourseDatabaseHelper.ANNOUNCE_COLUMN_TITLE;
-import static org.zankio.cculife.CCUService.ecourse.database.EcourseDatabaseHelper.ANNOUNCE_COLUMN_URL;
-import static org.zankio.cculife.CCUService.ecourse.database.EcourseDatabaseHelper.TABLE_ECOURSE_ANNOUNCE;
+import static org.zankio.cculife.CCUService.ecourse.database.EcourseDatabaseHelper.*;
 
 public class DatabaseAnnounceSource extends DatabaseBaseSource<Announce[]> implements IGetListener {
     public final static String TYPE_ANNOUNCE = AnnounceSource.TYPE;
@@ -133,46 +126,52 @@ public class DatabaseAnnounceSource extends DatabaseBaseSource<Announce[]> imple
         SQLiteDatabase database = getDatabase();
         if(announces == null || !database.isOpen() || database.isReadOnly()) return announces;
 
-        database.delete(
-                TABLE_ECOURSE_ANNOUNCE,
-                ANNOUNCE_COLUMN_COURSEID + "=\"" + course.courseid + "\"" +
-                        " AND " + ANNOUNCE_COLUMN_CONTENT + " IS NULL OR " +
-                        "trim(" + ANNOUNCE_COLUMN_CONTENT + ") = \"\"",
-                null
-        );
-
-        Cursor cursor;
-
-        ContentValues values = new ContentValues();
-        for(Announce announce : announces) {
-            values.clear();
-            values.put(ANNOUNCE_COLUMN_TITLE, announce.title);
-            values.put(ANNOUNCE_COLUMN_BROWSECOUNT, announce.browseCount);
-            values.put(ANNOUNCE_COLUMN_COURSEID, announce.getCourseID());
-            values.put(ANNOUNCE_COLUMN_DATE, announce.date);
-            values.put(ANNOUNCE_COLUMN_IMPORTANT, announce.important);
-            values.put(ANNOUNCE_COLUMN_NEW, announce.isnew ? 1 : 0);
-            values.put(ANNOUNCE_COLUMN_URL, removeUrlPHPSESSID(announce.url));
-            if(announce.content != null) values.put(ANNOUNCE_COLUMN_CONTENT, announce.content);
-
-            cursor = database.query(
+        database.beginTransaction();
+        try {
+            database.delete(
                     TABLE_ECOURSE_ANNOUNCE,
-                    new String[]{ ANNOUNCE_COLUMN_URL },
-                    ANNOUNCE_COLUMN_COURSEID + "=\"" + announce.getCourseID() + "\" AND " +
-                            ANNOUNCE_COLUMN_URL + "=" + DatabaseUtils.sqlEscapeString(removeUrlPHPSESSID(announce.url)) + "",
-                    null, null, null, null
+                    ANNOUNCE_COLUMN_COURSEID + "=\"" + course.courseid + "\"" +
+                            " AND " + ANNOUNCE_COLUMN_CONTENT + " IS NULL OR " +
+                            "trim(" + ANNOUNCE_COLUMN_CONTENT + ") = \"\"",
+                    null
             );
 
-            if(cursor.getCount() > 0) {
-                database.update(TABLE_ECOURSE_ANNOUNCE, values,
+            Cursor cursor;
+
+            ContentValues values = new ContentValues();
+            for(Announce announce : announces) {
+                values.clear();
+                values.put(ANNOUNCE_COLUMN_TITLE, announce.title);
+                values.put(ANNOUNCE_COLUMN_BROWSECOUNT, announce.browseCount);
+                values.put(ANNOUNCE_COLUMN_COURSEID, announce.getCourseID());
+                values.put(ANNOUNCE_COLUMN_DATE, announce.date);
+                values.put(ANNOUNCE_COLUMN_IMPORTANT, announce.important);
+                values.put(ANNOUNCE_COLUMN_NEW, announce.isnew ? 1 : 0);
+                values.put(ANNOUNCE_COLUMN_URL, removeUrlPHPSESSID(announce.url));
+                if(announce.content != null) values.put(ANNOUNCE_COLUMN_CONTENT, announce.content);
+
+                cursor = database.query(
+                        TABLE_ECOURSE_ANNOUNCE,
+                        new String[]{ ANNOUNCE_COLUMN_URL },
                         ANNOUNCE_COLUMN_COURSEID + "=\"" + announce.getCourseID() + "\" AND " +
-                                ANNOUNCE_COLUMN_URL + "=" + DatabaseUtils.sqlEscapeString(removeUrlPHPSESSID(announce.url)) + "", null);
-            } else {
-                database.insert(TABLE_ECOURSE_ANNOUNCE, null, values);
+                                ANNOUNCE_COLUMN_URL + "=" + DatabaseUtils.sqlEscapeString(removeUrlPHPSESSID(announce.url)) + "",
+                        null, null, null, null
+                );
+
+                if(cursor.getCount() > 0) {
+                    database.update(TABLE_ECOURSE_ANNOUNCE, values,
+                            ANNOUNCE_COLUMN_COURSEID + "=\"" + announce.getCourseID() + "\" AND " +
+                                    ANNOUNCE_COLUMN_URL + "=" + DatabaseUtils.sqlEscapeString(removeUrlPHPSESSID(announce.url)) + "", null);
+                } else {
+                    database.insert(TABLE_ECOURSE_ANNOUNCE, null, values);
+                }
+
+                cursor.close();
+
             }
-
-            cursor.close();
-
+            database.setTransactionSuccessful();
+        } finally {
+            database.endTransaction();
         }
 
         return announces;

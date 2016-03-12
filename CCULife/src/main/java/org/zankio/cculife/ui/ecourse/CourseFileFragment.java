@@ -29,19 +29,19 @@ public class CourseFileFragment extends BaseMessageFragment
     private Course course;
     private FileAdapter adapter;
     private ExpandableListView list;
-    private IGetCourseData courseDataContext;
     private boolean loading;
+    private IGetCourseData context;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
 
         try {
-            courseDataContext = (IGetCourseData) context;
+            this.context = (IGetCourseData) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + " must implement IGetCourseData");
+            throw new ClassCastException(context.toString()
+                    + " must implement IGetCourseData");
         }
-        adapter = new FileAdapter(context);
     }
 
     @Nullable
@@ -52,6 +52,7 @@ public class CourseFileFragment extends BaseMessageFragment
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        adapter = new FileAdapter();
         list = (ExpandableListView) view.findViewById(R.id.list);
         list.setAdapter(adapter);
         list.setOnChildClickListener(this);
@@ -64,7 +65,12 @@ public class CourseFileFragment extends BaseMessageFragment
     }
 
     public void courseChange(String id) {
-        course = courseDataContext.getCourse(id);
+        course = context.getCourse(id);
+        if (course == null) {
+            getFragmentManager().popBackStack("list", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            return;
+        }
+
         loading = course.getFiles(this);
 
         if (loading)
@@ -121,8 +127,8 @@ public class CourseFileFragment extends BaseMessageFragment
         private FileGroup[] filelists;
         private LayoutInflater inflater;
 
-        public FileAdapter(Context context) {
-            this.inflater = LayoutInflater.from(context);
+        public FileAdapter() {
+            this.inflater = LayoutInflater.from(getContext());
         }
 
         public void setFiles(FileGroup[] filelists) {
