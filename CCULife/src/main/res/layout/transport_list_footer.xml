@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <TextView
+        android:layout_gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textColor="@color/Gray"
+        android:padding="16dp"
+        tools:text="資料來源：\n交通部公路總局\n公路客運乘車資訊查詢系統 "
+        android:id="@+id/footer_text" />
+</LinearLayout>

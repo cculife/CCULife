@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:layout_width="45dp"
+        android:layout_height="80dp"
+        android:src="@drawable/bus_stop_icon"
+        android:id="@+id/train_delay"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:gravity="center"
+        tools:text="準點"
+        />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/train_delay"
+        android:layout_toEndOf="@id/train_delay" >
+        <TextView
+            tools:text="1121"
+            android:layout_gravity="center_vertical|start"
+            android:id="@+id/train_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="25sp" />
+
+        <TextView
+            android:layout_gravity="top|start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            tools:text="自強"
+            android:id="@+id/train_type"
+            android:textColor="@color/Gray" />
+
+        <TextView
+            tools:text="往 民雄"
+            android:id="@+id/train_to"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp"
+            android:textSize="25sp"
+            android:textColor="@color/green_400"/>
+
+        <TextView
+            tools:text="13:30"
+            android:id="@+id/train_departure"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp"
+            android:textSize="25sp" />
+    </FrameLayout>
+
+
+</RelativeLayout>

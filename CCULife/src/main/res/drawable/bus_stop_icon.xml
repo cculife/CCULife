@@ -1,0 +1,5 @@
+<level-list xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:maxLevel="1" android:drawable="@drawable/bus_stop_mid"/>
+    <item android:maxLevel="2" android:drawable="@drawable/bus_stop_first"/>
+    <item android:maxLevel="3" android:drawable="@drawable/bus_stop_last"/>
+</level-list>

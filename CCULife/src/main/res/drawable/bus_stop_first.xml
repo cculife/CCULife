@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:top="60dp"
+        android:left="13dp"
+        android:right="13dp"
+        android:gravity="center_horizontal">
+        <shape android:shape="rectangle" >
+            <solid android:color="@color/bus_line"/>
+            <size android:height="60dp" android:width="@dimen/bus_line_size"/>
+        </shape>
+    </item>
+    <item android:gravity="center" android:top="45dp" android:bottom="45dp">
+        <shape android:shape="oval" >
+            <solid android:color="@color/bus_icon"/>
+            <stroke android:color="@color/bus_stop_icon_border" android:width="@dimen/bus_stop_icon_border_size"/>
+            <size android:height="@dimen/bus_stop_icon_size" android:width="@dimen/bus_stop_icon_size"/>
+        </shape>
+    </item>
+</layer-list>

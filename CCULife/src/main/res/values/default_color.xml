@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="tab_loading_from">@color/brown_400</color>
+    <color name="tab_loading_to">@color/brown_50</color>
+    <color name="primary">@color/white</color>
+    <color name="primary_dark">@color/brown_300</color>
+    <color name="accent">@color/brown_400</color>
+    <color name="bus_icon">@color/orange_300</color>
+    <color name="bus_line">@color/grey_100</color>
+    <color name="bus_stop_icon_border">@color/orange_200</color>
+    <dimen name="bus_stop_icon_size">30dp</dimen>
+    <dimen name="bus_line_size">4dp</dimen>
+    <dimen name="bus_stop_icon_border_size">3dp</dimen>
+</resources>

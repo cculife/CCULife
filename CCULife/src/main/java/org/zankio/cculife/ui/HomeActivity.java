@@ -19,6 +19,7 @@ import org.zankio.cculife.ui.CourseSchedule.CourseTimeTableActivity;
 import org.zankio.cculife.ui.ScoreQuery.ScoreQueryActivity;
 import org.zankio.cculife.ui.base.BaseActivity;
 import org.zankio.cculife.ui.ecourse.CourseActivity;
+import org.zankio.cculife.ui.transport.TransportActivity;
 
 public class HomeActivity extends BaseActivity {
 
