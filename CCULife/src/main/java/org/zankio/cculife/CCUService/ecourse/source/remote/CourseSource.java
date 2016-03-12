@@ -1,6 +1,7 @@
 package org.zankio.cculife.CCUService.ecourse.source.remote;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import org.jsoup.Connection;
 import org.jsoup.nodes.Document;
@@ -9,6 +10,7 @@ import org.zankio.cculife.CCUService.base.BaseSession;
 import org.zankio.cculife.CCUService.base.source.SourceProperty;
 import org.zankio.cculife.CCUService.ecourse.Ecourse;
 import org.zankio.cculife.CCUService.ecourse.model.Course;
+import org.zankio.cculife.Debug;
 import org.zankio.cculife.override.Exceptions;
 
 import java.io.IOException;
@@ -50,6 +52,9 @@ public abstract class CourseSource<T> extends Arg1Source<T, Course> {
 
     @Override
     public T _fetch(Course course) throws Exception{
+        if (Debug.log)
+            Log.d(String.format("CourseSource(%s)", this.getClass().toString()), "fetch");
+
         Ecourse context = (Ecourse) this.context;
         BaseSession session = context.getSession();
         if (session == null) throw new Exception("Session is miss");

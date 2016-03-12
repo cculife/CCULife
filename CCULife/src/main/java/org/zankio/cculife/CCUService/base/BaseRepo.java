@@ -3,6 +3,7 @@ package org.zankio.cculife.CCUService.base;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.util.Log;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -89,6 +90,8 @@ public abstract class BaseRepo<TIdentify> {
     }
 
     public AsyncTask[] fetch(String type, IOnUpdateListener listener, Object... arg) {
+        Log.d("BaseRepo", String.format("fetch %s", type));
+
         ArrayList<BaseSource<Object>> sources = sourceMap.get(type);
         PriorityUpdateListener priorityUpdateListener = new PriorityUpdateListener(listener);
         if (sources == null || sources.size() == 0) {
@@ -112,6 +115,7 @@ public abstract class BaseRepo<TIdentify> {
     }
 
     public Object fetchSync(String type, Object ...arg) throws Exception {
+        Log.d("BaseRepo", String.format("fetch Sync %s", type));
         ArrayList<BaseSource<Object>> sources = sourceMap.get(type);
         if (sources != null) {
             for (BaseSource<Object> source: sources) {

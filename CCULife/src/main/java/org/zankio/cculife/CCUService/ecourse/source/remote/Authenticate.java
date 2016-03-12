@@ -1,5 +1,7 @@
 package org.zankio.cculife.CCUService.ecourse.source.remote;
 
+import android.util.Log;
+
 import org.jsoup.Connection;
 import org.zankio.cculife.CCUService.base.BaseSession;
 import org.zankio.cculife.CCUService.base.authentication.CookieAuth;
@@ -34,6 +36,7 @@ public class Authenticate extends BaseSource<Boolean> {
     @Override
     public Boolean fetch(String type, Object ...arg) throws Exception {
         if (arg.length < 2) throw new Exception("arg miss!?");
+        Log.d("Authenticate", "fetch");
 
         Ecourse context = (Ecourse) this.context;
         String user = (String) arg[0],
@@ -71,6 +74,9 @@ public class Authenticate extends BaseSource<Boolean> {
             throw new LoginErrorException("未知錯誤");
         } catch (IOException e) {
             throw Exceptions.getNetworkException(e);
+        } finally {
+            Log.d("Login", String.format("result: %s", session.isAuthenticated()));
+            Log.d("Login", String.format("data: %s", auth.getCookie(SESSION_FIELD_NAME)));
         }
     }
 }

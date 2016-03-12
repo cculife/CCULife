@@ -1,5 +1,7 @@
 package org.zankio.cculife.CCUService.ecourse.source.remote;
 
+import android.util.Log;
+
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.zankio.cculife.CCUService.base.source.SourceProperty;
@@ -7,6 +9,7 @@ import org.zankio.cculife.CCUService.ecourse.Ecourse;
 import org.zankio.cculife.CCUService.ecourse.constant.Url;
 import org.zankio.cculife.CCUService.ecourse.model.Classmate;
 import org.zankio.cculife.CCUService.ecourse.model.Course;
+import org.zankio.cculife.Debug;
 
 public class ClassmateSource extends CourseSource<Classmate[]> {
     public final static String TYPE = "CLASSMATE";
@@ -27,6 +30,8 @@ public class ClassmateSource extends CourseSource<Classmate[]> {
 
     @Override
     public Classmate[] parse(Document document, Course course) {
+        if (Debug.log)
+            Log.d(this.getClass().toString(), "parse");
         Elements list, field;
 
         Classmate[] result;
