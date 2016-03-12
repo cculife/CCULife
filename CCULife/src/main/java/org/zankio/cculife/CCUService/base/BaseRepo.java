@@ -7,6 +7,7 @@ import android.util.Log;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
+import org.zankio.cculife.CCUService.base.helper.SourcePropertyComparator;
 import org.zankio.cculife.CCUService.base.listener.IGetListener;
 import org.zankio.cculife.CCUService.base.listener.IOnUpdateListener;
 import org.zankio.cculife.CCUService.base.listener.PriorityUpdateListener;
@@ -125,13 +126,7 @@ public abstract class BaseRepo<TIdentify> {
         return null;
     }
 
-    private static Comparator<BaseSource> sourceComparator = new Comparator<BaseSource>() {
-        @Override
-        public int compare(BaseSource l, BaseSource r) {
-            return r.property.order.compareTo(l.property.order);
-        }
-    };
-
+    private static Comparator<BaseSource> sourceComparator = new SourcePropertyComparator();
 
     // Fetch For Single Source
     public class FetchAsyncTask extends AsyncTaskWithErrorHanding<Object, Object, Object> {
