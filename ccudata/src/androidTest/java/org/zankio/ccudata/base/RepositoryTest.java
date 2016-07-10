@@ -238,7 +238,7 @@ public class RepositoryTest {
     public List testFetchInter(String type, BaseSource[] sources) throws Throwable {
         final Throwable[] error = new Throwable[] { null };
 
-        Repository<Void> repository = new Repository<Void>(null) {
+        Repository repository = new Repository(null) {
             @Override
             protected BaseSource[] getSources() {
                 return sources;

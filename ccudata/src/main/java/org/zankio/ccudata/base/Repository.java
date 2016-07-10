@@ -18,7 +18,7 @@ import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 // Bourse Base Class
-public abstract class Repository<TIdentify> {
+public abstract class Repository {
 
     // Timeout Constant
     private static final int CONNECT_TIMEOUT = 15000;
