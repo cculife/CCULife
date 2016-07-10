@@ -57,7 +57,7 @@ public class RepositoryTest {
         }
 
         @Override
-        public T fetch() throws Exception {
+        public T fetch(Request request) throws Exception {
             delay();
             if (exception != null) throw exception;
             return result;

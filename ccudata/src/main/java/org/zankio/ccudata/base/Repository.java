@@ -112,7 +112,7 @@ public abstract class Repository<TIdentify> {
                         try {
                             Log.d("DATA", "source: " + request.source());
                             return Observable.just(
-                                    new Response<>(request.target.cast(request.source().fetch()), request)
+                                    new Response<>(request.target.cast(request.source().fetch(request)), request)
                             );
                         } catch (ClassCastException e) {
                             return Observable.just(
