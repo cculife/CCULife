@@ -9,8 +9,9 @@ public abstract class BaseSource<TData> {
     }
 
     public void before() { }
-    public abstract TData fetch() throws Exception;
     public void after() { }
+
+    public abstract TData fetch(Request request) throws Exception;
 
     public abstract String getType();
 
