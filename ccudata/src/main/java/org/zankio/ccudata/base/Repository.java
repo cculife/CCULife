@@ -36,6 +36,7 @@ public abstract class Repository<TIdentify> {
 
     private void initialSource() {
         for (BaseSource source: getSources()) {
+            source.setContext(this);
             sourceJar.addSource(source.getType(), source);
         }
     }
