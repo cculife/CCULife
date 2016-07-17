@@ -5,11 +5,9 @@ import android.util.Log;
 
 import org.zankio.ccudata.base.model.Request;
 import org.zankio.ccudata.base.model.Response;
+import org.zankio.ccudata.base.model.Storage;
 import org.zankio.ccudata.base.source.BaseSource;
 import org.zankio.ccudata.base.source.SourceJar;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -24,7 +22,7 @@ public abstract class Repository {
     private static final int CONNECT_TIMEOUT = 15000;
     private Context context;
 
-    private Map<String, Object> storage = new HashMap<>();
+    private Storage storage = new Storage();
 
     private SourceJar sourceJar = new SourceJar();
     protected abstract BaseSource[] getSources();
@@ -146,14 +144,9 @@ public abstract class Repository {
         return responseObservable -> responseObservable;
     }
 
-    public <T>T get(String key, Class<? extends T> mClass) {
-        Object value = storage.get(key);
-        return mClass.cast(value);
-    }
-
-    public void put(String key, Object value) {
-        storage.put(key, value);
-    }
+    public Storage storage() { return storage; }
 
     public Context getContext() { return context; }
+    }
+
 }

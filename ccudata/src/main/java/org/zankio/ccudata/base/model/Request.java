@@ -7,6 +7,7 @@ public class Request<TData, TArgument> {
     public Class<? extends TData> target;
     public String type;
     private BaseSource source;
+    private Storage storage = new Storage();
 
     public Request() { }
     public Request(Request<TData, TArgument> request) {
@@ -27,4 +28,6 @@ public class Request<TData, TArgument> {
 
     public BaseSource source() { return this.source; }
     public Request<TData, TArgument> source(BaseSource source) { this.source = source; return this;}
+
+    public Storage storage() { return storage; }
 }
