@@ -1,9 +1,9 @@
-package org.zankio.ccudata.base.source;
+package org.zankio.ccudata.base.source.http;
 
 import org.zankio.ccudata.base.model.HttpResponse;
 import org.zankio.ccudata.base.model.OkHttpResponse;
 import org.zankio.ccudata.base.model.Request;
-import org.zankio.ccudata.base.source.http.HTTPParameter;
+import org.zankio.ccudata.base.source.FetchParseSource;
 
 import java.util.List;
 import java.util.Map;
