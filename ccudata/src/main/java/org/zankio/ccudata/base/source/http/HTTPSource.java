@@ -103,7 +103,10 @@ public abstract class HTTPSource<TData> extends FetchParseSource<TData, HttpResp
         //return null;
     }
 
-    public void initHTTPRequest(Request request) {}
+    public void initHTTPRequest(Request request) {
+        request.storage().put(HTTP_PARAMETERS, HTTPAnnotationReader.read(this));
+
+    }
 
     public HTTPParameter httpParameter(Request request) {
         return request.storage().get(HTTP_PARAMETERS, HTTPParameter.class);
