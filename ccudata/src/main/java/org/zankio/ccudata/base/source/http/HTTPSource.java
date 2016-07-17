@@ -76,6 +76,7 @@ public abstract class HTTPSource<TData> extends FetchParseSource<TData, HttpResp
     }
 
     private okhttp3.RequestBody makeRequestBody(HTTPParameter parameter) {
+        if (parameter.method() == HTTPParameter.HTTPMethod.GET) return null;
         Map<String, List<String>> fields = parameter.fields();
         FormBody.Builder formBody = new FormBody.Builder();
 
