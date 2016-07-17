@@ -17,15 +17,15 @@ public class HTTPStringSourceTest {
             "Content-Type", "text/html",
             "body", OUTPUT_STR
     })
-    class ExampleSource extends HTTPStringSource { }
+    class ExampleSource extends HTTPStringSource<Void> { }
 
     @Test
     public void testFetch() throws Exception {
-        HTTPStringSource source;
+        HTTPStringSource<?> source;
         String result;
 
         source = new ExampleSource();
-        result = source.fetch(new Request());
+        result = source.fetch(new Request<>());
 
         System.out.println(result);
         Assert.assertEquals(OUTPUT_STR, result);

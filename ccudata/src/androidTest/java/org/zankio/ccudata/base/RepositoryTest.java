@@ -19,7 +19,7 @@ import java.util.List;
 public class RepositoryTest {
     private static final String EXAMPLE_TYPE = "EXAMPLE";
 
-    class ExampleSource<T> extends BaseSource<T> {
+    class ExampleSource<T> extends BaseSource<Void, T> {
         private String type;
         private int delay;
         private T result;

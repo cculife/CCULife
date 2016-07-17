@@ -17,20 +17,20 @@ public class HTTPJSONSourceTest {
     @QueryString({
             KEY, VALUE
     })
-    class ExampleSource extends HTTPJSONSource<String> {
+    class ExampleSource extends HTTPJSONSource<Void, String> {
         @Override
-        protected String parse(HttpResponse response, JSONObject json) throws JSONException {
+        protected String parse(Request<String, Void> request, HttpResponse response, JSONObject json) throws JSONException {
             return json.getString(KEY);
         }
     }
 
     @Test
     public void testParse() throws Exception {
-        HTTPJSONSource<String> source;
+        HTTPJSONSource<Void, String> source;
         String result;
 
         source = new ExampleSource();
-        result = source.fetch(new Request());
+        result = source.fetch(new Request<>());
 
         System.out.println(result);
         Assert.assertEquals(VALUE, result);

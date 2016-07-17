@@ -3,13 +3,14 @@ package org.zankio.ccudata.base.source.http;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.zankio.ccudata.base.model.HttpResponse;
+import org.zankio.ccudata.base.model.Request;
 
-public abstract class HTTPJsoupSource<TData> extends HTTPSource<TData>{
+public abstract class HTTPJsoupSource<TArgument, TData> extends HTTPSource<TArgument, TData>{
 
     @Override
-    protected TData parse(HttpResponse body) throws Exception {
-        return parse(body, Jsoup.parse(body.string()));
+    protected TData parse(Request<TData, TArgument> request, HttpResponse response) throws Exception {
+        return parse(request, response, Jsoup.parse(response.string()));
     }
 
-    protected abstract TData parse(HttpResponse response, Document document);
+    protected abstract TData parse(Request<TData, TArgument> request, HttpResponse response, Document document);
 }

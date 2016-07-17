@@ -6,7 +6,7 @@ import org.zankio.ccudata.base.model.Response;
 
 import rx.Observable;
 
-public abstract class BaseSource<TData> {
+public abstract class BaseSource<TArgument, TData> {
     protected Repository context;
 
     public SourceProperty.Level getOrder() {
@@ -20,7 +20,7 @@ public abstract class BaseSource<TData> {
                 .single();
     }
 
-    public abstract TData fetch(Request request) throws Exception;
+    public abstract TData fetch(Request<TData, TArgument> request) throws Exception;
 
     public void after(Response response) {
         Observable.just(response)
@@ -35,7 +35,8 @@ public abstract class BaseSource<TData> {
         return context;
     }
 
-    public void setContext(Repository context) {
+    public BaseSource<TArgument, TData> setContext(Repository context) {
         this.context = context;
+        return this;
     }
 }

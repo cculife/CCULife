@@ -13,11 +13,11 @@ import okhttp3.FormBody;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 
-public abstract class HTTPSource<TData> extends FetchParseSource<TData, HttpResponse> {
+public abstract class HTTPSource<TArgument, TData> extends FetchParseSource<TArgument, TData, HttpResponse> {
     private static final String HTTP_PARAMETERS = "HTTP_PARAMETERS";
 
     @Override
-    protected HttpResponse fetch(Request request, boolean inner) throws Exception {
+    protected HttpResponse fetch(Request<TData, TArgument> request, boolean inner) throws Exception {
         initHTTPRequest(request);
         HTTPParameter parameter = httpParameter(request);
 
@@ -105,7 +105,7 @@ public abstract class HTTPSource<TData> extends FetchParseSource<TData, HttpResp
         //return null;
     }
 
-    public void initHTTPRequest(Request request) {
+    public void initHTTPRequest(Request<TData, TArgument> request) {
         request.storage().put(HTTP_PARAMETERS, HTTPAnnotationReader.read(this));
 
     }
