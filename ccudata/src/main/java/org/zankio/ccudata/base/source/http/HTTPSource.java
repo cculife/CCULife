@@ -63,14 +63,15 @@ public abstract class HTTPSource<TData> extends FetchParseSource<TData, HttpResp
         //Cookie
         Map<String, List<String>> cookies = parameter.cookies();
         StringBuilder cookieHeader = new StringBuilder();
-        for (Map.Entry<String, List<String>> map: parameter.headers().entrySet()) {
+        for (Map.Entry<String, List<String>> map: parameter.cookies().entrySet()) {
             String key = map.getKey();
             List<String> values = map.getValue();
-
             for(String value: values)
                 cookieHeader.append(key).append("=").append(value).append(";");
         }
-        builder.header("Cookie", cookieHeader.toString());
+
+        if (cookieHeader.length() != 0)
+            builder.header("Cookie", cookieHeader.toString());
 
         return builder.url(url.build()).build();
     }
