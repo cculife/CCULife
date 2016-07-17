@@ -1,6 +1,7 @@
 package org.zankio.ccudata.base;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import org.zankio.ccudata.base.model.Request;
@@ -104,7 +105,7 @@ public abstract class Repository {
             Log.d("DATA", "executeSourceOB");
             return requestObservable
                     .map(request -> {
-                        request.source().before();
+                        request.source().before(request);
                         return request;
                     })
                     .flatMap(request -> {
@@ -126,7 +127,7 @@ public abstract class Repository {
                     .map(response -> {
                         Request request = response.args();
                         if (request != null)
-                            request.source().after();
+                            request.source().after(response);
                         return response;
                     });
         };
@@ -147,6 +148,14 @@ public abstract class Repository {
     public Storage storage() { return storage; }
 
     public Context getContext() { return context; }
+
+    @NonNull
+    public Observable.Transformer<Request, Request> preProgressRequest() {
+        return requestObservable -> requestObservable;
     }
 
+    @NonNull
+    public Observable.Transformer<Response, Response> postProgressResponse() {
+        return requestObservable -> requestObservable;
+    }
 }
