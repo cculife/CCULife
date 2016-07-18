@@ -1,10 +1,10 @@
 package org.zankio.ccudata.base.source.http;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
 import org.zankio.ccudata.base.model.HttpResponse;
+import org.zankio.ccudata.base.model.JSON;
 import org.zankio.ccudata.base.model.Request;
 import org.zankio.ccudata.base.source.http.annontation.QueryString;
 import org.zankio.ccudata.base.source.http.annontation.Url;
@@ -19,8 +19,8 @@ public class HTTPJSONSourceTest {
     })
     class ExampleSource extends HTTPJSONSource<Void, String> {
         @Override
-        protected String parse(Request<String, Void> request, HttpResponse response, JSONObject json) throws JSONException {
-            return json.getJSONObject("args").getString(KEY);
+        protected String parse(Request<String, Void> request, HttpResponse response, JSON json) throws JSONException {
+            return json.object().getJSONObject("args").getString(KEY);
         }
     }
 
