@@ -20,7 +20,7 @@ public class HTTPJSONSourceTest {
     class ExampleSource extends HTTPJSONSource<Void, String> {
         @Override
         protected String parse(Request<String, Void> request, HttpResponse response, JSONObject json) throws JSONException {
-            return json.getString(KEY);
+            return json.getJSONObject("args").getString(KEY);
         }
     }
 
