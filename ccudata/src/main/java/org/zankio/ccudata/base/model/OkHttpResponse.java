@@ -9,12 +9,21 @@ import okhttp3.Cookie;
 import okhttp3.Response;
 
 public class OkHttpResponse extends HttpResponse {
+    String charset;
     Response response;
     Map<String, String> cookies;
 
     public OkHttpResponse(Response response) { this.response = response; }
+    public OkHttpResponse(Response response, String charset) {
+        this.response = response;
+        this.charset = charset;
+    }
     @Override
-    public String string() throws IOException { return response.body().string(); }
+    public String string() throws IOException {
+        if (charset != null) return new String(bytes(), charset);
+        return response.body().string();
+    }
+
     @Override
     public byte[] bytes() throws IOException { return response.body().bytes(); }
 
@@ -23,7 +32,7 @@ public class OkHttpResponse extends HttpResponse {
         if (cookies == null) {
             cookies = new HashMap<>();
 
-            List<Cookie> cookieList = Cookie.parseAll(null, response.headers());
+            List<Cookie> cookieList = Cookie.parseAll(response.request().url(), response.headers());
             for (Cookie cookie : cookieList) {
                 cookies.put(cookie.name(), cookie.value());
             }

@@ -4,6 +4,7 @@ import org.zankio.ccudata.base.model.HttpResponse;
 import org.zankio.ccudata.base.model.OkHttpResponse;
 import org.zankio.ccudata.base.model.Request;
 import org.zankio.ccudata.base.source.FetchParseSource;
+import org.zankio.ccudata.base.source.http.annontation.Charset;
 
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,8 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.FormBody;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
+
+import static org.zankio.ccudata.base.utils.AnnotationUtils.getAnnotationValue;
 
 public abstract class HTTPSource<TArgument, TData> extends FetchParseSource<TArgument, TData, HttpResponse> {
     private static final String HTTP_PARAMETERS = "HTTP_PARAMETERS";
@@ -24,7 +27,10 @@ public abstract class HTTPSource<TArgument, TData> extends FetchParseSource<TArg
         OkHttpClient client = makeClient(parameter);
 
         okhttp3.Request httpRequest = makeRequest(parameter);
-        return new OkHttpResponse(client.newCall(httpRequest).execute());//.body().string();
+        return new OkHttpResponse(
+                client.newCall(httpRequest).execute(),
+                getCharset()
+        );
     }
 
     public OkHttpClient makeClient(HTTPParameter parameter) {
@@ -108,6 +114,10 @@ public abstract class HTTPSource<TArgument, TData> extends FetchParseSource<TArg
     public void initHTTPRequest(Request<TData, TArgument> request) {
         request.storage().put(HTTP_PARAMETERS, HTTPAnnotationReader.read(this));
 
+    }
+
+    public String getCharset() {
+        return getAnnotationValue(this.getClass(), Charset.class, null);
     }
 
     public HTTPParameter httpParameter(Request request) {
