@@ -45,7 +45,11 @@ public abstract class HTTPSource<TArgument, TData> extends FetchParseSource<TArg
 
     private okhttp3.Request makeRequest(HTTPParameter parameter) {
         okhttp3.Request.Builder builder = new okhttp3.Request.Builder();
-        HttpUrl.Builder url = HttpUrl.parse(parameter.url()).newBuilder();
+        String urlString = parameter.url();
+        if (urlString == null || urlString.isEmpty())
+            throw new RuntimeException("HTTP Request Without URL");
+
+        HttpUrl.Builder url = HttpUrl.parse(urlString).newBuilder();
         builder.method(parameter.method().name(), makeRequestBody(parameter));
 
         //QueryString
