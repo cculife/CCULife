@@ -41,7 +41,7 @@ public abstract class Repository {
         }
     }
 
-    public <TData, TArgument> Observable<Response> fetch(Request<TData, TArgument> request) {
+    public <TData, TArgument> Observable<Response<TData, TArgument>> fetch(Request<TData, TArgument> request) {
         return Observable.just(request)
                 .observeOn(Schedulers.io())
                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -134,7 +134,7 @@ public abstract class Repository {
         };
     }
 
-    private Observable.Transformer<Response, Response> bindListener(String type) {
+    private <TArgument, TData>Observable.Transformer<Response<TData, TArgument>, Response<TData, TArgument>> bindListener(String type) {
         Log.d("DATA", "bindListener");
         /*return observable -> {
             if (listener != null)
