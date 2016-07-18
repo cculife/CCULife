@@ -20,10 +20,8 @@ public class RequestOrderComparatorTest {
 
             @Override
             public Object fetch(Request request) throws Exception { return null; }
-
-            @Override
-            public String getType() { return null; }
         };
+
         BaseSource high = new BaseSource() {
             @Override
             public SourceProperty.Level getOrder() {
@@ -32,9 +30,6 @@ public class RequestOrderComparatorTest {
 
             @Override
             public Object fetch(Request request) throws Exception { return null; }
-
-            @Override
-            public String getType() { return null; }
         };
 
 

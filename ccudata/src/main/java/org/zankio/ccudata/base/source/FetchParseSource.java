@@ -14,7 +14,7 @@ public abstract class FetchParseSource<TArgument, TData, TFetch> extends BaseSou
     protected abstract TFetch fetch(Request<TData, TArgument> request, boolean inner) throws Exception;
 
     @Override
-    public String getType() {
+    public String getPrimaryType() {
         return null;
     }
 }
