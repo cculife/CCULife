@@ -9,7 +9,12 @@ import org.zankio.ccudata.base.utils.AnnotationUtils;
 import rx.Observable;
 
 public abstract class BaseSource<TArgument, TData> {
+    public final String TYPE;
     protected Repository context;
+
+    protected BaseSource() {
+        this.TYPE = getPrimaryType();
+    }
 
     public SourceProperty.Level getOrder() {
         return SourceProperty.Level.LOW;

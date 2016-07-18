@@ -72,8 +72,8 @@ public class RepositoryTest {
         }
 
         @Override
-        public String getType() {
-            return type;
+        public String[] getDataType() {
+            return new String[]{ type };
         }
 
         @Override
