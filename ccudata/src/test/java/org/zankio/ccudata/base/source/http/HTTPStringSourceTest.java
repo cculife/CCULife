@@ -2,6 +2,7 @@ package org.zankio.ccudata.base.source.http;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.zankio.ccudata.base.model.HttpResponse;
 import org.zankio.ccudata.base.model.Request;
 import org.zankio.ccudata.base.source.http.annontation.QueryString;
 import org.zankio.ccudata.base.source.http.annontation.Url;
@@ -17,11 +18,16 @@ public class HTTPStringSourceTest {
             "Content-Type", "text/html",
             "body", OUTPUT_STR
     })
-    class ExampleSource extends HTTPStringSource<Void> { }
+    class ExampleSource extends HTTPStringSource<Void, String> {
+        @Override
+        protected String parse(Request<String, Void> request, HttpResponse response, String body) throws Exception {
+            return body;
+        }
+    }
 
     @Test
     public void testFetch() throws Exception {
-        HTTPStringSource<?> source;
+        HTTPStringSource<?, String> source;
         String result;
 
         source = new ExampleSource();
