@@ -18,6 +18,11 @@ import rx.schedulers.Schedulers;
 
 // Bourse Base Class
 public abstract class Repository {
+    public interface RequestTransformer<TData, TArgument>
+            extends Observable.Transformer<Request<TData, TArgument>, Request<TData, TArgument>> { }
+
+    public interface ResponseTransformer<TData, TArgument>
+            extends Observable.Transformer<Response<TData, TArgument>, Response<TData, TArgument>> { }
 
     // Timeout Constant
     private static final int CONNECT_TIMEOUT = 15000;
@@ -53,7 +58,7 @@ public abstract class Repository {
     }
 
     @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
-    private <TData, TArgument>Observable.Transformer<Response<TData, TArgument>, Response<TData,TArgument>> delayError() {
+    private <TData, TArgument>ResponseTransformer<TData, TArgument> delayError() {
         final Response[] last = {null};
         final boolean[] hasException = {true};
 
@@ -77,7 +82,7 @@ public abstract class Repository {
     }
 
 
-    private <TData, TArgument> Observable.Transformer<Response<TData, TArgument>, Response<TData, TArgument>> filterResult() {
+    private <TData, TArgument> ResponseTransformer<TData, TArgument> filterResult() {
         final Request[] last = new Request[]{null};
 
         return responseObservable ->
@@ -134,7 +139,7 @@ public abstract class Repository {
         };
     }
 
-    private <TArgument, TData>Observable.Transformer<Response<TData, TArgument>, Response<TData, TArgument>> bindListener(String type) {
+    private <TArgument, TData>ResponseTransformer<TData, TArgument> bindListener(String type) {
         Log.d("DATA", "bindListener");
         /*return observable -> {
             if (listener != null)
