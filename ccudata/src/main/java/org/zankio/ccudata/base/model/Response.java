@@ -1,14 +1,14 @@
 package org.zankio.ccudata.base.model;
 
 public class Response<TData, TArgument> {
-    private Request<TData, TArgument> args;
+    private Request<TData, TArgument> request;
     private TData data;
     private Exception exception;
     public Response() {}
-    public Response(TData data, Request<TData, TArgument> args) { this.data = data; this.args = args; }
-    public Response(Exception e, Request<TData, TArgument> args) { this.exception = e; this.args = args; }
-    public Request<TData, TArgument> args() { return this.args; }
-    public Response<TData, TArgument> args(Request<TData, TArgument> args) { this.args = args; return this; }
+    public Response(TData data, Request<TData, TArgument> request) { this.data = data; this.request = request; }
+    public Response(Exception e, Request<TData, TArgument> request) { this.exception = e; this.request = request; }
+    public Request<TData, TArgument> request() { return this.request; }
+    public Response<TData, TArgument> request(Request<TData, TArgument> args) { this.request = args; return this; }
     public TData data() { return this.data; }
     public Exception exception() { return exception; }
     public Response<TData, TArgument> data(TData data) { this.data = data; return this; }

@@ -76,7 +76,7 @@ public abstract class Repository {
                         return;
                     }
 
-                    if (last[0] == null || new RequestOrderComparator().compare(response.args(), last[0].args()) > 0)
+                    if (last[0] == null || new RequestOrderComparator().compare(response.request(), last[0].request()) > 0)
                         last[0] = response;
                 })
                 .filter(response -> response.exception() == null)
@@ -92,9 +92,9 @@ public abstract class Repository {
 
         return responseObservable ->
                 // filter the lastest data
-                responseObservable.filter(response -> new RequestOrderComparator().compare(response.args(), last[0]) <= 0 )
+                responseObservable.filter(response -> new RequestOrderComparator().compare(response.request(), last[0]) <= 0 )
                 // record last record
-                .doOnNext(response -> last[0] = response.args())
+                .doOnNext(response -> last[0] = response.request())
                 // clear memory
                 .doOnCompleted(() -> last[0] = null);
     }
@@ -136,7 +136,7 @@ public abstract class Repository {
                         }
                     })
                     .map(response -> {
-                        Request request = response.args();
+                        Request request = response.request();
                         if (request != null)
                             request.source().after(response);
                         return response;
