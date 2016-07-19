@@ -12,5 +12,5 @@ public abstract class HTTPJsoupSource<TArgument, TData> extends HTTPSource<TArgu
         return parse(request, response, Jsoup.parse(response.string()));
     }
 
-    protected abstract TData parse(Request<TData, TArgument> request, HttpResponse response, Document document);
+    protected abstract TData parse(Request<TData, TArgument> request, HttpResponse response, Document document) throws Exception;
 }
