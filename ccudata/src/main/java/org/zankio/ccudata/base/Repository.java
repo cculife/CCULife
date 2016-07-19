@@ -53,9 +53,9 @@ public abstract class Repository {
     private void initialSource() {
         for (BaseSource source: getSources()) {
             source.setContext(this);
+            source.init();
             for (String type: source.getDataType()) {
                 sourceJar.addSource(type, source);
-                source.init();
             }
         }
     }
@@ -164,7 +164,8 @@ public abstract class Repository {
             Set<Func0<Action1<Response>>> listeners = listenerSet.get(type);
             if (listeners != null)
                 for (Func0<Action1<Response>> listener : listeners)
-                    observable.doOnNext(listener.call());
+                    observable = observable.doOnNext(listener.call());
+
             return observable;
         };
 
