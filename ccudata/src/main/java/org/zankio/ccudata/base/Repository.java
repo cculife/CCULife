@@ -10,19 +10,29 @@ import org.zankio.ccudata.base.model.Storage;
 import org.zankio.ccudata.base.source.BaseSource;
 import org.zankio.ccudata.base.source.SourceJar;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.exceptions.Exceptions;
+import rx.functions.Action1;
+import rx.functions.Func0;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 // Bourse Base Class
 public abstract class Repository {
+
     public interface RequestTransformer<TData, TArgument>
             extends Observable.Transformer<Request<TData, TArgument>, Request<TData, TArgument>> { }
 
     public interface ResponseTransformer<TData, TArgument>
             extends Observable.Transformer<Response<TData, TArgument>, Response<TData, TArgument>> { }
+
+    public interface GetListener extends Func0<Action1<Response>> {};
 
     // Timeout Constant
     private static final int CONNECT_TIMEOUT = 15000;
@@ -31,6 +41,8 @@ public abstract class Repository {
     private Storage storage = new Storage();
 
     private SourceJar sourceJar = new SourceJar();
+    private Map<String, Set<Func0<Action1<Response>>>> listenerSet = new HashMap<>();
+
     protected abstract BaseSource[] getSources();
 
     public Repository(Context context) {
@@ -41,8 +53,10 @@ public abstract class Repository {
     private void initialSource() {
         for (BaseSource source: getSources()) {
             source.setContext(this);
-            for (String type: source.getDataType())
+            for (String type: source.getDataType()) {
                 sourceJar.addSource(type, source);
+                source.init();
+            }
         }
     }
 
@@ -146,14 +160,25 @@ public abstract class Repository {
 
     private <TArgument, TData>ResponseTransformer<TData, TArgument> bindListener(String type) {
         Log.d("DATA", "bindListener");
-        /*return observable -> {
-            if (listener != null)
-                for (IGetOnNext source : listener)
-                    observable.doOnNext(source.call(type));
-
+        return observable -> {
+            Set<Func0<Action1<Response>>> listeners = listenerSet.get(type);
+            if (listeners != null)
+                for (Func0<Action1<Response>> listener : listeners)
+                    observable.doOnNext(listener.call());
             return observable;
-        };*/
-        return responseObservable -> responseObservable;
+        };
+
+        //return responseObservable -> responseObservable;
+    }
+
+    public void registeOnNext(String type, Func0<Action1<Response>> getOnNext) {
+        Set<Func0<Action1<Response>>> listeners = listenerSet.get(type);
+        if (listeners == null) {
+            listeners = new HashSet<>();
+            listenerSet.put(type, listeners);
+        }
+
+        listeners.add(getOnNext);
     }
 
     public Storage storage() { return storage; }
