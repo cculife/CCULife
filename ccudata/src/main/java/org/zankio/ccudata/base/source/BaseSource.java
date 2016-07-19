@@ -55,6 +55,8 @@ public abstract class BaseSource<TArgument, TData> {
         return this;
     }
 
+    public void init() {}
+
     public Boolean isOffline() {
         return AnnotationUtils.getAnnotationValue(this.getClass(), Offline.class, false);
     }
