@@ -51,10 +51,15 @@ public abstract class Repository {
                 .observeOn(Schedulers.io())
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .compose(sourceJar.mapAll())
+                .compose(filterSource())
                 .compose(parallel(requestObservable -> requestObservable.compose(executeSource())))
                 .compose(delayError())
                 .compose(filterResult())
                 .compose(bindListener(request.type));
+    }
+
+    protected <TData, TArgument>RequestTransformer<TData, TArgument> filterSource() {
+        return requestObservable -> requestObservable;
     }
 
     @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
