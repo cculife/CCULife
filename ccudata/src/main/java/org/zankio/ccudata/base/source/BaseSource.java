@@ -4,6 +4,7 @@ import org.zankio.ccudata.base.Repository;
 import org.zankio.ccudata.base.model.Request;
 import org.zankio.ccudata.base.model.Response;
 import org.zankio.ccudata.base.source.annotation.DataType;
+import org.zankio.ccudata.base.source.annotation.Offline;
 import org.zankio.ccudata.base.utils.AnnotationUtils;
 
 import rx.Observable;
@@ -52,5 +53,9 @@ public abstract class BaseSource<TArgument, TData> {
     public BaseSource<TArgument, TData> setContext(Repository context) {
         this.context = context;
         return this;
+    }
+
+    public Boolean isOffline() {
+        return AnnotationUtils.getAnnotationValue(this.getClass(), Offline.class, false);
     }
 }
