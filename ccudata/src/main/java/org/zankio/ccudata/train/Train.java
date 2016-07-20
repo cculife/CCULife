@@ -13,7 +13,7 @@ public class Train extends Repository{
     @Override
     protected BaseSource[] getSources() {
         return new BaseSource[] {
-                new TrainStopStatusSource().setContext(this)
+                new TrainStopStatusSource()
         };
     }
 }

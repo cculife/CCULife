@@ -15,8 +15,8 @@ public class ScoreQuery extends Repository {
     @Override
     protected BaseSource[] getSources() {
         return new BaseSource[]{
-                new Authenticate().setContext(this),
-                new GradesInquiriesSource().setContext(this),
+                new Authenticate(),
+                new GradesInquiriesSource(),
         };
     }
 }
