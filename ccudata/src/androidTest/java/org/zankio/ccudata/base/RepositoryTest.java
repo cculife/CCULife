@@ -1,6 +1,7 @@
 package org.zankio.ccudata.base;
 
 import android.support.test.runner.AndroidJUnit4;
+import android.util.Log;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -11,7 +12,9 @@ import org.zankio.ccudata.base.source.BaseSource;
 import org.zankio.ccudata.base.source.SourceProperty;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 //import static org.junit.Assert.*;
 
@@ -244,18 +247,25 @@ public class RepositoryTest {
                 return sources;
             }
         };
-
+        Date start = new Date();
         List result = repository
                 .fetch(new Request<>(type, "", String.class))
                 .doOnError(throwable -> {
                     System.out.println("error");
                     error[0] = throwable;
                 })
-                .map(response -> (String) response.data())
+                .map(response -> response.data())
                 .doOnNext(s -> System.out.println("output : " + s))
                 .toList()
                 .toBlocking()
                 .single();
+        Date end = new Date();
+        long diff = end.getTime() - start.getTime();//as given
+
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(diff);
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(diff);
+        Log.d("TEST", "TIME: " + diff);
+
 
         if (error[0] != null) {
             throw error[0];
