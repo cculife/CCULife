@@ -61,6 +61,7 @@ public abstract class Repository {
     }
 
     public <TData, TArgument> Observable<Response<TData, TArgument>> fetch(Request<TData, TArgument> request) {
+
         return Observable.just(request)
                 .observeOn(Schedulers.io())
                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -83,7 +84,7 @@ public abstract class Repository {
 
         return responseObservable -> responseObservable
                 .doOnNext(response -> {
-                    Log.d("Data", "delayError onNext" +response.exception());
+                    Log.d("Data", "delayError onNext" + response.exception());
 
                     if (response.exception() == null) {
                         hasException[0] = false;
