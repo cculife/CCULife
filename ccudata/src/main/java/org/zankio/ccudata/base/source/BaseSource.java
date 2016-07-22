@@ -43,7 +43,7 @@ public abstract class BaseSource<TArgument, TData> {
 
     public String getPrimaryType() {
         String[] types = getDataType();
-        return types.length > 0 ? types[1] : "";
+        return types.length > 0 ? types[0] : "";
     }
 
     public Repository getContext() {
