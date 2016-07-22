@@ -25,23 +25,24 @@ public class SourceJar {
     }
 
     public <TData, TArgument> Observable.Transformer<Request<TData, TArgument>, Request<TData, TArgument>> mapAll() {
-        Log.d("SOUR", "mapAll");
-        return requestObservable ->
-                requestObservable.flatMap((Request<TData, TArgument> request) -> {
-                    Log.d("SOUR", "mapAll: " + request.type);
-                    // get sources
-                    ArrayList<BaseSource> sources = sourceMap.get(request.type);
+        return requestObservable -> {
+            return requestObservable.flatMap((Request<TData, TArgument> request) -> {
+                Log.d("SourceJar", "mapAll: " + request.type);
+                // get sources
+                ArrayList<BaseSource> sources = sourceMap.get(request.type);
 
-                    if (sources == null)
-                        return Observable.error(new Exception("No Source Found"));
+                if (sources == null)
+                    return Observable.error(new Exception("No Source Found"));
 
-                    // sort source
-                    Collections.sort(sources, sourceComparator);
+                // sort source
+                Collections.sort(sources, sourceComparator);
 
-                    // map source to new request
-                    return Observable.from(sources)
-                            .map(source -> new Request<>(request).source(source));
-        });
+                Log.d("SourceJar", "mapAll: " + request.type + ", Count: " + sources.size());
+                // map source to new request
+                return Observable.from(sources)
+                        .map(source -> new Request<>(request).source(source));
+            });
+        };
     }
 
     private static Comparator<BaseSource> sourceComparator =

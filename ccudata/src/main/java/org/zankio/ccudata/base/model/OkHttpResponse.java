@@ -27,6 +27,16 @@ public class OkHttpResponse extends HttpResponse {
     @Override
     public byte[] bytes() throws IOException { return response.body().bytes(); }
 
+    public HttpResponse cookieJar(CookieJar cookieJar) {
+        cookies = new HashMap<>();
+
+        List<Cookie> cookieList = cookieJar.loadForRequest(response.request().url());
+        for (Cookie cookie : cookieList) {
+            cookies.put(cookie.name(), cookie.value());
+        }
+        return this;
+    }
+
     @Override
     public String cookie(String name) {
         if (cookies == null) {
@@ -51,4 +61,5 @@ public class OkHttpResponse extends HttpResponse {
 
     @Override
     public List<String> headers(String name) { return response.headers(name); }
+
 }

@@ -1,5 +1,6 @@
 package org.zankio.ccudata.base.source.http;
 
+import org.zankio.ccudata.base.model.CookieJar;
 import org.zankio.ccudata.base.model.HttpResponse;
 import org.zankio.ccudata.base.model.OkHttpResponse;
 import org.zankio.ccudata.base.model.Request;
@@ -24,22 +25,24 @@ public abstract class HTTPSource<TArgument, TData> extends FetchParseSource<TArg
         initHTTPRequest(request);
         HTTPParameter parameter = httpParameter(request);
 
-        OkHttpClient client = makeClient(parameter);
+        CookieJar cookieJar = new CookieJar();
+        OkHttpClient client = makeClient(parameter, cookieJar);
 
         okhttp3.Request httpRequest = makeRequest(parameter);
         return new OkHttpResponse(
                 client.newCall(httpRequest).execute(),
                 getCharset()
-        );
+        ).cookieJar(cookieJar);
     }
 
-    public OkHttpClient makeClient(HTTPParameter parameter) {
+    public OkHttpClient makeClient(HTTPParameter parameter, CookieJar cookieJar) {
         return new OkHttpClient.Builder()
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(10, TimeUnit.SECONDS)
                 .writeTimeout(10, TimeUnit.SECONDS)
                 .followRedirects(parameter.followRedirect())
                 .followSslRedirects(parameter.followRedirect())
+                .cookieJar(cookieJar)
                 .build();
     }
 
