@@ -14,14 +14,12 @@ import rx.Observable;
 
 
 public class Course {
-    private final static int TASK_ANNOUNCE = 0;
-    //private final static int TASK_ANNOUNCE_CONTENT = 1;
-    private final static int TASK_CLASSMATE = 2;
-    private final static int TASK_FILE = 3;
-    private final static int TASK_SCORE = 4;
-    private final static int TASK_HOMEWORK = 5;
-    private final static int TASK_ROLLCALL = 6;
-    //private HashMap<Integer, SourceExecutor> loading = new HashMap<>();
+    public Observable<Response<ScoreGroup[], CourseData>> loadingScore;
+    public Observable<Response<RollCall[]  , CourseData>> loadingRollCall;
+    public Observable<Response<Homework[]  , CourseData>> loadingHomework;
+    public Observable<Response<FileGroup[] , CourseData>> loadingFiles;
+    public Observable<Response<Classmate[] , CourseData>> loadingClassmate;
+    public Observable<Response<Announce[]  , CourseData>> loadingAnnounces;
 
     public String courseid;
     public String id;
@@ -53,63 +51,119 @@ public class Course {
     }
 
     public Observable<Response<Announce[], CourseData>> getAnnounces() {
+        Observable<Response<Announce[], CourseData>> cache;
         if (this.files != null) {
             return Observable.just(new Response<>(this.announces, null));
         }
 
-        return ecourse.fetch(AnnounceSource.request(this))
+        if (loadingAnnounces != null)
+            return loadingAnnounces;
+
+        cache = ecourse.fetch(AnnounceSource.request(this))
                 .doOnNext(response -> {
                     if (ecourse.getOfflineMode().compareTo(OfflineMode.VIEWED) >= 0)
                         syncAnnounceContent(response.data());
 
                     this.announces = response.data();
-                });
+                })
+                .doOnTerminate(() -> loadingAnnounces = null)
+                .cache();
+
+        loadingAnnounces = cache;
+        return cache;
     }
 
     public Observable<Response<Classmate[], CourseData>> getClassmate() {
+        Observable<Response<Classmate[], CourseData>> cache;
         if (this.files != null) {
             return Observable.just(new Response<>(this.classmate, null));
         }
 
-        return ecourse.fetch(ClassmateSource.request(this))
-                .doOnNext(response -> this.classmate = response.data());
+        if (loadingClassmate != null)
+            return loadingClassmate;
+
+        cache = ecourse.fetch(ClassmateSource.request(this))
+                .doOnNext(response -> this.classmate = response.data())
+                .doOnTerminate(() -> loadingClassmate = null)
+                .cache();
+
+        loadingClassmate = cache;
+        return cache;
     }
 
     public Observable<Response<FileGroup[], CourseData>> getFiles() {
+        Observable<Response<FileGroup[], CourseData>> cache;
         if (this.files != null) {
             return Observable.just(new Response<>(this.files, null));
         }
 
-        return ecourse.fetch(FileGroupSource.request(this))
-                .doOnNext(response -> this.files = response.data());
+        if (loadingFiles != null) {
+            return loadingFiles;
+        }
+
+        cache = ecourse.fetch(FileGroupSource.request(this))
+                .doOnNext(response -> this.files = response.data())
+                .doOnTerminate(() -> loadingFiles = null)
+                .cache();
+
+        loadingFiles = cache;
+        return cache;
     }
 
     public Observable<Response<Homework[], CourseData>> getHomework() {
+        Observable<Response<Homework[], CourseData>> cache;
         if (this.rollcalls != null) {
             return Observable.just(new Response<>(this.homeworks, null));
         }
 
-        return ecourse.fetch(HomeworkSource.request(this))
-                .doOnNext(response -> this.homeworks = response.data());
+        if (loadingHomework != null)
+            return loadingHomework;
+
+        cache = ecourse.fetch(HomeworkSource.request(this))
+                .doOnNext(response -> this.homeworks = response.data())
+                .doOnTerminate(() -> loadingHomework = null)
+                .cache();
+
+        loadingHomework = cache;
+        return cache;
     }
 
     public Observable<Response<RollCall[], CourseData>> getRollCall() {
+        Observable<Response<RollCall[], CourseData>> cache;
         if (this.rollcalls != null) {
             return Observable.just(new Response<>(this.rollcalls, null));
         }
 
-        return ecourse.fetch(RollCallSource.request(this))
-                .doOnNext(response -> this.rollcalls = response.data());
+        if (loadingRollCall != null)
+            return loadingRollCall;
+
+        cache = ecourse.fetch(RollCallSource.request(this))
+                .doOnNext(response -> this.rollcalls = response.data())
+                .doOnTerminate(() -> loadingRollCall = null)
+                .cache();
+
+        loadingRollCall = cache;
+        return cache;
     }
 
-    // TODO: 2016/7/20 double loading
-    public rx.Observable<Response<ScoreGroup[], CourseData>> getScore() {
+    public Observable<Response<ScoreGroup[], CourseData>> getScore() {
+        Observable<Response<ScoreGroup[], CourseData>> cache;
         if (this.scores != null) {
             return Observable.just(new Response<>(this.scores, null));
         }
 
-        return ecourse.fetch(ScoreSource.request(this))
-            .doOnNext(response -> this.scores = response.data());
+        if (loadingScore != null) {
+            return loadingScore;
+        }
+
+        cache = ecourse.fetch(ScoreSource.request(this))
+                .doOnNext(response -> this.scores = response.data())
+                .doOnTerminate(() -> loadingScore = null)
+                .cache();
+
+        loadingScore = cache;
+        return cache;
+
     }
 
     public Ecourse getEcourse() {
