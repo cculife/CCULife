@@ -4,6 +4,7 @@ package org.zankio.ccudata.kiki;
 import android.content.Context;
 
 import org.zankio.ccudata.base.Repository;
+import org.zankio.ccudata.base.model.OfflineMode;
 import org.zankio.ccudata.base.model.User;
 import org.zankio.ccudata.base.source.BaseSource;
 import org.zankio.ccudata.kiki.source.local.DatabaseTimeTableSource;
@@ -22,7 +23,7 @@ public class Kiki extends Repository {
     @Override
     protected <TData, TArgument> RequestTransformer<TData, TArgument> filterSource() {
         // no disabled
-        if (offline_mode.compareTo(OfflineMode.DISABLED) != 0)
+        if (getOfflineMode().compareTo(OfflineMode.DISABLED) != 0)
             return requestObservable -> requestObservable;
 
         // disabled offline
@@ -47,13 +48,6 @@ public class Kiki extends Repository {
 
     public OfflineMode getOfflineMode() {
         return offline_mode;
-    }
-
-    public enum OfflineMode {
-        ALL,
-        CLASS,
-        BROWSERED,
-        DISABLED
     }
 
 }
