@@ -119,38 +119,41 @@ public abstract class Repository {
                 requestObservable.flatMap(
                         request -> func1.call(
                                 Observable.just(request)
-                                    .subscribeOn(Schedulers.computation())
+                                    .subscribeOn(Schedulers.io())
                         )
                 );
     }
 
     private <TData, TArgument> Observable.Transformer<Request<TData, TArgument>, Response<TData, TArgument>> executeSource() {
-        Log.d("DATA", "executeSource");
         return requestObservable -> {
-            Log.d("DATA", "executeSourceOB");
+            Log.d("Repository", "executeSource");
             return requestObservable
                     .map(request -> {
+                        Log.d("Repository executeSource", "Before " + request.source().getClass().getName());
                         request.source().before(request);
                         return request;
                     })
                     .flatMap(request -> {
                         try {
-                            Log.d("DATA", "source: " + request.source());
+                            Log.d("Repository executeSource", "Execute source: " + request.source());
                             return Observable.just(
                                     new Response<>(request.target.cast(request.source().fetch(request)), request)
                             );
                         } catch (ClassCastException e) {
+                            Log.d("Repository executeSource", "Class NotMetch");
                             return Observable.just(
                                     new Response<>(new Exception("Result class not match", e), request)
                             );
                         } catch (Exception e) {
+                            Log.d("Repository executeSource", "Exception");
                             return Observable.just(
                                     new Response<>(e, request)
                             );
                         }
                     })
                     .map(response -> {
-                        Request request = response.request();
+                        Log.d("Repository executeSource", "After " + response.request().source().getClass().getName());
+                        Request<TData, TArgument> request = response.request();
                         if (request != null)
                             request.source().after(response);
                         return response;
