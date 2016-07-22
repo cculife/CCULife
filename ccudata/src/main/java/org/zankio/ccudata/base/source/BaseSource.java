@@ -21,7 +21,7 @@ public abstract class BaseSource<TArgument, TData> {
         return SourceProperty.Level.LOW;
     }
 
-    public void before(Request request) {
+    public void before(Request<TData, TArgument> request) {
         Observable.just(request)
                 .compose(context.preProgressRequest())
                 .toBlocking()
@@ -30,7 +30,7 @@ public abstract class BaseSource<TArgument, TData> {
 
     public abstract TData fetch(Request<TData, TArgument> request) throws Exception;
 
-    public void after(Response response) {
+    public void after(Response<TData, TArgument> response) {
         Observable.just(response)
                 .compose(context.postProgressResponse())
                 .toBlocking()
