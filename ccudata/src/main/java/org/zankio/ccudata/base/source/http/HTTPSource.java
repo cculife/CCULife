@@ -7,6 +7,7 @@ import org.zankio.ccudata.base.model.Request;
 import org.zankio.ccudata.base.source.FetchParseSource;
 import org.zankio.ccudata.base.source.http.annontation.Charset;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -29,10 +30,14 @@ public abstract class HTTPSource<TArgument, TData> extends FetchParseSource<TArg
         OkHttpClient client = makeClient(parameter, cookieJar);
 
         okhttp3.Request httpRequest = makeRequest(parameter);
-        return new OkHttpResponse(
-                client.newCall(httpRequest).execute(),
-                getCharset()
-        ).cookieJar(cookieJar);
+        try {
+            return new OkHttpResponse(
+                    client.newCall(httpRequest).execute(),
+                    getCharset()
+            ).cookieJar(cookieJar);
+        } catch (IOException e) {
+            throw new IOException("網路錯誤", e);
+        }
     }
 
     public OkHttpClient makeClient(HTTPParameter parameter, CookieJar cookieJar) {
