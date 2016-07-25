@@ -131,10 +131,21 @@ public abstract class Repository {
             return requestObservable
                     .map(request -> {
                         Log.d("Repository executeSource", "Before " + request.source().getClass().getName());
-                        request.source().before(request);
+                        try {
+                            request.source().before(request);
+                        } catch (Exception e) {
+                            request.exception(e);
+                        }
                         return request;
                     })
                     .flatMap(request -> {
+                        Exception exception = request.exception();
+                        if (exception != null) {
+                            return Observable.just(
+                                    new Response<>(exception, request)
+                            );
+                        }
+
                         try {
                             Log.d("Repository executeSource", "Execute source: " + request.source());
                             return Observable.just(
@@ -155,8 +166,10 @@ public abstract class Repository {
                     .map(response -> {
                         Log.d("Repository executeSource", "After " + response.request().source().getClass().getName());
                         Request<TData, TArgument> request = response.request();
-                        if (request != null)
-                            request.source().after(response);
+                        if (request != null && request.exception() == null)
+                            try {
+                                request.source().after(response);
+                            } catch (Exception ignored) {}
                         return response;
                     });
         };

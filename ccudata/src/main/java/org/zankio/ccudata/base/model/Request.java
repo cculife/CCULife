@@ -8,6 +8,7 @@ public class Request<TData, TArgument> {
     public String type;
     private BaseSource<TArgument, TData> source;
     private Storage storage = new Storage();
+    private Exception exception;
 
     public Request() { }
     public Request(Request<TData, TArgument> request) {
@@ -30,4 +31,13 @@ public class Request<TData, TArgument> {
     public Request<TData, TArgument> source(BaseSource<TArgument, TData> source) { this.source = source; return this;}
 
     public Storage storage() { return storage; }
+
+    public Request<TData, TArgument> exception(Exception e) {
+        exception = e;
+        return this;
+    }
+
+    public Exception exception() {
+        return exception;
+    }
 }
