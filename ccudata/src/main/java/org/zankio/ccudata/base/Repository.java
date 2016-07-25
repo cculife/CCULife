@@ -63,14 +63,15 @@ public abstract class Repository {
     public <TData, TArgument> Observable<Response<TData, TArgument>> fetch(Request<TData, TArgument> request) {
 
         return Observable.just(request)
-                .observeOn(Schedulers.io())
-                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
                 .compose(sourceJar.mapAll())
                 .compose(filterSource())
                 .compose(parallel(requestObservable -> requestObservable.compose(executeSource())))
                 .compose(delayError())
                 .compose(filterResult())
-                .compose(bindListener(request.type));
+                .compose(bindListener(request.type))
+                .doOnError(Throwable::printStackTrace)
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     protected <TData, TArgument>RequestTransformer<TData, TArgument> filterSource() {
