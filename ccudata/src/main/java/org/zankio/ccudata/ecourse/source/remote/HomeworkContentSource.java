@@ -8,6 +8,7 @@ import org.zankio.ccudata.base.source.SourceProperty;
 import org.zankio.ccudata.base.source.annotation.DataType;
 import org.zankio.ccudata.base.source.annotation.Important;
 import org.zankio.ccudata.base.source.annotation.Order;
+import org.zankio.ccudata.base.source.http.annontation.Charset;
 import org.zankio.ccudata.base.source.http.annontation.FollowRedirect;
 import org.zankio.ccudata.base.source.http.annontation.Method;
 import org.zankio.ccudata.ecourse.annotation.ChangeCourse;
@@ -20,6 +21,7 @@ import java.util.Locale;
 
 @Method("GET")
 @FollowRedirect(false)
+@Charset("big5")
 
 @DataType(HomeworkContentSource.TYPE)
 @Order(SourceProperty.Level.MIDDLE)
