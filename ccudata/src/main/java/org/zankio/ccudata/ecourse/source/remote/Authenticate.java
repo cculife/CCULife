@@ -1,5 +1,6 @@
 package org.zankio.ccudata.ecourse.source.remote;
 
+import org.zankio.ccudata.base.constant.Exceptions;
 import org.zankio.ccudata.base.model.HttpResponse;
 import org.zankio.ccudata.base.model.Request;
 import org.zankio.ccudata.base.source.annotation.DataType;
@@ -21,7 +22,6 @@ import org.zankio.ccudata.ecourse.model.AuthData;
 @DataType({Authenticate.TYPE})
 public class Authenticate extends HTTPSource<AuthData, Boolean> {
     private static final String SESSION_FIELD_NAME = "PHPSESSID";
-    private static final String ERROR_ID_PASS_WRONG = "帳號或密碼錯誤";
     public final static String TYPE = "AUTH";
 
     public static Request<Boolean, AuthData> request(String username, String password) {
@@ -46,10 +46,10 @@ public class Authenticate extends HTTPSource<AuthData, Boolean> {
             EcourseSource.storageSession(getContext(), response.cookie(SESSION_FIELD_NAME));
             return true;
         } else if (url.startsWith(Urls.LOGIN)) {
-            if (body != null && body.contains(ERROR_ID_PASS_WRONG))
-                throw new Exception(ERROR_ID_PASS_WRONG);
+            if (body != null && body.contains(Exceptions.ID_PASS_WRONG))
+                throw new Exception(Exceptions.ID_PASS_WRONG);
         }
-        throw new Exception("未知錯誤");
+        throw new Exception(Exceptions.UNKONWN_FAIL);
     }
 
 }

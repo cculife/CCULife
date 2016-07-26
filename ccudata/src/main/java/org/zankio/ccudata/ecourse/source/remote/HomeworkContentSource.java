@@ -2,6 +2,7 @@ package org.zankio.ccudata.ecourse.source.remote;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.zankio.ccudata.base.constant.Exceptions;
 import org.zankio.ccudata.base.model.HttpResponse;
 import org.zankio.ccudata.base.model.Request;
 import org.zankio.ccudata.base.source.SourceProperty;
@@ -34,7 +35,7 @@ public class HomeworkContentSource extends EcourseSource<HomeworkData, Homework>
         Elements content;
 
         content = document.select("pre");
-        if (content.size() == 0) throw new Exception("讀取作業題目錯誤");
+        if (content.size() == 0) throw new Exception(Exceptions.PARSE_FAIL);
 
         homework.content = content.html();
     }

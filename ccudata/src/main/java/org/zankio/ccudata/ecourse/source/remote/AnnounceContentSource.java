@@ -2,6 +2,7 @@ package org.zankio.ccudata.ecourse.source.remote;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.zankio.ccudata.base.constant.Exceptions;
 import org.zankio.ccudata.base.model.HttpResponse;
 import org.zankio.ccudata.base.model.Request;
 import org.zankio.ccudata.base.source.SourceProperty;
@@ -45,7 +46,7 @@ public class AnnounceContentSource extends EcourseSource<AnnounceData, Announce>
         if (rows.size() > 2 )
             return rows.get(2).html();
         else
-            throw new Exception("讀取資料錯誤");
+            throw new Exception(Exceptions.PARSE_FAIL);
 
     }
 

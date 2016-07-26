@@ -3,6 +3,7 @@ package org.zankio.ccudata.sourcequery.source.remote;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.zankio.ccudata.base.Repository;
+import org.zankio.ccudata.base.constant.Exceptions;
 import org.zankio.ccudata.base.model.HttpResponse;
 import org.zankio.ccudata.base.model.Request;
 import org.zankio.ccudata.base.source.SourceProperty;
@@ -65,7 +66,7 @@ public class Authenticate extends HTTPJsoupSource<AuthData, Boolean> {
                         error.contains("密碼長度過長或過短") ||
                         error.contains("您輸入的密碼有誤"))
                 {
-                    throw new Exception("帳號或密碼錯誤");
+                    throw new Exception(Exceptions.ID_PASS_WRONG);
                 } else {
                     throw new Exception("未知錯誤 : " + error);
                 }

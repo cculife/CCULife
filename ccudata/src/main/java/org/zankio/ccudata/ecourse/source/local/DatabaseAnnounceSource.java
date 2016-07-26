@@ -6,6 +6,7 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 
 import org.zankio.ccudata.base.Repository;
+import org.zankio.ccudata.base.constant.Exceptions;
 import org.zankio.ccudata.base.model.Request;
 import org.zankio.ccudata.base.source.BaseSource;
 import org.zankio.ccudata.base.source.SourceProperty;
@@ -68,7 +69,7 @@ public class DatabaseAnnounceSource extends DatabaseBaseSource<CourseData, Annou
 
     @Override
     public Announce[] fetch(Request<Announce[], CourseData> request) throws Exception {
-        if (TYPE_ANNOUNCE_CONTENT.equals(request.type)) throw new Exception("未支援離線資料");
+        if (TYPE_ANNOUNCE_CONTENT.equals(request.type)) throw new Exception(Exceptions.NO_DATA);
 
         SQLiteDatabase database = getDatabase();
         if(!database.isOpen()) return null;
