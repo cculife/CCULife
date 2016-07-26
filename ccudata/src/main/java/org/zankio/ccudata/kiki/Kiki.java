@@ -13,7 +13,7 @@ import org.zankio.ccudata.kiki.source.remote.CourseListSource;
 import org.zankio.ccudata.kiki.source.remote.TimetableSource;
 
 public class Kiki extends Repository {
-    private OfflineMode offline_mode = OfflineMode.ALL;
+    private OfflineMode offlineMode = OfflineMode.ALL;
     private User user = new User(this);
 
     public Kiki(Context context) {
@@ -47,7 +47,11 @@ public class Kiki extends Repository {
     }
 
     public OfflineMode getOfflineMode() {
-        return offline_mode;
+        return offlineMode;
     }
 
+    public Kiki setOfflineMode(OfflineMode offlineMode) {
+        this.offlineMode = offlineMode;
+        return this;
+    }
 }

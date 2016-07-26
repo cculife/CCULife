@@ -26,6 +26,7 @@ import org.zankio.cculife.R;
 import org.zankio.cculife.UserManager;
 import org.zankio.cculife.ui.base.BaseFragmentActivity;
 import org.zankio.cculife.ui.base.BaseMessageFragment;
+import org.zankio.cculife.utils.SettingUtils;
 
 import java.util.Locale;
 
@@ -65,11 +66,17 @@ public class CourseListFragment extends BaseMessageFragment {
             adapter.notifyDataSetChanged();
             return;
         }
-        UserManager userManager = UserManager.getInstance(getActivity());
-        ecourse = new Ecourse(getContext());
-        ecourse.user().username(userManager.getUserName()).password(userManager.getPassword());
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        Context context = getContext();
+        UserManager userManager = UserManager.getInstance(context);
+
+        ecourse = new Ecourse(context);
+        ecourse.setOfflineMode(SettingUtils.loadOffline(context))
+               .user()
+                   .username(userManager.getUserName())
+                   .password(userManager.getPassword());
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         if (Debug.debug && preferences.getBoolean("debug_ecourse_custom", false)) {
             int year, term;
 

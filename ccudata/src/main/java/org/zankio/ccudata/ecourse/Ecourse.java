@@ -86,4 +86,9 @@ public class Ecourse extends Repository {
     public OfflineMode getOfflineMode() {
         return offlineMode;
     }
+
+    public Ecourse setOfflineMode(OfflineMode offlineMode) {
+        this.offlineMode = offlineMode;
+        return this;
+    }
 }

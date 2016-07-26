@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
+import org.zankio.ccudata.base.model.OfflineMode;
 import org.zankio.ccudata.base.model.Request;
 import org.zankio.ccudata.base.model.Response;
 import org.zankio.ccudata.base.model.Storage;
@@ -15,7 +16,7 @@ import org.zankio.ccudata.kiki.source.local.DatabaseTimeTableSource;
 import org.zankio.ccudata.kiki.source.remote.TimetableSource;
 import org.zankio.cculife.UserManager;
 import org.zankio.cculife.ui.base.GetStorage;
-
+import org.zankio.cculife.utils.SettingUtils;
 
 import rx.Subscriber;
 import rx.subjects.BehaviorSubject;
@@ -42,9 +43,10 @@ public class TimetableDataFragment extends Fragment
 
         Context context = getContext();
         UserManager userManager = UserManager.getInstance(context);
+        OfflineMode offlineMode = SettingUtils.loadOffline(context);
 
         kiki = new Kiki(context);
-        kiki.user()
+        kiki.setOfflineMode(offlineMode).user()
                 .username(userManager.getUserName())
                 .password(userManager.getPassword());
     }
@@ -98,4 +100,5 @@ public class TimetableDataFragment extends Fragment
 
     @Override
     public Storage storage() { return storage; }
+
 }
