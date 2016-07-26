@@ -27,6 +27,7 @@ import org.zankio.ccudata.ecourse.model.CourseData;
 import org.zankio.cculife.R;
 import org.zankio.cculife.ui.base.BaseMessageFragment;
 import org.zankio.cculife.ui.base.IGetCourseData;
+import org.zankio.cculife.utils.ExceptionUtils;
 
 import rx.Subscriber;
 
@@ -89,8 +90,11 @@ public class CourseAnnounceFragment
 
             @Override
             public void onError(Throwable e) {
+                e = ExceptionUtils.extraceException(e);
+
                 CourseAnnounceFragment.this.loading = false;
                 setLoaded(true);
+
                 message().show(e.getMessage());
             }
 
@@ -119,7 +123,10 @@ public class CourseAnnounceFragment
                 public void onCompleted() { }
 
                 @Override
-                public void onError(Throwable e) { }
+                public void onError(Throwable e) {
+                    e = ExceptionUtils.extraceException(e);
+                    onAnnounceContentUpdate(announce, e.getMessage());
+                }
 
                 @Override
                 public void onNext(Response<Announce, AnnounceData> response) {

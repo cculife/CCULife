@@ -23,6 +23,7 @@ import org.zankio.cculife.R;
 import org.zankio.cculife.services.DownloadService;
 import org.zankio.cculife.ui.base.BaseMessageFragment;
 import org.zankio.cculife.ui.base.IGetCourseData;
+import org.zankio.cculife.utils.ExceptionUtils;
 
 import rx.Subscriber;
 
@@ -85,6 +86,8 @@ public class CourseScoreFragment extends BaseMessageFragment
 
                     @Override
                     public void onError(Throwable e) {
+                        e = ExceptionUtils.extraceException(e);
+
                         CourseScoreFragment.this.loading = false;
                         setLoaded(true);
                         message().show(e.getMessage());

@@ -15,6 +15,7 @@ import org.zankio.ccudata.sourcequery.source.remote.GradesInquiriesSource;
 import org.zankio.cculife.R;
 import org.zankio.cculife.UserManager;
 import org.zankio.cculife.ui.base.BaseFragmentActivity;
+import org.zankio.cculife.utils.ExceptionUtils;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -50,6 +51,8 @@ public class ScoreQueryActivity extends BaseFragmentActivity
 
             @Override
             public void onError(Throwable e) {
+                e = ExceptionUtils.extraceException(e);
+
                 showMessage(e.getMessage());
             }
 

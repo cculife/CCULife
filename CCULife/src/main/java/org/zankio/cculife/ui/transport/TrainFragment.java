@@ -16,6 +16,7 @@ import org.zankio.ccudata.train.model.TrainRequest;
 import org.zankio.ccudata.train.model.TrainTimetable;
 import org.zankio.cculife.R;
 import org.zankio.cculife.ui.base.BaseMessageFragment;
+import org.zankio.cculife.utils.ExceptionUtils;
 
 import rx.Subscriber;
 
@@ -92,6 +93,8 @@ public class TrainFragment extends BaseMessageFragment implements ISwitchLine {
 
                 @Override
                 public void onError(Throwable e) {
+                    e = ExceptionUtils.extraceException(e);
+
                     message().show(e.getMessage());
                 }
 

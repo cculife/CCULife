@@ -18,6 +18,7 @@ import org.zankio.ccudata.bus.model.BusStop;
 import org.zankio.cculife.R;
 import org.zankio.cculife.ui.base.BaseMessageFragment;
 import org.zankio.cculife.ui.base.IGetCache;
+import org.zankio.cculife.utils.ExceptionUtils;
 
 import rx.Subscriber;
 
@@ -143,6 +144,8 @@ public class BusFragment extends BaseMessageFragment implements ISwitchLine {
             @Override
             public void onError(Throwable e) {
                 if (isCurrent()) return;
+                e = ExceptionUtils.extraceException(e);
+
                 message().show(e.getMessage());
             }
 

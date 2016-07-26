@@ -26,6 +26,7 @@ import org.zankio.cculife.R;
 import org.zankio.cculife.UserManager;
 import org.zankio.cculife.ui.base.BaseFragmentActivity;
 import org.zankio.cculife.ui.base.BaseMessageFragment;
+import org.zankio.cculife.utils.ExceptionUtils;
 import org.zankio.cculife.utils.SettingUtils;
 
 import java.util.Locale;
@@ -93,6 +94,8 @@ public class CourseListFragment extends BaseMessageFragment {
 
                 @Override
                 public void onError(Throwable e) {
+                    e = ExceptionUtils.extraceException(e);
+
                     CourseListFragment.this.loading = false;
                     message().show(e.getMessage());
                 }

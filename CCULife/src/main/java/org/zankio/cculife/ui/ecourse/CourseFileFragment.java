@@ -26,6 +26,7 @@ import org.zankio.cculife.Utils;
 import org.zankio.cculife.services.DownloadService;
 import org.zankio.cculife.ui.base.BaseMessageFragment;
 import org.zankio.cculife.ui.base.IGetCourseData;
+import org.zankio.cculife.utils.ExceptionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,6 +100,8 @@ public class CourseFileFragment extends BaseMessageFragment
 
                     @Override
                     public void onError(Throwable e) {
+                        e = ExceptionUtils.extraceException(e);
+
                         CourseFileFragment.this.loading = false;
                         setLoaded(true);
                         message().show(e.getMessage());

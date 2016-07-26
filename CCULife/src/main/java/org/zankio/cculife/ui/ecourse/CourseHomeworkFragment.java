@@ -30,6 +30,7 @@ import org.zankio.ccudata.ecourse.model.HomeworkData;
 import org.zankio.cculife.R;
 import org.zankio.cculife.ui.base.BaseMessageFragment;
 import org.zankio.cculife.ui.base.IGetCourseData;
+import org.zankio.cculife.utils.ExceptionUtils;
 
 import rx.Subscriber;
 
@@ -88,6 +89,8 @@ public class CourseHomeworkFragment extends BaseMessageFragment
 
                     @Override
                     public void onError(Throwable e) {
+                        e = ExceptionUtils.extraceException(e);
+
                         CourseHomeworkFragment.this.loading = false;
                         setLoaded(true);
                         message().show(e.getMessage());
