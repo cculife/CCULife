@@ -3,24 +3,32 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.5.0'
+        classpath 'com.android.tools.build:gradle:2.1.2'
+        classpath 'me.tatarka:gradle-retrolambda:3.2.5'
     }
 }
+
 apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
 
 repositories {
     mavenCentral()
 }
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion 24
     buildToolsVersion '23.0.2'
 
     defaultConfig {
-        minSdkVersion 8
-        targetSdkVersion 23
+        minSdkVersion 9
+        targetSdkVersion 24
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
@@ -29,17 +37,25 @@ tasks.withType(JavaCompile) {
 }
 
 dependencies {
-    compile 'com.android.support:design:23.2.1'
-    compile 'com.android.support:support-v4:23.2.1'
-    compile 'com.android.support:appcompat-v7:23.2.1'
-    compile 'com.android.support:support-annotations:23.2.1'
+    compile 'org.jetbrains:annotations:13.0'
+
+    compile 'com.android.support:design:24.1.1'
+    compile 'com.android.support:support-v4:24.1.1'
+    compile 'com.android.support:appcompat-v7:24.1.1'
+    compile 'com.android.support:support-annotations:24.1.1'
     compile 'org.jsoup:jsoup:1.7.2'
     compile 'com.koushikdutta.ion:ion:2.1.6'
-    //compile 'com.squareup.okio:okio:1.6.0'
-    //compile 'com.squareup.okhttp3:okhttp:3.2.0'
+
+    compile 'io.reactivex:rxandroid:1.1.0'
+    compile 'io.reactivex:rxjava:1.1.0'
+
+    compile 'com.squareup.okio:okio:1.6.0'
+    compile 'com.squareup.okhttp3:okhttp:3.2.0'
+
     testCompile 'junit:junit:4.12'
 
-    androidTestCompile 'com.android.support:support-annotations:23.2.1'
+    androidTestCompile 'com.android.support:support-annotations:24.1.1'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
     androidTestCompile 'com.android.support.test:runner:0.4.1'
+    compile project(path: ':ccudata')
 }
