@@ -27,7 +27,7 @@ public abstract class KikiSource<TArgument, TData> extends HTTPJsoupSource<TArgu
     }
 
     @Override
-    public void before(Request request) {
+    public void before(Request<TData, TArgument> request) {
         super.before(request);
 
         Kiki context = (Kiki) getContext();
