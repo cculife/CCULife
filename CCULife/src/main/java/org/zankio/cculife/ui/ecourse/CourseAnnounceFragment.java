@@ -120,7 +120,9 @@ public class CourseAnnounceFragment
         else
             announce.getContent(true).subscribe(new Subscriber<Response<Announce, AnnounceData>>() {
                 @Override
-                public void onCompleted() { }
+                public void onCompleted() {
+
+                }
 
                 @Override
                 public void onError(Throwable e) {
@@ -136,20 +138,26 @@ public class CourseAnnounceFragment
     }
 
     private void onAnnounceContentUpdate(Announce announce) {
+        onAnnounceContentUpdate(announce, null);
+    }
+
+    private void onAnnounceContentUpdate(Announce announce, String message) {
         Context context = getContext();
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
-        TextView message = new TextView(getContext());
-        if (announce.content != null) {
-            message.setText(Html.fromHtml(announce.content));
+        TextView messageView = new TextView(getContext());
+        if (message != null) {
+            messageView.setText(message);
+        } else if (announce.content != null) {
+            messageView.setText(Html.fromHtml(announce.content));
         } else {
-            message.setText("沒有資料");
+            messageView.setText("沒有資料");
         }
-        message.setAutoLinkMask(Linkify.WEB_URLS);
-        message.setMovementMethod(LinkMovementMethod.getInstance());
-        message.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-        message.setPadding(20, 20, 20, 20);
-        builder.setView(message);
+        messageView.setAutoLinkMask(Linkify.WEB_URLS);
+        messageView.setMovementMethod(LinkMovementMethod.getInstance());
+        messageView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+        messageView.setPadding(20, 20, 20, 20);
+        builder.setView(messageView);
 
         builder.setTitle(announce.title);
         builder.setPositiveButton("確定", (dialog, which) -> {
