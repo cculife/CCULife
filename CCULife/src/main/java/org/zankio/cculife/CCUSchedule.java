@@ -59,7 +59,7 @@ public class CCUSchedule {
 
             matcher = pattern.matcher(getScheduleRawDate(SCHEDULE_FILE[i]));
 
-            list = new ArrayList<Item>();
+            list = new ArrayList<>();
             while (matcher.find()) {
                 Item item = new Item();
                 if (!"".equals(matcher.group(1))) {
@@ -68,9 +68,8 @@ public class CCUSchedule {
                     int day = Integer.parseInt(matcher.group(3));
                     date = new GregorianCalendar(year, month - 1, day);
                 }
-                String title = matcher.group(5);
 
-                item.Title = title;
+                item.Title = matcher.group(5);
                 item.Date = date;
                 list.add(item);
             }
@@ -92,16 +91,16 @@ public class CCUSchedule {
         public Calendar Date;
         public String Title;
 
+        public boolean isToday(int today_year, int today_day_of_year) {
+            return this.Date.get(Calendar.YEAR) == today_year
+                    && this.Date.get(Calendar.DAY_OF_YEAR) == today_day_of_year;
+        }
+
         public String toDateString() {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM / dd", Locale.US);
             return String.format("%s (%s)",
                     simpleDateFormat.format(this.Date.getTime()),
                     weekName.charAt(this.Date.get(Calendar.DAY_OF_WEEK) - 1));
-        }
-
-        public boolean isToday(int today_year, int today_day_of_year) {
-            return this.Date.get(Calendar.YEAR) == today_year
-                    && this.Date.get(Calendar.DAY_OF_YEAR) == today_day_of_year;
         }
     }
 }
