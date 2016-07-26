@@ -61,7 +61,7 @@ public class Course {
 
         cache = ecourse.fetch(AnnounceSource.request(this))
                 .doOnNext(response -> {
-                    if (ecourse.getOfflineMode().compareTo(OfflineMode.VIEWED) >= 0)
+                    if (ecourse.getOfflineMode().compareTo(OfflineMode.VIEWED) <= 0)
                         syncAnnounceContent(response.data());
 
                     this.announces = response.data();
