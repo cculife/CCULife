@@ -16,11 +16,11 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.zankio.cculife.CCUService.base.listener.IOnUpdateListener;
-import org.zankio.cculife.CCUService.base.source.BaseSource;
-import org.zankio.cculife.CCUService.ecourse.model.Course;
-import org.zankio.cculife.CCUService.ecourse.model.File;
-import org.zankio.cculife.CCUService.ecourse.model.FileGroup;
+import org.zankio.ccudata.base.model.Response;
+import org.zankio.ccudata.ecourse.model.Course;
+import org.zankio.ccudata.ecourse.model.CourseData;
+import org.zankio.ccudata.ecourse.model.File;
+import org.zankio.ccudata.ecourse.model.FileGroup;
 import org.zankio.cculife.R;
 import org.zankio.cculife.Utils;
 import org.zankio.cculife.services.DownloadService;
@@ -30,17 +30,19 @@ import org.zankio.cculife.ui.base.IGetCourseData;
 import java.util.ArrayList;
 import java.util.List;
 
+import rx.Subscriber;
+
 
 public class CourseFileFragment extends BaseMessageFragment
-        implements ExpandableListView.OnChildClickListener, IOnUpdateListener<FileGroup[]>, IGetLoading {
+        implements ExpandableListView.OnChildClickListener, IGetLoading {
     private List<File> download_list;
     private Course course;
     private FileAdapter adapter;
     private ExpandableListView list;
     private boolean loading;
-    private IGetCourseData context;
     private boolean loaded;
-    private IOnUpdateListener<Boolean> loadedListener;
+    private IGetCourseData context;
+    private CourseFragment.LoadingListener loadedListener;
 
     @Override
     public void onAttach(Context context) {
@@ -81,30 +83,33 @@ public class CourseFileFragment extends BaseMessageFragment
             return;
         }
 
-        loading = course.getFiles(this);
+        course.getFiles()
+                .subscribe(new Subscriber<Response<FileGroup[], CourseData>>() {
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                        setLoaded(false);
+                        message().show("讀取中...", true);
+                    }
 
-        if (loading) {
-            setLoaded(false);
-            message().show("讀取中...", true);
-        }
-    }
+                    @Override
+                    public void onCompleted() {
+                        setLoaded(true);
+                    }
 
-    @Override
-    public void onNext(String type, FileGroup[] fileGroups, BaseSource source) {
-        this.loading = false;
-        onFileUpdate(fileGroups);
-    }
+                    @Override
+                    public void onError(Throwable e) {
+                        CourseFileFragment.this.loading = false;
+                        setLoaded(true);
+                        message().show(e.getMessage());
+                    }
 
-    @Override
-    public void onError(String type, Exception err, BaseSource source) {
-        this.loading = false;
-        setLoaded(true);
-        message().show(err.getMessage());
-    }
-
-    @Override
-    public void onComplete(String type) {
-        setLoaded(true);
+                    @Override
+                    public void onNext(Response<FileGroup[], CourseData> courseDataResponse) {
+                        CourseFileFragment.this.loading = false;
+                        onFileUpdate(courseDataResponse.data());
+                    }
+                });
     }
 
     private void onFileUpdate(FileGroup[] fileGroups) {
@@ -164,7 +169,7 @@ public class CourseFileFragment extends BaseMessageFragment
 
     public void setLoaded(boolean loaded) {
         this.loaded = loaded;
-        if (loadedListener != null) loadedListener.onNext(null, loaded, null);
+        if (loadedListener != null) loadedListener.call(loaded);
     }
 
     @Override
@@ -173,7 +178,7 @@ public class CourseFileFragment extends BaseMessageFragment
     }
 
     @Override
-    public void setLoadedListener(IOnUpdateListener<Boolean> listener) {
+    public void setLoadedListener(CourseFragment.LoadingListener listener) {
         this.loadedListener = listener;
     }
 

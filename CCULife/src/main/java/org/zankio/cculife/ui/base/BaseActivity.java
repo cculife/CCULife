@@ -180,7 +180,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             String launchURL[];
 
             portal = new Portal(BaseActivity.this);
-            portal.init();
+            //portal.init();
             launchURL = portal.getSSOPortal(ssoService);
 
             if (launchURL == null) throw new Exception();

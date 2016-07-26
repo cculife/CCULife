@@ -3,14 +3,15 @@ package org.zankio.cculife.ui.ecourse;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 
-import org.zankio.cculife.CCUService.ecourse.Ecourse;
-import org.zankio.cculife.CCUService.ecourse.model.Course;
+import org.zankio.ccudata.ecourse.Ecourse;
+import org.zankio.ccudata.ecourse.model.Course;
 import org.zankio.cculife.R;
 import org.zankio.cculife.ui.base.BaseFragmentActivity;
 import org.zankio.cculife.ui.base.IGetCourseData;
 
 public class CourseActivity extends BaseFragmentActivity
-    implements CourseListFragment.OnCourseSelectedListener, IGetCourseData{
+    implements CourseListFragment.OnCourseSelectedListener,
+        IGetCourseData {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

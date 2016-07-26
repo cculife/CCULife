@@ -3,17 +3,21 @@ package org.zankio.cculife.ui.ecourse;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 
-import org.zankio.cculife.CCUService.ecourse.Ecourse;
-import org.zankio.cculife.CCUService.ecourse.model.Course;
+import org.zankio.ccudata.ecourse.Ecourse;
+import org.zankio.ccudata.ecourse.model.Course;
 import org.zankio.cculife.ui.base.IGetCourseData;
 
-public class CourseDataFragment extends Fragment implements IGetCourseData, CourseListFragment.OnCourseSelectedListener {
+import rx.Observable;
+
+public class CourseDataFragment extends Fragment implements IGetCourseData, CourseListFragment.OnCourseSelectedListener{
     public static final String TAG_COURSE_DATA_FRAGMENT = "COURSE_DATA_FRAGMENT";
     private Ecourse ecourse;
     private Course course;
 
     public static CourseDataFragment getFragment(FragmentManager fragmentManager) {
+        Observable.just("aa").subscribe(str -> Log.d("test", str));
         CourseDataFragment fragment = (CourseDataFragment) fragmentManager.findFragmentByTag(TAG_COURSE_DATA_FRAGMENT);
         if (fragment == null) {
             fragment = new CourseDataFragment();
@@ -49,6 +53,9 @@ public class CourseDataFragment extends Fragment implements IGetCourseData, Cour
     @Override
     public void onCourseSelected(Ecourse ecourse, Course course) {
         this.ecourse = ecourse;
+        if (this.course != course) {
+            // TODO: 2016/7/22 cancel task
+        }
         this.course = course;
     }
 }

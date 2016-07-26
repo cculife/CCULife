@@ -1,8 +1,11 @@
 package org.zankio.cculife.ui.transport;
 
-import org.zankio.cculife.CCUService.base.listener.IOnUpdateListener;
-import org.zankio.cculife.CCUService.bus.model.BusStop;
+import org.zankio.ccudata.base.model.Response;
+import org.zankio.ccudata.bus.model.BusLineRequest;
+import org.zankio.ccudata.bus.model.BusStop;
+
+import rx.Observable;
 
 public interface IGetBusData {
-    void getBusState(String busNo, String branch, String isReturn, IOnUpdateListener<BusStop[]> listener);
+    Observable<Response<BusStop[], BusLineRequest>> getBusState(String busNo, String branch, String isReturn);
 }

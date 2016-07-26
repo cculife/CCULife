@@ -1,20 +1,21 @@
 package org.zankio.cculife.ui.transport;
 
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.os.Bundle;
 import android.view.View;
 
-import org.zankio.cculife.CCUService.base.listener.IOnUpdateListener;
-import org.zankio.cculife.CCUService.bus.Bus;
-import org.zankio.cculife.CCUService.bus.model.BusLineRequest;
-import org.zankio.cculife.CCUService.bus.model.BusStop;
-import org.zankio.cculife.CCUService.bus.source.remote.BusStateSource;
-import org.zankio.cculife.CCUService.train.Train;
-import org.zankio.cculife.CCUService.train.model.TrainTimetable;
-import org.zankio.cculife.CCUService.train.source.remote.TrainStopStatusSource;
+import org.zankio.ccudata.base.model.Response;
+import org.zankio.ccudata.bus.Bus;
+import org.zankio.ccudata.bus.model.BusLineRequest;
+import org.zankio.ccudata.bus.model.BusStop;
+import org.zankio.ccudata.bus.source.remote.BusStateSource;
+import org.zankio.ccudata.train.Train;
+import org.zankio.ccudata.train.model.TrainRequest;
+import org.zankio.ccudata.train.model.TrainTimetable;
+import org.zankio.ccudata.train.source.remote.TrainStopStatusSource;
 import org.zankio.cculife.R;
 import org.zankio.cculife.ui.base.BaseActivity;
 import org.zankio.cculife.ui.base.CacheFragment;
@@ -24,6 +25,9 @@ import org.zankio.cculife.ui.base.helper.FragmentPagerHelper;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import rx.Observable;
+
 import static org.zankio.cculife.ui.base.helper.FragmentPagerHelper.Page;
 
 public class TransportActivity extends BaseActivity
@@ -83,28 +87,35 @@ public class TransportActivity extends BaseActivity
         findViewById(R.id.switch_return).setOnClickListener(this);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public void getBusState(String busNo, String branch, String isReturn, IOnUpdateListener<BusStop[]> listener) {
-        IOnUpdateListener<BusStop[]> cacheListener = mCache.cache(
-                String.format("%s_%s_%s_%s", KEY_BUS_PREFIX, busNo, branch, isReturn),
-                listener,
-                BusStop[].class,
-                CACHE_TIME
-        );
+    public Observable<Response<BusStop[], BusLineRequest>> getBusState(String busNo, String branch, String isReturn) {
+        String key = String.format("%s_%s_%s_%s", KEY_BUS_PREFIX, busNo, branch, isReturn);
+        Observable<Response<BusStop[], BusLineRequest>> observable;
+        observable = mCache.get(key, Observable.class);
 
-        if (cacheListener != null)
-            BusStateSource.fetch(bus, cacheListener, busNo, branch, isReturn);
+        if (observable == null) {
+            observable = bus.fetch(BusStateSource.request(busNo, branch, isReturn)).cache();
+            mCache.set(key, observable, CACHE_TIME);
+        }
+
+        return observable;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public void getTrainStatus(String code, IOnUpdateListener<TrainTimetable> listener) {
-        IOnUpdateListener<TrainTimetable> cacheListener = mCache.cache(String.format("%s_%s", KEY_TRAIN_PREFIX, code), listener, TrainTimetable.class, CACHE_TIME);
+    public Observable<Response<TrainTimetable, TrainRequest>> getTrainStatus(String code) {
+        String key = String.format("%s_%s", KEY_TRAIN_PREFIX, code);
+        Observable<Response<TrainTimetable, TrainRequest>> observable;
+        observable = mCache.get(key, Observable.class);
 
-        if (cacheListener != null) {
+        if (observable == null) {
             Date date = new Date();
             SimpleDateFormat formater = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
-            TrainStopStatusSource.fetch(train, cacheListener, formater.format(date), code);
+            observable = train.fetch(TrainStopStatusSource.request(formater.format(date), code)).cache();
+            mCache.set(key, observable, CACHE_TIME);
         }
+        return observable;
     }
 
     @Override

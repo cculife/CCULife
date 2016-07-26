@@ -14,8 +14,9 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import org.zankio.cculife.CCUService.ecourse.source.local.DatabaseBaseSource;
-import org.zankio.cculife.CCUService.ecourse.source.remote.Authenticate;
+import org.zankio.ccudata.ecourse.Ecourse;
+import org.zankio.ccudata.ecourse.source.local.DatabaseBaseSource;
+import org.zankio.ccudata.ecourse.source.remote.Authenticate;
 import org.zankio.cculife.CCUService.portal.Portal;
 import org.zankio.cculife.R;
 import org.zankio.cculife.UserManager;
@@ -147,7 +148,7 @@ public class LoginActivity extends BaseActivity {
         @Override
         protected Boolean doInBackground(Void... params) {
             Portal portal;
-            Authenticate authenticate;
+            Ecourse ecourse = new Ecourse(getApplicationContext());
             try {
                 portal = new Portal(LoginActivity.this);
                 return portal.getSession(mStudentId, mPassword);
@@ -158,14 +159,14 @@ public class LoginActivity extends BaseActivity {
             } catch (LoginErrorException e) {
                 try {
                     boolean success;
-                    authenticate = new Authenticate(null);
-                    success = authenticate.fetch(Authenticate.TYPE, mStudentId, mPassword);
+                    success = ecourse.fetch(Authenticate.request(mStudentId, mPassword)).toBlocking().last().data();
                     if (success) {
                         DatabaseBaseSource.clearData(LoginActivity.this);
                     }
                     return success;
-                } catch (LoginErrorException e1) {
-                    if ("帳號或密碼錯誤".equals(e.getMessage())) {
+                } catch (RuntimeException e1) {
+                    Throwable cause = e.getCause();
+                    if (cause != null && "帳號或密碼錯誤".equals(cause.getMessage())) {
                         message = e.getMessage();
                         return false;
                     }

@@ -5,10 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
-import org.zankio.cculife.CCUService.base.listener.IOnUpdateListener;
-import org.zankio.cculife.CCUService.base.listener.OnUpdateListener;
-import org.zankio.cculife.CCUService.base.source.BaseSource;
-
 import java.util.HashMap;
 
 public class CacheFragment extends Fragment {
@@ -34,36 +30,33 @@ public class CacheFragment extends Fragment {
         return (CacheFragment) fragment;
     }
 
-    public <T>OnUpdateListener<T> cache(final String key, IOnUpdateListener<T> listener) {
-        return cache(key, listener, null, -1);
+    /*public <T>Observable<T> cache(final String key, Observable<T> observable) {
+        return cache(key, observable, null, -1);
     }
 
-    public <T>OnUpdateListener<T> cache(final String key, IOnUpdateListener<T> listener, final int expired) {
-        return cache(key, listener, null, expired);
+    public <T>Observable<T> cache(final String key, Observable<T> observable, final int expired) {
+        return cache(key, observable, null, expired);
     }
 
-    public <T>OnUpdateListener<T> cache(final String key, IOnUpdateListener<T> listener, Class<T> mClass) {
-        return cache(key, listener, mClass, -1);
+    public <T> Observable<T> cache(final String key, Observable<T> observable, Class<T> mClass) {
+        return cache(key, observable, mClass, -1);
     }
 
-    public <T>OnUpdateListener<T> cache(final String key, IOnUpdateListener<T> listener, Class<T> mClass, final int expired) {
+    public <T>Observable<T> cache(final String key, Observable<T> observable, Class<T> mClass, final int expired) {
+        BehaviorSubject<T> subject = BehaviorSubject.create();
+
         T data;
         if (mClass != null) {
             data = get(key, mClass);
             if (data != null) {
-                listener.onNext(null, data, null);
+                subject.onNext(null, data, null);
                 return null;
             }
         }
 
-        return new OnUpdateListener<T>(listener) {
-            @Override
-            public void onNext(String type, T o, BaseSource source) {
-                super.onNext(type, o, source);
-                set(key, o, expired);
-            }
-        };
-    }
+        set(key, o, expired);
+        return subject.startWith(observable);
+    }*/
 
     public <T>T get(String key, Class<? extends T> mClass) {
         Cache cache = hashMap.get(key);

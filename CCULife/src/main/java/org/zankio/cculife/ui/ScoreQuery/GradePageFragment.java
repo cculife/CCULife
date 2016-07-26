@@ -10,13 +10,13 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.zankio.cculife.CCUService.base.listener.IOnUpdateListener;
-import org.zankio.cculife.CCUService.base.source.BaseSource;
-import org.zankio.cculife.CCUService.sourcequery.model.Grade;
-import org.zankio.cculife.CCUService.sourcequery.model.Score;
+import org.zankio.ccudata.sourcequery.model.Grade;
+import org.zankio.ccudata.sourcequery.model.Score;
 import org.zankio.cculife.R;
 
-public class GradePageFragment extends Fragment implements IOnUpdateListener<Grade> {
+import rx.Subscriber;
+
+public class GradePageFragment extends Fragment {
 
     public static final String ARG_GRADE = "grade";
     private IGetGradeData gradeDataContext;
@@ -51,21 +51,24 @@ public class GradePageFragment extends Fragment implements IOnUpdateListener<Gra
     }
 
     @Override
-    public void onNext(String type, Grade grade, BaseSource source) {
-        adapter.setScores(grade.scores);
-        ((TextView)getView().findViewById(R.id.description)).setText(grade.description.replace("本學期共", ""));
-    }
-    @Override
-    public void onComplete(String type) { }
-    @Override
-    public void onError(String type, Exception err, BaseSource source) { }
-
-    @Override
     public void onResume() {
         super.onResume();
 
         int index = getArguments().getInt(ARG_GRADE);
-        gradeDataContext.getGrade(index, this);
+        gradeDataContext.getGrade(index).subscribe(new Subscriber<Grade>() {
+            @Override
+            public void onCompleted() { }
+
+            @Override
+            public void onError(Throwable e) { }
+
+            @Override
+            public void onNext(Grade grade) {
+                adapter.setScores(grade.scores);
+                ((TextView)getView().findViewById(R.id.description)).setText(grade.description.replace("本學期共", ""));
+
+            }
+        });
     }
 
     public class ScoreAdapter extends BaseAdapter {

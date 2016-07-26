@@ -12,24 +12,27 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.zankio.cculife.CCUService.base.listener.IOnUpdateListener;
-import org.zankio.cculife.CCUService.base.source.BaseSource;
-import org.zankio.cculife.CCUService.ecourse.Ecourse;
-import org.zankio.cculife.CCUService.ecourse.model.Course;
-import org.zankio.cculife.CCUService.ecourse.source.remote.CourseListSource;
-import org.zankio.cculife.CCUService.ecourse.source.remote.CustomCourseListSource;
-import org.zankio.cculife.CCUService.kiki.Kiki;
+import org.zankio.ccudata.base.model.Response;
+import org.zankio.ccudata.ecourse.Ecourse;
+import org.zankio.ccudata.ecourse.model.Course;
+import org.zankio.ccudata.ecourse.model.CourseData;
+import org.zankio.ccudata.ecourse.source.remote.CourseListSource;
 import org.zankio.cculife.Debug;
 import org.zankio.cculife.R;
+import org.zankio.cculife.UserManager;
 import org.zankio.cculife.ui.base.BaseFragmentActivity;
 import org.zankio.cculife.ui.base.BaseMessageFragment;
 
-public class CourseListFragment extends BaseMessageFragment implements IOnUpdateListener<Course[]>{
+import java.util.Locale;
+
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+
+public class CourseListFragment extends BaseMessageFragment {
 
     public static Ecourse ecourse;
     private CourseAdapter adapter = null;
@@ -62,7 +65,9 @@ public class CourseListFragment extends BaseMessageFragment implements IOnUpdate
             adapter.notifyDataSetChanged();
             return;
         }
-        ecourse = new org.zankio.cculife.CCUService.ecourse.Ecourse(getContext());
+        UserManager userManager = UserManager.getInstance(getActivity());
+        ecourse = new Ecourse(getContext());
+        ecourse.user().username(userManager.getUserName()).password(userManager.getPassword());
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         if (Debug.debug && preferences.getBoolean("debug_ecourse_custom", false)) {
@@ -70,9 +75,34 @@ public class CourseListFragment extends BaseMessageFragment implements IOnUpdate
 
             year = Integer.parseInt(preferences.getString("debug_ecourse_year", "-1"));
             term = Integer.parseInt(preferences.getString("debug_ecourse_term", "-1"));
-            ecourse.fetch(CustomCourseListSource.TYPE, this, year, term, new Kiki(getContext()));
+            // TODO: 2016/7/22
+            //ecourse.fetch(CustomCourseListSource.request(year, term, new Kiki(getContext()));
         } else {
-            ecourse.fetch(CourseListSource.TYPE, this);
+            ecourse.fetch(CourseListSource.request()).subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<Response<Course[], CourseData>>() {
+                @Override
+                public void onCompleted() {
+
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    CourseListFragment.this.loading = false;
+                    message().show(e.getMessage());
+                }
+
+                @Override
+                public void onNext(Response<Course[], CourseData> courseDataResponse) {
+                    Course[] courses = courseDataResponse.data();
+                    CourseListFragment.this.loading = false;
+                    if(courses == null || courses.length == 0) {
+                        message().show("沒有課程");
+                        return;
+                    }
+
+                    adapter.setCourses(courses);
+                    message().hide();
+                }
+            });
         }
 
     }
@@ -93,12 +123,9 @@ public class CourseListFragment extends BaseMessageFragment implements IOnUpdate
         adapter = new CourseAdapter();
         ListView courselist = (ListView)view.findViewById(R.id.list);
         courselist.setAdapter(adapter);
-        courselist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(final AdapterView<?> parent, View view, final int position, long id) {
-                final Course course = (Course) parent.getAdapter().getItem(position);
-                context.onCourseSelected(ecourse, course);
-            }
+        courselist.setOnItemClickListener((parent, view1, position, id) -> {
+            final Course course = (Course) parent.getAdapter().getItem(position);
+            context.onCourseSelected(ecourse, course);
         });
 
         ((BaseFragmentActivity)getActivity()).setMessageView(R.id.list);
@@ -113,34 +140,6 @@ public class CourseListFragment extends BaseMessageFragment implements IOnUpdate
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.course_list, menu);
         super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onNext(String type, Course[] courses, BaseSource source) {
-        this.loading = false;
-        if(courses == null || courses.length == 0) {
-            message().show("沒有課程");
-            return;
-        }
-
-        adapter.setCourses(courses);
-        message().hide();
-    }
-
-    @Override
-    public void onError(String type, Exception err, BaseSource source) {
-        this.loading = false;
-        message().show(err.getMessage());
-    }
-
-    @Override
-    public void onComplete(String type) {
-
     }
 
     public class CourseAdapter extends BaseAdapter {
@@ -182,9 +181,9 @@ public class CourseListFragment extends BaseMessageFragment implements IOnUpdate
             }
 
             Course course = courses[position];
-            ((TextView) (view.findViewById(R.id.course_name))).setText(course.name + "");
+            ((TextView) (view.findViewById(R.id.course_name))).setText(course.name);
 
-            ((TextView)view.findViewById(R.id.unread)).setText(String.format("%d", course.notice + course.homework + course.exam));
+            ((TextView)view.findViewById(R.id.unread)).setText(String.format(Locale.US, "%d", course.notice + course.homework + course.exam));
 
             if (ignore_ecourse_warnning) {
                 view.findViewById(R.id.warring).setBackgroundColor( course.warning ? getResources().getColor(R.color.Red_Course_Warring) : 0);

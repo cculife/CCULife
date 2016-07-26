@@ -13,15 +13,17 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.TextView;
 
-import org.zankio.cculife.CCUService.base.listener.IOnUpdateListener;
-import org.zankio.cculife.CCUService.base.source.BaseSource;
-import org.zankio.cculife.CCUService.ecourse.model.Classmate;
-import org.zankio.cculife.CCUService.ecourse.model.Course;
+import org.zankio.ccudata.base.model.Response;
+import org.zankio.ccudata.ecourse.model.Classmate;
+import org.zankio.ccudata.ecourse.model.Course;
+import org.zankio.ccudata.ecourse.model.CourseData;
 import org.zankio.cculife.R;
 import org.zankio.cculife.ui.base.BaseMessageFragment;
 import org.zankio.cculife.ui.base.IGetCourseData;
 
-public class CourseClassmateFragment extends BaseMessageFragment implements IOnUpdateListener<Classmate[]> {
+import rx.Subscriber;
+
+public class CourseClassmateFragment extends BaseMessageFragment {
 
     private GridView list;
     private ClassmateAdapter adapter;
@@ -50,7 +52,29 @@ public class CourseClassmateFragment extends BaseMessageFragment implements IOnU
         message().show("讀取中...", true);
         String id = getArguments().getString("id");
         Course course = context.getCourse(id);
-        if (course != null) course.getClassmate(this);
+        if (course != null) course.getClassmate().subscribe(new Subscriber<Response<Classmate[], CourseData>>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                message().show("沒有資料");
+            }
+
+            @Override
+            public void onNext(Response<Classmate[], CourseData> courseDataResponse) {
+                Classmate[] classmates = courseDataResponse.data();
+                if (classmates == null || classmates.length == 0) {
+                    message().show("沒有資料");
+                    return;
+                }
+
+                adapter.setClassmate(classmates);
+                message().hide();
+            }
+        });
     }
 
     @Override
@@ -69,24 +93,6 @@ public class CourseClassmateFragment extends BaseMessageFragment implements IOnU
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.course_classmate, menu);
-    }
-
-    @Override
-    public void onNext(String type, Classmate[] classmates, BaseSource source) {
-        if (classmates == null || classmates.length == 0) {
-            message().show("沒有資料");
-            return;
-        }
-
-        adapter.setClassmate(classmates);
-        message().hide();
-    }
-
-    @Override
-    public void onComplete(String type) { }
-    @Override
-    public void onError(String type, Exception err, BaseSource source) {
-        message().show("沒有資料");
     }
 
     public class ClassmateAdapter extends BaseAdapter {

@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -20,29 +21,30 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.zankio.cculife.CCUService.base.listener.IOnUpdateListener;
-import org.zankio.cculife.CCUService.base.listener.OnUpdateListener;
-import org.zankio.cculife.CCUService.base.source.BaseSource;
-import org.zankio.cculife.CCUService.ecourse.model.Course;
-import org.zankio.cculife.R;
+import org.zankio.ccudata.ecourse.model.Course;
 import org.zankio.cculife.CCUService.portal.service.Ecourse;
+import org.zankio.cculife.R;
 import org.zankio.cculife.ui.base.BaseFragmentActivity;
 import org.zankio.cculife.ui.base.IGetCourseData;
 
 import java.util.Locale;
 
+import rx.functions.Action1;
+
 public class CourseFragment extends Fragment {
+    interface LoadingListener extends Action1<Boolean> {}
+
     private Page[] pages;// = new Page[0];
 
     CoursePagerAdapter mPagerAdapter;
     protected Course course;
-    ViewPager mViewPager;
-    ActionBar actionBar;
     private IGetCourseData context;
     private ValueAnimator loadingAnimator;
     private ValueAnimator transAnimator;
     private int tab_loading_form;
     private int tab_loading_to;
+    ViewPager mViewPager;
+    ActionBar actionBar;
     TabLayout tabLayout;
 
     @Override
@@ -129,13 +131,7 @@ public class CourseFragment extends Fragment {
         }
     };
 
-    private IOnUpdateListener<Boolean> loadedListener = new OnUpdateListener<Boolean>() {
-        @Override
-        public void onNext(String type, Boolean loaded, BaseSource source) {
-            super.onNext(type, loaded, source);
-            setLoading(!loaded);
-        }
-    };
+    private LoadingListener loadedListener = (loaded) -> { setLoading(!loaded); };
 
     private void setLoading(boolean loading) {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
@@ -176,7 +172,7 @@ public class CourseFragment extends Fragment {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         for (Page p : pages) {
             p.fragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -217,6 +213,11 @@ public class CourseFragment extends Fragment {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 
     public class CoursePagerAdapter extends FragmentPagerAdapter {

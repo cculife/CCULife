@@ -15,23 +15,22 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.zankio.cculife.CCUService.base.BaseRepo;
-import org.zankio.cculife.CCUService.base.listener.IOnUpdateListener;
-import org.zankio.cculife.CCUService.base.source.BaseSource;
-import org.zankio.cculife.CCUService.kiki.model.Course;
-import org.zankio.cculife.CCUService.kiki.model.TimeTable;
-import org.zankio.cculife.CCUService.kiki.source.local.DatabaseTimeTableSource;
-import org.zankio.cculife.CCUService.kiki.source.remote.TimetableSource;
+import org.zankio.ccudata.base.Repository;
+import org.zankio.ccudata.base.source.BaseSource;
+import org.zankio.ccudata.kiki.model.Course;
+import org.zankio.ccudata.kiki.model.TimeTable;
+import org.zankio.ccudata.kiki.source.local.DatabaseTimeTableSource;
 import org.zankio.cculife.KikiCourseAssest;
 import org.zankio.cculife.R;
 
 
-public class AddCourseFragment extends DialogFragment implements View.OnClickListener, AdapterView.OnItemClickListener, IOnUpdateListener<TimeTable>, View.OnKeyListener, TextView.OnEditorActionListener {
+public class AddCourseFragment extends DialogFragment
+        implements View.OnClickListener, AdapterView.OnItemClickListener,
+        View.OnKeyListener, TextView.OnEditorActionListener {
     private KikiCourseAssest assest;
     private CourseAdapter adapter;
     private EditText keyView;
     private TimeTable timetable;
-    private IOnUpdateListener<TimeTable> listener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,9 +42,7 @@ public class AddCourseFragment extends DialogFragment implements View.OnClickLis
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         IGetTimeTableData context = (IGetTimeTableData) getActivity();
-        context.getTimeTable(this);
-
-        listener = ((IGetListener<TimeTable>) getActivity()).getUpdateListener();
+        context.getTimeTable();
 
         adapter = new CourseAdapter();
 
@@ -59,11 +56,9 @@ public class AddCourseFragment extends DialogFragment implements View.OnClickLis
         keyView.setOnEditorActionListener(this);
         keyView.setImeActionLabel("搜尋", KeyEvent.KEYCODE_ENTER);
 
-        AlertDialog dialog = new AlertDialog.Builder(getContext())
+        return new AlertDialog.Builder(getContext())
                 .setTitle("增加旁聽課程")
                 .setView(view).create();
-
-        return dialog;
     }
 
     @Override
@@ -84,29 +79,13 @@ public class AddCourseFragment extends DialogFragment implements View.OnClickLis
 
         KikiCourseAssest.addCourseToTimeTable(timetable, course);
         timetable.sort();
-        listener.onNext(TimetableSource.TYPE, timetable, null);
-        new DatabaseTimeTableSource(new BaseRepo(getContext()) {
+        new DatabaseTimeTableSource(new Repository(getContext()) {
             @Override
             protected BaseSource[] getSources() {
                 return new BaseSource[0];
             }
         }).storeTimeTable(timetable, true);
         this.dismiss();
-    }
-
-    @Override
-    public void onNext(String type, TimeTable timeTable, BaseSource source) {
-        this.timetable = timeTable;
-    }
-
-    @Override
-    public void onComplete(String type) {
-
-    }
-
-    @Override
-    public void onError(String type, Exception err, BaseSource source) {
-
     }
 
     @Override

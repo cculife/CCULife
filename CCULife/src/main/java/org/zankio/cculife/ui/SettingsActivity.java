@@ -19,11 +19,11 @@ import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.text.TextUtils;
 
+import org.zankio.ccudata.ecourse.source.local.DatabaseBaseSource;
 import org.zankio.cculife.Debug;
 import org.zankio.cculife.R;
 import org.zankio.cculife.Updater;
 import org.zankio.cculife.UserManager;
-import org.zankio.cculife.CCUService.ecourse.source.local.DatabaseBaseSource;
 
 import java.util.List;
 
@@ -158,7 +158,7 @@ public class SettingsActivity extends PreferenceActivity implements UserManager.
             else if ("account_log_in_out".equals(key)) {
                 sessionManager.toggleLogin();
                 DatabaseBaseSource.clearData(context);
-                org.zankio.cculife.CCUService.kiki.source.local.DatabaseBaseSource.clearData(context);
+                org.zankio.ccudata.kiki.source.local.DatabaseBaseSource.clearData(context);
             } else if ("check_update".equals(key)) {
                 new Updater(context).checkUpdate(true);
             }

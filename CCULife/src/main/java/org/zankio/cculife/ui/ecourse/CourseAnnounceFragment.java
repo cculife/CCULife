@@ -2,11 +2,10 @@ package org.zankio.cculife.ui.ecourse;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.FragmentManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
@@ -20,25 +19,26 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.zankio.cculife.CCUService.base.listener.IOnUpdateListener;
-import org.zankio.cculife.CCUService.base.listener.OnUpdateListener;
-import org.zankio.cculife.CCUService.base.source.BaseSource;
-import org.zankio.cculife.CCUService.ecourse.model.Announce;
-import org.zankio.cculife.CCUService.ecourse.model.Course;
-import org.zankio.cculife.CCUService.ecourse.source.remote.AnnounceContentSource;
+import org.zankio.ccudata.base.model.Response;
+import org.zankio.ccudata.ecourse.model.Announce;
+import org.zankio.ccudata.ecourse.model.AnnounceData;
+import org.zankio.ccudata.ecourse.model.Course;
+import org.zankio.ccudata.ecourse.model.CourseData;
 import org.zankio.cculife.R;
 import org.zankio.cculife.ui.base.BaseMessageFragment;
 import org.zankio.cculife.ui.base.IGetCourseData;
 
+import rx.Subscriber;
+
 public class CourseAnnounceFragment
         extends BaseMessageFragment
-        implements AdapterView.OnItemClickListener, IOnUpdateListener<Announce[]>, IGetLoading {
+        implements AdapterView.OnItemClickListener, IGetLoading {
     private Course course;
     private AnnounceAdapter adapter;
     private boolean loading;
     private boolean loaded;
     private IGetCourseData context;
-    private IOnUpdateListener<Boolean> loadedListener;
+    private CourseFragment.LoadingListener loadedListener;
 
     @Override
     public void onAttach(Context context) {
@@ -49,12 +49,6 @@ public class CourseAnnounceFragment
             throw new ClassCastException(context.toString()
                     + " must implement IGetCourseData");
         }
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Log.e("course", "onCreate");
     }
 
     @Nullable
@@ -87,9 +81,28 @@ public class CourseAnnounceFragment
             return;
         }
 
-        loading = course.getAnnounces(this);
+        course.getAnnounces().subscribe(new Subscriber<Response<Announce[], CourseData>>() {
+            @Override
+            public void onCompleted() {
+                setLoaded(true);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                CourseAnnounceFragment.this.loading = false;
+                setLoaded(true);
+                message().show(e.getMessage());
+            }
+
+            @Override
+            public void onNext(Response<Announce[], CourseData> courseDataResponse) {
+                CourseAnnounceFragment.this.loading = false;
+                onAnnounceUpdate(courseDataResponse.data());
+            }
+        });
 
         if (loading) {
+            loading = true;
             setLoaded(false);
             message().show("讀取中...", true);
         }
@@ -98,34 +111,21 @@ public class CourseAnnounceFragment
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         Announce announce = (Announce) adapterView.getAdapter().getItem(i);
-        announce.getContent(announceContentListener);
-    }
+        if (announce.content != null)
+            onAnnounceContentUpdate(announce);
+        else
+            announce.getContent(true).subscribe(new Subscriber<Response<Announce, AnnounceData>>() {
+                @Override
+                public void onCompleted() { }
 
+                @Override
+                public void onError(Throwable e) { }
 
-    private IOnUpdateListener<Announce> announceContentListener = new OnUpdateListener<Announce>() {
-        @Override
-        public void onNext(String type, Announce announce, BaseSource source) {
-            if (AnnounceContentSource.TYPE.equals(type))
-                onAnnounceContentUpdate(announce);
-        }
-    };
-
-    @Override
-    public void onNext(String type, Announce[] data, BaseSource source) {
-        this.loading = false;
-        onAnnounceUpdate(data);
-    }
-
-    @Override
-    public void onError(String type, Exception err, BaseSource source) {
-        this.loading = false;
-        setLoaded(true);
-        message().show(err.getMessage());
-    }
-
-    @Override
-    public void onComplete(String type) {
-        setLoaded(true);
+                @Override
+                public void onNext(Response<Announce, AnnounceData> response) {
+                    onAnnounceContentUpdate(response.data());
+                }
+            });
     }
 
     private void onAnnounceContentUpdate(Announce announce) {
@@ -145,11 +145,8 @@ public class CourseAnnounceFragment
         builder.setView(message);
 
         builder.setTitle(announce.title);
-        builder.setPositiveButton("確定", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
+        builder.setPositiveButton("確定", (dialog, which) -> {
+            dialog.dismiss();
         });
         final AlertDialog dialog = builder.create();
         if (context instanceof Activity && ((Activity)context).isFinishing()) return;
@@ -171,13 +168,13 @@ public class CourseAnnounceFragment
     }
 
     @Override
-    public void setLoadedListener(IOnUpdateListener<Boolean> listener) {
+    public void setLoadedListener(CourseFragment.LoadingListener listener) {
         this.loadedListener = listener;
     }
 
     public void setLoaded(boolean loaded) {
         this.loaded = loaded;
-        if (this.loadedListener != null) loadedListener.onNext(null, loaded, null);
+        if (this.loadedListener != null) loadedListener.call(loaded);
     }
 
     public class AnnounceAdapter extends BaseAdapter {

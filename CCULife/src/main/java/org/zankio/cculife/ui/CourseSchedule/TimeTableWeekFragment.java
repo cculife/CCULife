@@ -10,9 +10,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.zankio.cculife.CCUService.base.listener.IOnUpdateListener;
-import org.zankio.cculife.CCUService.base.source.BaseSource;
-import org.zankio.cculife.CCUService.kiki.model.TimeTable;
+import org.zankio.ccudata.kiki.model.TimeTable;
 import org.zankio.cculife.R;
 import org.zankio.cculife.ui.base.BaseMessageFragment;
 import org.zankio.cculife.view.LessionView;
@@ -21,9 +19,10 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Random;
 
+import rx.Subscriber;
 
-public class TimeTableWeekFragment extends BaseMessageFragment
-        implements IOnUpdateListener<TimeTable> {
+
+public class TimeTableWeekFragment extends BaseMessageFragment {
     private LinearLayout[] week;
     private float minuteToPixel = 1.5f;
     private static int[] colors = {0x3333B5E5, 0x33AA66CC, 0x3399CC00, 0x33FFBB33, 0x33FF4444};
@@ -31,7 +30,7 @@ public class TimeTableWeekFragment extends BaseMessageFragment
     private TimeTable timeTable;
     private Calendar firstClass;
     private IGetTimeTableData courseDataContext;
-    private boolean loading;
+    Subscriber<TimeTable> subscriber;
 
     public static int randomColor(){
         return colors[new Random().nextInt(colors.length)];
@@ -65,9 +64,6 @@ public class TimeTableWeekFragment extends BaseMessageFragment
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        IGetListener<TimeTable> listenerGetter = (IGetListener) getActivity();
-        if (listenerGetter != null) listenerGetter.registerListener(this);
-
         week = new LinearLayout[]{
                 null,
                 (LinearLayout) view.findViewById(R.id.weekMonday),
@@ -88,44 +84,38 @@ public class TimeTableWeekFragment extends BaseMessageFragment
             if(i % 2 == 0) indexNode.setBackgroundColor(0x11000000);
             index.addView(indexNode);
         }
-        this.loading = courseDataContext.getTimeTable(this);
-    }
+        subscriber = new Subscriber<TimeTable>() {
+            @Override
+            public void onCompleted() {
 
-    @Override
-    public void onResume() {
-        super.onResume();
+            }
 
-    }
+            @Override
+            public void onError(Throwable e) {
+                message().show(e.getMessage());
+            }
 
-    @Override
-    public void onComplete(String type) { }
-
-    @Override
-    public void onNext(String type, TimeTable timeTable, BaseSource source) {
-        this.loading = false;
-        this.timeTable = timeTable;
-        updateTimeTable();
-    }
-
-    @Override
-    public void onError(String type, Exception err, BaseSource source) {
-        this.loading = false;
-        message().show(err.getMessage());
+            @Override
+            public void onNext(TimeTable timeTable) {
+                TimeTableWeekFragment.this.timeTable = timeTable;
+                updateTimeTable();
+            }
+        };
+        courseDataContext.getTimeTable().subscribe();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        IGetListener<TimeTable> listenerGetter = (IGetListener) getActivity();
-        if (listenerGetter != null) listenerGetter.unregisterListener(this);
+        subscriber.unsubscribe();
     }
 
     public void updateTimeTable() {
         if(timeTable == null) return;
 
-        for (int i = 0; i < week.length; i++) {
-            if(week[i] != null)
-                week[i].removeAllViews();
+        for (LinearLayout aWeek : week) {
+            if (aWeek != null)
+                aWeek.removeAllViews();
         }
 
         for (int i = 0; i < timeTable.days.length; i++) {

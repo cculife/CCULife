@@ -11,23 +11,25 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.zankio.cculife.CCUService.base.listener.IOnUpdateListener;
-import org.zankio.cculife.CCUService.base.source.BaseSource;
-import org.zankio.cculife.CCUService.ecourse.model.Course;
-import org.zankio.cculife.CCUService.ecourse.model.RollCall;
+import org.zankio.ccudata.base.model.Response;
+import org.zankio.ccudata.ecourse.model.Course;
+import org.zankio.ccudata.ecourse.model.CourseData;
+import org.zankio.ccudata.ecourse.model.RollCall;
 import org.zankio.cculife.R;
 import org.zankio.cculife.ui.base.BaseMessageFragment;
 import org.zankio.cculife.ui.base.IGetCourseData;
 
+import rx.Subscriber;
 
-public class CourseRollCallFragment extends BaseMessageFragment implements IOnUpdateListener<RollCall[]> , IGetLoading{
+
+public class CourseRollCallFragment extends BaseMessageFragment implements IGetLoading{
     private IGetCourseData context;
     private RollCallAdapter adapter;
     private Course course;
     private ListView list;
     private boolean loading;
     private boolean loaded;
-    private IOnUpdateListener<Boolean> loadedListener;
+    private CourseFragment.LoadingListener loadedListener;
 
     @Override
     public void onAttach(Context context) {
@@ -39,11 +41,6 @@ public class CourseRollCallFragment extends BaseMessageFragment implements IOnUp
             throw new ClassCastException(context.toString()
                     + " must implement IGetCourseData");
         }
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Nullable
@@ -72,43 +69,49 @@ public class CourseRollCallFragment extends BaseMessageFragment implements IOnUp
             return;
         }
 
-        loading = course.getRollCall(this);
+        course.getRollCall().subscribe(new Subscriber<Response<RollCall[], CourseData>>() {
+            @Override
+            public void onCompleted() {
+                setLoaded(true);
+            }
 
-        if (loading) {
-            setLoaded(false);
-            message().show("讀取中...", true);
-        }
+            @Override
+            public void onError(Throwable e) {
+                CourseRollCallFragment.this.loading = false;
+                setLoaded(true);
+                message().show(e.getMessage());
+            }
+
+            @Override
+            public void onNext(Response<RollCall[], CourseData> courseDataResponse) {
+                CourseRollCallFragment.this.loading = false;
+
+                RollCall[] rollCalls = courseDataResponse.data();
+                if (rollCalls == null || rollCalls.length == 0) {
+                    message().show("沒有點名");
+                    return;
+                }
+
+                adapter.setRollCall(rollCalls);
+
+                message().hide();
+
+            }
+
+            @Override
+            public void onStart() {
+                super.onStart();
+
+                setLoaded(false);
+                message().show("讀取中...", true);
+            }
+        });
     }
 
-    @Override
-    public void onNext(String type, RollCall[] rollCalls, BaseSource source) {
-        this.loading = false;
-
-        if (rollCalls == null || rollCalls.length == 0) {
-            message().show("沒有點名");
-            return;
-        }
-
-        adapter.setRollCall(rollCalls);
-
-        message().hide();
-    }
-
-    @Override
-    public void onError(String type, Exception err, BaseSource source) {
-        this.loading = false;
-        setLoaded(true);
-        message().show(err.getMessage());
-    }
-
-    @Override
-    public void onComplete(String type) {
-        setLoaded(true);
-    }
 
     public void setLoaded(boolean loaded) {
         this.loaded = loaded;
-        if (loadedListener != null) loadedListener.onNext(null, loaded, null);
+        if (loadedListener != null) loadedListener.call(loaded);
     }
 
     @Override
@@ -117,9 +120,8 @@ public class CourseRollCallFragment extends BaseMessageFragment implements IOnUp
     }
 
     @Override
-    public void setLoadedListener(IOnUpdateListener<Boolean> listener) {
+    public void setLoadedListener(CourseFragment.LoadingListener listener) {
         this.loadedListener = listener;
-
     }
 
     public class RollCallAdapter extends BaseAdapter {

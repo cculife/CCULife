@@ -7,26 +7,26 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 
-import org.zankio.cculife.CCUService.base.listener.IOnUpdateListener;
-import org.zankio.cculife.CCUService.base.source.BaseSource;
-import org.zankio.cculife.CCUService.sourcequery.ScoreQueryNew;
-import org.zankio.cculife.CCUService.portal.service.ScoreQuery;
-import org.zankio.cculife.CCUService.sourcequery.model.Grade;
-import org.zankio.cculife.CCUService.sourcequery.source.remote.GradesInquiriesSource;
+import org.zankio.ccudata.base.model.Response;
+import org.zankio.ccudata.ecourse.model.AuthData;
+import org.zankio.ccudata.sourcequery.ScoreQuery;
+import org.zankio.ccudata.sourcequery.model.Grade;
+import org.zankio.ccudata.sourcequery.source.remote.GradesInquiriesSource;
 import org.zankio.cculife.R;
+import org.zankio.cculife.UserManager;
 import org.zankio.cculife.ui.base.BaseFragmentActivity;
 
-import java.util.HashMap;
-import java.util.Map;
+import rx.Observable;
+import rx.Subscriber;
+import rx.subjects.BehaviorSubject;
 
 public class ScoreQueryActivity extends BaseFragmentActivity
-        implements IOnUpdateListener<Grade[]>, IGetGradeData {
+        implements IGetGradeData {
 
     private GradePageAdapter mGradePageAdapter;
     private ViewPager mViewPager;
-    private ScoreQueryNew scoreQuery;
+    private ScoreQuery scoreQuery;
     private Grade[] grades;
-    private HashMap<Integer, IOnUpdateListener<Grade>> listeners;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,16 +39,34 @@ public class ScoreQueryActivity extends BaseFragmentActivity
         mViewPager.setAdapter(mGradePageAdapter);
 
         setMessageView(R.id.pager);
-        setSSOService(new ScoreQuery());
+        setSSOService(new org.zankio.cculife.CCUService.portal.service.ScoreQuery());
 
         showMessage("讀取中...", true);
-        Grade[] grades = ScoreDataFragment.getFragment(getSupportFragmentManager()).getGrades();
-        if (grades == null) {
-            scoreQuery = new ScoreQueryNew(this);
-            scoreQuery.fetch(GradesInquiriesSource.TYPE, this);
-        } else {
-            this.onNext(GradesInquiriesSource.TYPE, grades, null);
-        }
+        getGrade().subscribe(new Subscriber<Grade[]>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                showMessage(e.getMessage());
+            }
+
+            @Override
+            public void onNext(Grade[] grades) {
+                ScoreQueryActivity.this.grades = grades;
+
+                hideMessage();
+
+                if(grades == null || grades.length == 0) {
+                    showMessage("沒有成績");
+                    return;
+                }
+
+                mGradePageAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
@@ -58,51 +76,67 @@ public class ScoreQueryActivity extends BaseFragmentActivity
     }
 
     @Override
-    public void onComplete(String type) {
-
-    }
-
-    @Override
-    public void onError(String type, Exception err, BaseSource source) {
-        showMessage(err.getMessage());
-    }
-
-    @Override
-    public void onNext(String type, Grade[] grades, BaseSource source) {
-        ScoreDataFragment.getFragment(getSupportFragmentManager()).setGrades(grades);
-        this.grades = grades;
-
-        hideMessage();
-
-        if(grades == null || grades.length == 0) {
-            showMessage("沒有成績");
-            return;
-        }
-
-        mGradePageAdapter.notifyDataSetChanged();
-
-        if (listeners != null) {
-            for (Map.Entry<Integer, IOnUpdateListener<Grade>> listenerEntry : listeners.entrySet()) {
-                int key = listenerEntry.getKey();
-                IOnUpdateListener<Grade> listener = listeners.remove(key);
-                if (listener != null)
-                    listener.onNext(null, grades[key], null);
+    public Observable<Grade> getGrade(int i) {
+        BehaviorSubject<Grade> subject = BehaviorSubject.create();
+        getGrade().subscribe(new Subscriber<Grade[]>() {
+            @Override
+            public void onCompleted() {
+               subject.onCompleted();
             }
-        }
 
+            @Override
+            public void onError(Throwable e) {
+                subject.onError(e);
+            }
+
+            @Override
+            public void onNext(Grade[] grades) {
+                subject.onNext(grades[i]);
+            }
+        });
+
+        return subject;
     }
 
-    @Override
-    public void getGrade(int i, IOnUpdateListener<Grade> listener) {
-        if (listeners == null) listeners = new HashMap<>();
-        listeners.put(i, listener);
+    public Observable<Grade[]> getGrade() {
+        BehaviorSubject<Grade[]> subject =
+                ScoreDataFragment
+                        .getFragment(getSupportFragmentManager())
+                        .getGrades();
 
-        if (this.grades != null) {
-            listener = listeners.remove(i);
-            if (listener != null) {
-                listener.onNext(null, grades[i], null);
+        if (subject != null)
+            return subject;
+
+        subject = BehaviorSubject.create();
+
+        if (scoreQuery == null)
+            scoreQuery = new ScoreQuery(this);
+
+        Observable<Response<Grade[], AuthData>> observable;
+        UserManager userManager = UserManager.getInstance(this);
+        observable = scoreQuery.fetch(GradesInquiriesSource.request(
+                userManager.getUserName(),
+                userManager.getPassword()
+        ));
+
+        final BehaviorSubject<Grade[]> finalSubject = subject;
+        observable.subscribe(new Subscriber<Response<Grade[], AuthData>>() {
+            @Override
+            public void onCompleted() { finalSubject.onCompleted(); }
+
+            @Override
+            public void onError(Throwable e) {
+                finalSubject.onError(e);
             }
-        }
+
+            @Override
+            public void onNext(Response<Grade[], AuthData> response) {
+                finalSubject.onNext(response.data());
+            }
+        });
+
+        ScoreDataFragment.getFragment(getSupportFragmentManager()).setGrades(subject);
+        return subject;
     }
 
     public class GradePageAdapter extends FragmentPagerAdapter {

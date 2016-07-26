@@ -2,9 +2,9 @@ package org.zankio.cculife;
 
 import android.content.Context;
 
-import org.zankio.cculife.CCUService.kiki.model.Course;
-import org.zankio.cculife.CCUService.kiki.model.TimeTable;
-import org.zankio.cculife.CCUService.kiki.source.remote.TimetableSource;
+import org.zankio.ccudata.kiki.model.Course;
+import org.zankio.ccudata.kiki.model.TimeTable;
+import org.zankio.ccudata.kiki.source.remote.TimetableSource;
 
 import java.io.IOException;
 import java.io.InputStream;

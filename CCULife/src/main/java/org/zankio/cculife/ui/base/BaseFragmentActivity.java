@@ -2,6 +2,8 @@ package org.zankio.cculife.ui.base;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -47,9 +49,13 @@ public class BaseFragmentActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @NonNull
     public android.support.v7.app.ActionBar getSupportActionBar() {
         if (!toolbarInited) initToolbar();
-        return super.getSupportActionBar();
+        ActionBar actionBar = super.getSupportActionBar();
+
+        if (actionBar == null) throw new RuntimeException("initial Toolbar fail");
+        return actionBar;
     }
 
     private void initToolbar() {
@@ -170,7 +176,7 @@ public class BaseFragmentActivity extends AppCompatActivity {
             String launchURL[];
 
             portal = new Portal(BaseFragmentActivity.this);
-            portal.init();
+            //portal.init();
             launchURL = portal.getSSOPortal(ssoService);
 
             if (launchURL == null) throw new Exception();

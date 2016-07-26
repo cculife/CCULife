@@ -4,9 +4,7 @@ import android.content.Context;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
-import org.zankio.cculife.CCUService.base.BaseService;
 import org.zankio.cculife.CCUService.portal.service.BasePortal;
-import org.zankio.cculife.UserManager;
 import org.zankio.cculife.override.Exceptions;
 import org.zankio.cculife.override.LoginErrorException;
 import org.zankio.cculife.override.Net;
@@ -15,21 +13,16 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Portal extends BaseService {
+public class Portal  {
 
     public Context context;
     private static final String ERROR_WRONG_USERPASS = "錯誤代碼：LOGIN_001\\n帳號或密碼錯誤,請重新登錄！";
     private static final String ERROR_AUTOLOGOUT = "錯誤代碼：GLOBAL_001\\n您沒有權限，或是系統已自動登出，請重新登入！";
     private static final String ERROR_WORNG_AUTHCODE = "錯誤代碼：LOGIN_002\\n驗證碼錯誤,請重新登錄！";
+    private String SESSIONID;
 
     public Portal(Context context) {
         this.context = context;
-    }
-
-    @Override
-    public boolean getSession() throws Exception {
-        UserManager sessionManager = UserManager.getInstance(context);
-        return getSession(sessionManager.getUserName(), sessionManager.getPassword());
     }
 
     public boolean getSession(String user, String pass) throws Exception {

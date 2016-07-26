@@ -11,11 +11,13 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.zankio.cculife.CCUService.base.listener.IOnUpdateListener;
-import org.zankio.cculife.CCUService.base.source.BaseSource;
-import org.zankio.cculife.CCUService.train.model.TrainTimetable;
+import org.zankio.ccudata.base.model.Response;
+import org.zankio.ccudata.train.model.TrainRequest;
+import org.zankio.ccudata.train.model.TrainTimetable;
 import org.zankio.cculife.R;
 import org.zankio.cculife.ui.base.BaseMessageFragment;
+
+import rx.Subscriber;
 
 
 public class TrainFragment extends BaseMessageFragment implements ISwitchLine {
@@ -82,30 +84,31 @@ public class TrainFragment extends BaseMessageFragment implements ISwitchLine {
 
         if (timetable == null) {
             message().show("讀取中...", true);
-            context.getTrainStatus(trainStop, listener);
+            context.getTrainStatus(trainStop).subscribe(new Subscriber<Response<TrainTimetable, TrainRequest>>() {
+                @Override
+                public void onCompleted() {
+
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    message().show(e.getMessage());
+                }
+
+                @Override
+                public void onNext(Response<TrainTimetable, TrainRequest> response) {
+                    TrainTimetable trainTimetable = response.data();
+                    TrainFragment.this.timetable = trainTimetable;
+                    adapter.setTimetable(currentLine == 0 ? timetable.up : timetable.down);
+                    adapter.notifyDataSetChanged();
+                    message().hide();
+                }
+            });
         } else {
             adapter.setTimetable(currentLine == 0 ? timetable.up : timetable.down);
             adapter.notifyDataSetChanged();
         }
     }
-
-    public IOnUpdateListener<TrainTimetable> listener = new IOnUpdateListener<TrainTimetable>() {
-        @Override
-        public void onNext(String type, TrainTimetable timetable, BaseSource source) {
-            TrainFragment.this.timetable = timetable;
-            adapter.setTimetable(currentLine == 0 ? timetable.up : timetable.down);
-            adapter.notifyDataSetChanged();
-            message().hide();
-        }
-
-        @Override
-        public void onError(String type, Exception err, BaseSource source) {
-            message().show(err.getMessage());
-        }
-
-        @Override
-        public void onComplete(String type) { }
-    };
 
     @Override
     public void swtichLine() {

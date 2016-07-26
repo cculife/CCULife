@@ -1,8 +1,11 @@
 package org.zankio.cculife.ui.transport;
 
-import org.zankio.cculife.CCUService.base.listener.IOnUpdateListener;
-import org.zankio.cculife.CCUService.train.model.TrainTimetable;
+import org.zankio.ccudata.base.model.Response;
+import org.zankio.ccudata.train.model.TrainRequest;
+import org.zankio.ccudata.train.model.TrainTimetable;
+
+import rx.Observable;
 
 public interface IGetTrainData {
-    void getTrainStatus(String code, IOnUpdateListener<TrainTimetable> listener);
+    Observable<Response<TrainTimetable, TrainRequest>> getTrainStatus(String code);
 }

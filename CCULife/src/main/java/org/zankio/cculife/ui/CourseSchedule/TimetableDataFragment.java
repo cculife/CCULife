@@ -5,88 +5,81 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
-import org.zankio.cculife.CCUService.base.listener.IOnUpdateListener;
-import org.zankio.cculife.CCUService.base.listener.OnUpdateListener;
-import org.zankio.cculife.CCUService.base.source.BaseSource;
-import org.zankio.cculife.CCUService.kiki.Kiki;
-import org.zankio.cculife.CCUService.kiki.model.TimeTable;
-import org.zankio.cculife.CCUService.kiki.source.local.DatabaseTimeTableSource;
-import org.zankio.cculife.CCUService.kiki.source.remote.TimetableSource;
+import org.zankio.ccudata.base.model.Request;
+import org.zankio.ccudata.base.model.Response;
+import org.zankio.ccudata.base.model.Storage;
+import org.zankio.ccudata.kiki.Kiki;
+import org.zankio.ccudata.kiki.model.SemesterData;
+import org.zankio.ccudata.kiki.model.TimeTable;
+import org.zankio.ccudata.kiki.source.local.DatabaseTimeTableSource;
+import org.zankio.ccudata.kiki.source.remote.TimetableSource;
+import org.zankio.cculife.UserManager;
+import org.zankio.cculife.ui.base.GetStorage;
 
-import java.util.HashSet;
+
+import rx.Subscriber;
+import rx.subjects.BehaviorSubject;
 
 public class TimetableDataFragment extends Fragment
-        implements IGetTimeTableData, IOnUpdateListener<TimeTable>, IGetListener<TimeTable>, IGetInteger {
+        implements IGetTimeTableData, GetStorage{
     private static final String TAG_TIMETABLE_DATA_FRAGMENT = "TIMETABLE_DATA_FRAGMENT";
     public static final String LAST_PAGE = "LAST_PAGE";
     private Kiki kiki;
-    private boolean loading;
-    private HashSet<IOnUpdateListener<TimeTable>> listeners = new HashSet<>();
-    private TimeTable timeTable;
-    private int lastPage;
+
+    private BehaviorSubject<TimeTable> subject = BehaviorSubject.create();
+    private Storage storage = new Storage();
 
     public void init(Context context) {
-        if (kiki == null)
-            kiki = new Kiki(context);
+        if (kiki == null) {
+            //kiki = new Kiki(context);
+        }
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        kiki = new Kiki(getContext());
+
+        Context context = getContext();
+        UserManager userManager = UserManager.getInstance(context);
+
+        kiki = new Kiki(context);
+        kiki.user()
+                .username(userManager.getUserName())
+                .password(userManager.getPassword());
     }
 
     @Override
-    public boolean getTimeTable(IOnUpdateListener<TimeTable> listener) {
-        if (this.timeTable != null) {
-            listener.onNext(TimetableSource.TYPE, this.timeTable, null);
-            return false;
+    public BehaviorSubject<TimeTable> getTimeTable() {
+        if (this.subject != null) {
+            return this.subject;
         }
-        listeners.add(listener);
-        if (loading) {
-            //Todo Race condition ?
-            return true;
-        }
-        loading = true;
-        kiki.fetch(TimetableSource.TYPE, this);
-        return true;
-    }
 
-    private IOnUpdateListener localCourseListener = new OnUpdateListener<TimeTable>() {
-        @Override
-        public void onNext(String type, TimeTable o, BaseSource source) {
-            super.onNext(type, o, source);
-            if (o == null) return;
-            if (TimetableDataFragment.this.timeTable == null) return;
+        kiki.fetch(TimetableSource.request()).subscribe(
+                new Subscriber<Response<TimeTable, SemesterData>>() {
+                    @Override
+                    public void onCompleted() { subject.onCompleted(); }
 
-            TimetableDataFragment.this.timeTable.mergeTimetable(o);
-            TimetableDataFragment.this.onNext(TimetableSource.TYPE, TimetableDataFragment.this.timeTable, null);
-        }
-    };
+                    @Override
+                    public void onError(Throwable e) { subject.onError(e); }
 
-    @Override
-    public void onNext(String type, TimeTable timeTable, BaseSource source) {
-        loading = false;
-        this.timeTable = timeTable;
-        for (IOnUpdateListener<TimeTable> listener: listeners)
-            listener.onNext(type, timeTable, source);
+                    @Override
+                    public void onNext(Response<TimeTable, SemesterData> response) {
+                        TimeTable timetable = response.data();
+                        subject.onNext(timetable);
+                        kiki.fetch(new Request<>(DatabaseTimeTableSource.TYPE_USERADD, null, TimeTable.class))
+                                .subscribe(res -> {
+                                    TimeTable timetableUser = res.data();
+                                    if (timetable == null) return;
+                                    if (timetableUser == null) return;
 
-        if (source != null)
-            kiki.fetch(DatabaseTimeTableSource.TYPE_USERADD, localCourseListener);
-    }
+                                    timetable.mergeTimetable(timetableUser);
+                                    subject.onNext(timetable);
+                                });
+                    }
+                });
 
-    @Override
-    public void onError(String type, Exception err, BaseSource source) {
-        loading = false;
-        for (IOnUpdateListener listener: listeners)
-            listener.onError(type, err, source);
-
-    }
-
-    @Override
-    public void onComplete(String type) {
-        for (IOnUpdateListener listener: listeners)
-            listener.onComplete(type);
+        return subject;
     }
 
     public static TimetableDataFragment getFragment(FragmentManager fragmentManager) {
@@ -104,29 +97,5 @@ public class TimetableDataFragment extends Fragment
     }
 
     @Override
-    public IOnUpdateListener<TimeTable> getUpdateListener() {
-        return this;
-    }
-
-    @Override
-    public void registerListener(IOnUpdateListener<TimeTable> listener) {
-        if (listeners == null) listeners = new HashSet<>();
-        listeners.add(listener);
-    }
-
-    @Override
-    public void unregisterListener(IOnUpdateListener<TimeTable> listener) {
-        if (listeners == null) return ;
-        listeners.remove(listener);
-    }
-
-    @Override
-    public int getInt(String key) {
-        return lastPage;
-    }
-
-    @Override
-    public void setInt(String key, int value) {
-        lastPage = value;
-    }
+    public Storage storage() { return storage; }
 }

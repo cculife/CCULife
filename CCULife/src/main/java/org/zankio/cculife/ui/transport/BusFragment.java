@@ -12,13 +12,14 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.zankio.cculife.CCUService.base.listener.IOnUpdateListener;
-import org.zankio.cculife.CCUService.base.source.BaseSource;
-import org.zankio.cculife.CCUService.bus.model.BusLineRequest;
-import org.zankio.cculife.CCUService.bus.model.BusStop;
+import org.zankio.ccudata.base.model.Response;
+import org.zankio.ccudata.bus.model.BusLineRequest;
+import org.zankio.ccudata.bus.model.BusStop;
 import org.zankio.cculife.R;
 import org.zankio.cculife.ui.base.BaseMessageFragment;
 import org.zankio.cculife.ui.base.IGetCache;
+
+import rx.Subscriber;
 
 
 public class BusFragment extends BaseMessageFragment implements ISwitchLine {
@@ -128,29 +129,30 @@ public class BusFragment extends BaseMessageFragment implements ISwitchLine {
             listView.setAdapter(adapter);
 
             message().show("讀取中...", true);
-            IOnUpdateListener<BusStop[]> listener = getNewListener(request.toString());
-            context.getBusState(request.busNo, request.branch, request.isReturn, listener);
+            Subscriber<Response<BusStop[], BusLineRequest>> subscriber = getNewListener(request.toString());
+            context.getBusState(request.busNo, request.branch, request.isReturn).subscribe(subscriber);
         }
     }
 
-    public IOnUpdateListener<BusStop[]> getNewListener(final String bus_id) {
-        return new IOnUpdateListener<BusStop[]>() {
+    public Subscriber<Response<BusStop[], BusLineRequest>> getNewListener(final String bus_id) {
+        return new Subscriber<Response<BusStop[],BusLineRequest>>() {
             @Override
-            public void onNext(String type, BusStop[] busStops, BaseSource source) {
+            public void onCompleted() {
+            }
+
+            @Override
+            public void onError(Throwable e) {
                 if (isCurrent()) return;
-                adapter.setBusStops(busStops);
+                message().show(e.getMessage());
+            }
+
+            @Override
+            public void onNext(Response<BusStop[], BusLineRequest> response) {
+                if (isCurrent()) return;
+                adapter.setBusStops(response.data());
                 adapter.notifyDataSetChanged();
                 message().hide();
             }
-
-            @Override
-            public void onError(String type, Exception err, BaseSource source) {
-                if (isCurrent()) return;
-                message().show(err.getMessage());
-            }
-
-            @Override
-            public void onComplete(String type) { }
 
             public boolean isCurrent() {
                 int currentLine = currentLine();

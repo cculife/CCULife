@@ -13,27 +13,29 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.zankio.cculife.CCUService.base.listener.IOnUpdateListener;
-import org.zankio.cculife.CCUService.base.source.BaseSource;
-import org.zankio.cculife.CCUService.ecourse.model.Course;
-import org.zankio.cculife.CCUService.ecourse.model.File;
-import org.zankio.cculife.CCUService.ecourse.model.Score;
-import org.zankio.cculife.CCUService.ecourse.model.ScoreGroup;
+import org.zankio.ccudata.base.model.Response;
+import org.zankio.ccudata.ecourse.model.Course;
+import org.zankio.ccudata.ecourse.model.CourseData;
+import org.zankio.ccudata.ecourse.model.File;
+import org.zankio.ccudata.ecourse.model.Score;
+import org.zankio.ccudata.ecourse.model.ScoreGroup;
 import org.zankio.cculife.R;
 import org.zankio.cculife.services.DownloadService;
 import org.zankio.cculife.ui.base.BaseMessageFragment;
 import org.zankio.cculife.ui.base.IGetCourseData;
 
+import rx.Subscriber;
+
 
 public class CourseScoreFragment extends BaseMessageFragment
-        implements ExpandableListView.OnChildClickListener, IOnUpdateListener<ScoreGroup[]>, IGetLoading {
+        implements ExpandableListView.OnChildClickListener,  IGetLoading {
     private Course course;
     private ScoreAdapter adapter;
     private ExpandableListView list;
     private boolean loading;
     private boolean loaded;
     private IGetCourseData context;
-    private IOnUpdateListener<Boolean> loadedListener;
+    private CourseFragment.LoadingListener loadedListener;
 
     @Override
     public void onAttach(Context context) {
@@ -74,41 +76,48 @@ public class CourseScoreFragment extends BaseMessageFragment
             return;
         }
 
-        loading = course.getScore(this);
+        course.getScore()
+                .subscribe(new Subscriber<Response<ScoreGroup[], CourseData>>() {
+                    @Override
+                    public void onCompleted() {
+                        setLoaded(true);
+                    }
 
-        if (loading) {
-            setLoaded(false);
-            message().show("讀取中...", true);
-        }
-    }
+                    @Override
+                    public void onError(Throwable e) {
+                        CourseScoreFragment.this.loading = false;
+                        setLoaded(true);
+                        message().show(e.getMessage());
+                    }
 
-    @Override
-    public void onNext(String type, ScoreGroup[] scoreGroups, BaseSource source) {
-        this.loading = false;
-        if (scoreGroups == null || scoreGroups.length == 0) {
-            message().show("沒有成績");
-            return;
-        }
+                    @Override
+                    public void onNext(Response<ScoreGroup[], CourseData> courseDataResponse) {
+                        CourseScoreFragment.this.loading = false;
 
-        adapter.setScores(scoreGroups);
+                        ScoreGroup[] scoreGroups = courseDataResponse.data();
+                        if (scoreGroups == null || scoreGroups.length == 0) {
+                            message().show("沒有成績");
+                            return;
+                        }
 
-        for (int i = 0; i < adapter.getGroupCount(); i++) {
-            list.expandGroup(i);
-        }
 
-        message().hide();
-    }
+                        adapter.setScores(scoreGroups);
 
-    @Override
-    public void onComplete(String type) {
-        setLoaded(true);
-    }
+                        for (int i = 0; i < adapter.getGroupCount(); i++) {
+                            list.expandGroup(i);
+                        }
 
-    @Override
-    public void onError(String type, Exception err, BaseSource source) {
-        this.loading = false;
-        setLoaded(true);
-        message().show(err.getMessage());
+                        message().hide();
+
+                    }
+
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                        setLoaded(false);
+                        message().show("讀取中...", true);
+                    }
+                });
     }
 
     @Override
@@ -126,17 +135,17 @@ public class CourseScoreFragment extends BaseMessageFragment
 
     @Override
     public boolean isLoading() {
-        return this.loading;
+        return !this.loaded;
     }
 
     @Override
-    public void setLoadedListener(IOnUpdateListener<Boolean> listener) {
+    public void setLoadedListener(CourseFragment.LoadingListener listener) {
         this.loadedListener = listener;
     }
 
     public void setLoaded(boolean loaded) {
         this.loaded = loaded;
-        if(loadedListener != null) loadedListener.onNext(null, loaded, null);
+        if(loadedListener != null) loadedListener.call(loaded);
     }
 
     public class ScoreAdapter extends BaseExpandableListAdapter {

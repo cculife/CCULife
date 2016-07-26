@@ -1,8 +1,9 @@
 package org.zankio.cculife.ui.CourseSchedule;
 
-import org.zankio.cculife.CCUService.base.listener.IOnUpdateListener;
-import org.zankio.cculife.CCUService.kiki.model.TimeTable;
+import org.zankio.ccudata.kiki.model.TimeTable;
+
+import rx.subjects.BehaviorSubject;
 
 public interface IGetTimeTableData {
-    boolean getTimeTable(IOnUpdateListener<TimeTable> listener);
+    BehaviorSubject<TimeTable> getTimeTable();
 }

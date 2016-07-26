@@ -7,46 +7,46 @@ import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.widget.ArrayAdapter;
 
-import org.zankio.cculife.CCUService.base.listener.IOnUpdateListener;
-import org.zankio.cculife.CCUService.kiki.model.TimeTable;
+import org.zankio.ccudata.base.model.Storage;
+import org.zankio.ccudata.kiki.model.TimeTable;
 import org.zankio.cculife.R;
 import org.zankio.cculife.ui.base.BaseFragmentActivity;
+import org.zankio.cculife.ui.base.GetStorage;
+
+import rx.subjects.BehaviorSubject;
 
 public class CourseTimeTableActivity extends BaseFragmentActivity
         implements ActionBar.OnNavigationListener,
         IGetTimeTableData,
-        IGetListener<TimeTable>,
-        IGetInteger {
+        GetStorage {
 
     private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
-    private boolean loading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_timetable);
 
+        // initial Action bar
         final ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowTitleEnabled(false);
-            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
-            actionBar.setListNavigationCallbacks(
-                    new ArrayAdapter<>(
-                            getActionBarThemedContextCompat(),
-                            android.R.layout.simple_list_item_1,
-                            android.R.id.text1,
-                            new String[]{
-                                    getString(R.string.title_timetable_day),
-                                    getString(R.string.title_timetable_week)
-                            }),
-                    this);
-        }
+        actionBar.setListNavigationCallbacks(
+                new ArrayAdapter<>(
+                        getActionBarThemedContextCompat(),
+                        android.R.layout.simple_list_item_1,
+                        android.R.id.text1,
+                        new String[]{
+                                getString(R.string.title_timetable_day),
+                                getString(R.string.title_timetable_week)
+                        }),
+                this);
 
 
+        // set message view
         setMessageView(R.id.container);
-        loading = false;
     }
 
     private Context getActionBarThemedContextCompat() {
@@ -56,6 +56,7 @@ public class CourseTimeTableActivity extends BaseFragmentActivity
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
+        // restore select
         if (savedInstanceState.containsKey(STATE_SELECTED_NAVIGATION_ITEM)) {
             getSupportActionBar().setSelectedNavigationItem(
                     savedInstanceState.getInt(STATE_SELECTED_NAVIGATION_ITEM));
@@ -70,6 +71,7 @@ public class CourseTimeTableActivity extends BaseFragmentActivity
         super.onSaveInstanceState(outState);
     }
 
+    ////// Option Menu //////
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.course_schedule, menu);
@@ -92,40 +94,22 @@ public class CourseTimeTableActivity extends BaseFragmentActivity
         return true;
     }
 
+    ////// TimeTable Data //////
     @Override
-    public boolean getTimeTable(IOnUpdateListener<TimeTable> listener) {
+    public BehaviorSubject<TimeTable> getTimeTable() {
         TimetableDataFragment dataFragment;
         dataFragment = TimetableDataFragment.getFragment(getSupportFragmentManager());
         dataFragment.init(this);
 
-        return  dataFragment.getTimeTable(listener);
+        return dataFragment.getTimeTable();
     }
 
-    public IOnUpdateListener<TimeTable> getUpdateListener() {
-        return TimetableDataFragment.getFragment(getSupportFragmentManager());
-
-    }
-
+    ////// storage data in fragment //////
     @Override
-    public void registerListener(IOnUpdateListener<TimeTable> listener) {
-        TimetableDataFragment.getFragment(getSupportFragmentManager()).registerListener(listener);
-    }
-
-    @Override
-    public void unregisterListener(IOnUpdateListener<TimeTable> listener) {
-        if (isFinishing()) return;
-        TimetableDataFragment fragment = TimetableDataFragment.getFragment(getSupportFragmentManager(), true);
-        if (fragment != null) fragment.unregisterListener(listener);
-    }
-
-    @Override
-    public int getInt(String key) {
-        return TimetableDataFragment.getFragment(getSupportFragmentManager()).getInt(key);
-    }
-
-    @Override
-    public void setInt(String key, int value) {
-        TimetableDataFragment.getFragment(getSupportFragmentManager()).setInt(key, value);
+    public Storage storage() {
+        TimetableDataFragment dataFragment = TimetableDataFragment.getFragment(getSupportFragmentManager());
+        dataFragment.init(this);
+        return dataFragment.storage();
     }
 
 }

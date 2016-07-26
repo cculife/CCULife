@@ -1,7 +1,6 @@
 package org.zankio.cculife.ui.CourseSchedule;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
@@ -10,34 +9,35 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.zankio.cculife.CCUService.base.BaseRepo;
-import org.zankio.cculife.CCUService.base.listener.IOnUpdateListener;
-import org.zankio.cculife.CCUService.base.source.BaseSource;
-import org.zankio.cculife.CCUService.kiki.model.TimeTable;
-import org.zankio.cculife.CCUService.kiki.source.local.DatabaseTimeTableSource;
+import org.zankio.ccudata.base.Repository;
+import org.zankio.ccudata.base.source.BaseSource;
+import org.zankio.ccudata.kiki.model.TimeTable;
+import org.zankio.ccudata.kiki.source.local.DatabaseTimeTableSource;
 import org.zankio.cculife.R;
 import org.zankio.cculife.ui.base.BaseMessageFragment;
+import org.zankio.cculife.ui.base.GetStorage;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
+import rx.Subscriber;
+
 public class TimeTableDaysFragment extends BaseMessageFragment
-        implements IOnUpdateListener<TimeTable>, View.OnClickListener {
+        implements View.OnClickListener {
     private IGetTimeTableData timeTableDataContext;
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private TimeTableAdapter[] adapter;
     private ListView[] list;
     private TimeTable timeTable;
-    private boolean loading;
     private ViewPager mViewPager;
     private int lastPage = -1;
+    private Subscriber<TimeTable> subscriber;
 
     @Override
     public void onAttach(Context context) {
@@ -59,16 +59,12 @@ public class TimeTableDaysFragment extends BaseMessageFragment
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         Context context = getActivity();
+        Integer conv;
         if (context != null) {
-            ((IGetListener) context).registerListener(this);
-            lastPage = ((IGetInteger) context).getInt(TimetableDataFragment.LAST_PAGE);
+            conv = ((GetStorage) context).storage().get(TimetableDataFragment.LAST_PAGE, Integer.class);
+            lastPage = conv == null ? 0 : conv;
         }
 
         mViewPager = (ViewPager) view.findViewById(R.id.pager);
@@ -77,26 +73,24 @@ public class TimeTableDaysFragment extends BaseMessageFragment
         adapter = new TimeTableAdapter[7];
         list = new ListView[7];
 
-        this.loading = timeTableDataContext.getTimeTable(this);
+        subscriber = new Subscriber<TimeTable>() {
+            @Override
+            public void onCompleted() { }
+
+            @Override
+            public void onError(Throwable e) {
+                message().show(e.getMessage());
+            }
+
+            @Override
+            public void onNext(TimeTable timeTable) {
+                TimeTableDaysFragment.this.timeTable = timeTable;
+                updateTimeTable();
+            }
+        };
+
+        timeTableDataContext.getTimeTable().subscribe(subscriber);
         view.findViewById(R.id.add).setOnClickListener(this);
-    }
-
-    @Override
-    public void onError(String type, Exception err, BaseSource source) {
-        this.loading = false;
-        message().show(err.getMessage());
-    }
-
-    @Override
-    public void onNext(String type, TimeTable timeTable, BaseSource source) {
-        this.loading = false;
-        this.timeTable = timeTable;
-        updateTimeTable();
-    }
-
-    @Override
-    public void onComplete(String type) {
-
     }
 
     @Override
@@ -110,8 +104,8 @@ public class TimeTableDaysFragment extends BaseMessageFragment
         super.onDestroyView();
         Context context = getActivity();
         if (context != null) {
-            ((IGetListener) context).unregisterListener(this);
-            ((IGetInteger) context).setInt(TimetableDataFragment.LAST_PAGE, mViewPager.getCurrentItem());
+            subscriber.unsubscribe();
+            ((GetStorage) context).storage().put(TimetableDataFragment.LAST_PAGE, mViewPager.getCurrentItem());
         }
 
     }
@@ -148,44 +142,32 @@ public class TimeTableDaysFragment extends BaseMessageFragment
             adapter[week] = new TimeTableAdapter(getWeekClasses(week));
             list[week] = (ListView) view.findViewById(R.id.list);
             list[week].setAdapter(adapter[week]);
-            list[week].setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    if (old != null) old.findViewById(R.id.course_id).setSelected(false);
-                    view.findViewById(R.id.course_id).setSelected(true);
-                    old = view;
-                }
+            list[week].setOnItemClickListener((parent, view1, position1, id) -> {
+                if (old != null) old.findViewById(R.id.course_id).setSelected(false);
+                view1.findViewById(R.id.course_id).setSelected(true);
+                old = view1;
             });
-            list[week].setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                @Override
-                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                    final TimeTable.Class course = (TimeTable.Class) parent.getAdapter().getItem(position);
-                    if (course.userAdd == 0) return false;
 
-                    new AlertDialog.Builder(getContext())
-                            .setTitle("刪除旁聽課程?")
-                            .setPositiveButton("確定", new DialogInterface.OnClickListener() {
+            list[week].setOnItemLongClickListener((parent, view1, position1, id) -> {
+                final TimeTable.Class course = (TimeTable.Class) parent.getAdapter().getItem(position1);
+                if (course.userAdd == 0) return false;
+
+                new AlertDialog.Builder(getContext())
+                        .setTitle("刪除旁聽課程?")
+                        .setPositiveButton(R.string.OK, (dialog, which) -> {
+                            timeTable.remove(course);
+                            new DatabaseTimeTableSource(new Repository(getContext()) {
                                 @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    timeTable.remove(course);
-                                    new DatabaseTimeTableSource(new BaseRepo(getContext()) {
-                                        @Override
-                                        protected BaseSource[] getSources() {
-                                            return new BaseSource[0];
-                                        }
-                                    }).storeTimeTable(timeTable, true);
-                                    updateTimeTable(mViewPager.getCurrentItem());
+                                protected BaseSource[] getSources() {
+                                    return new BaseSource[0];
                                 }
-                            })
-                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            }).create().show();
-                    return false;
-                }
+                            }).storeTimeTable(timeTable, true);
+                            updateTimeTable(mViewPager.getCurrentItem());
+                        })
+                        .setNegativeButton(R.string.cancel, (dialog, which) -> { dialog.dismiss(); })
+                        .create()
+                        .show();
+                return false;
             });
             container.addView(view, 0);
             return view;
