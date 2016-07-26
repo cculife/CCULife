@@ -20,6 +20,7 @@ import static org.zankio.ccudata.base.utils.AnnotationUtils.getAnnotationValue;
 
 public abstract class HTTPSource<TArgument, TData> extends FetchParseSource<TArgument, TData, HttpResponse> {
     private static final String HTTP_PARAMETERS = "HTTP_PARAMETERS";
+    public static final String HTTP_ERROR_CONNECT_FAIL = "無法連線";
 
     @Override
     protected HttpResponse fetch(Request<TData, TArgument> request, boolean inner) throws Exception {
@@ -36,7 +37,7 @@ public abstract class HTTPSource<TArgument, TData> extends FetchParseSource<TArg
                     getCharset()
             ).cookieJar(cookieJar);
         } catch (IOException e) {
-            throw new IOException("網路錯誤", e);
+            throw new IOException(HTTP_ERROR_CONNECT_FAIL, e);
         }
     }
 

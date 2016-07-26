@@ -63,5 +63,8 @@
     <string name="timetable">課表</string>
     <string name="score_query">成績查詢</string>
     <string name="schedule">行事曆</string>
+    <string name="cancel">取消</string>
+    <string name="OK">確定</string>
+    <string name="enable_offline">啟用離線瀏覽</string>
 
 </resources>
