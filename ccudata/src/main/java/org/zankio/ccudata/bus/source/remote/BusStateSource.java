@@ -41,7 +41,7 @@ public class BusStateSource extends HTTPJSONSource<BusLineRequest, BusStop[]> {
                 result[i].name = row.getString("name");
                 result[i].seq = row.getString("seq");
                 result[i].carNo = row.getString("carNo");
-                result[i].perdiction = row.getString("predictionTime");
+                result[i].perdiction = row.getString("predictionTime").replaceAll("<a[^>]*>([^<]*)</a>", "$1");
             }
 
             return result;
