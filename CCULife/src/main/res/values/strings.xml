@@ -66,5 +66,7 @@
     <string name="cancel">取消</string>
     <string name="OK">確定</string>
     <string name="enable_offline">啟用離線瀏覽</string>
+    <string name="reference_bus">資料來源：\n交通部公路總局\n公路客運乘車資訊查詢系統</string>
+    <string name="reference_train">資料來源：\n臺灣鐵路管理局\n列車動態查詢系統\n實際時間以車站公告時間為準</string>
 
 </resources>

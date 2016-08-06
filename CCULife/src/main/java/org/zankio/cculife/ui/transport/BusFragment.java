@@ -111,7 +111,7 @@ public class BusFragment extends BaseMessageFragment implements ISwitchLine {
         super.onViewCreated(view, savedInstanceState);
         adapter = new BusStopAdapter();
         View footer = View.inflate(getContext(), R.layout.transport_list_footer, null);
-        ((TextView) footer.findViewById(R.id.footer_text)).setText("資料來源：\n交通部公路總局\n公路客運乘車資訊查詢系統");
+        ((TextView) footer.findViewById(R.id.footer_text)).setText(R.string.reference_bus);
 
         ListView listView = (ListView) view.findViewById(R.id.list);
         listView.addFooterView(footer, null, false);

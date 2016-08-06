@@ -65,7 +65,7 @@ public class TrainFragment extends BaseMessageFragment implements ISwitchLine {
         trainStop = arguments.getString(KEY_TRAIN);
 
         View footer = View.inflate(getContext(), R.layout.transport_list_footer, null);
-        ((TextView) footer.findViewById(R.id.footer_text)).setText("資料來源：\n臺灣鐵路管理局\n列車動態查詢系統");
+        ((TextView) footer.findViewById(R.id.footer_text)).setText(R.string.reference_train);
 
         ListView listView = (ListView) view.findViewById(R.id.list);
         listView.addFooterView(footer, null, false);
