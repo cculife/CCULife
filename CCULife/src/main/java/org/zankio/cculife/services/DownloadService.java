@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
@@ -160,8 +161,9 @@ public class DownloadService extends IntentService {
     private static void notify (Context context, NotificationManager mNotifyManager, NotificationCompat.Builder builder, int id, String filename) {
         builder.setContentTitle(context.getResources().getString(R.string.download_file) + filename)
                 .setContentText(context.getResources().getString(R.string.downloading))
-                .setSmallIcon(R.drawable.sicon)
-                .setOngoing(true);
+                .setOngoing(true)
+                .setSmallIcon(getNotificationIcon());
+        builder.setColor(ContextCompat.getColor(context, R.color.accent));
         mNotifyManager.notify(TAG, id, builder.build());
     }
 
@@ -181,12 +183,19 @@ public class DownloadService extends IntentService {
                 builder.setContentText(context.getResources().getString(R.string.download_error));
                 break;
         }
+        builder.setSmallIcon(getNotificationIcon());
+        builder.setColor(ContextCompat.getColor(context, R.color.accent));
         builder.setProgress(0, 0, false);
         builder.setOngoing(false);
         if (pendingIntent != null) builder.setContentIntent(pendingIntent);
         mNotifyManager.cancel(TAG, id);
         mNotifyManager.notify(TAG, id, builder.build());
         notifyID.remove(Integer.valueOf(id));
+    }
+
+    private static int getNotificationIcon() {
+        boolean useWhiteIcon = (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP);
+        return useWhiteIcon ? R.drawable.white_icon : R.drawable.sicon;
     }
 
     @Override
