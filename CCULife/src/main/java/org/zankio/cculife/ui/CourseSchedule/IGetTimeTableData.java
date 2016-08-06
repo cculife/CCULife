@@ -2,8 +2,8 @@ package org.zankio.cculife.ui.CourseSchedule;
 
 import org.zankio.ccudata.kiki.model.TimeTable;
 
-import rx.subjects.BehaviorSubject;
+import rx.subjects.ReplaySubject;
 
 public interface IGetTimeTableData {
-    BehaviorSubject<TimeTable> getTimeTable();
+    ReplaySubject<TimeTable> getTimeTable();
 }

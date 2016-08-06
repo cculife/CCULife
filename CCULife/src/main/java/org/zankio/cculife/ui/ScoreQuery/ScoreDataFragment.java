@@ -6,11 +6,11 @@ import android.support.v4.app.FragmentManager;
 
 import org.zankio.ccudata.sourcequery.model.Grade;
 
-import rx.subjects.BehaviorSubject;
+import rx.subjects.ReplaySubject;
 
 public class ScoreDataFragment extends Fragment {
     private static final String TAG_SCORE_DATA_FRAGMENT = "SCORE_DATA_FRAGMENT";
-    private BehaviorSubject<Grade[]> grades;
+    private ReplaySubject<Grade[]> grades;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -18,11 +18,11 @@ public class ScoreDataFragment extends Fragment {
         setRetainInstance(true);
     }
 
-    public void setGrades(BehaviorSubject<Grade[]> grades) {
+    public void setGrades(ReplaySubject<Grade[]> grades) {
         this.grades = grades;
     }
 
-    public BehaviorSubject<Grade[]> getGrades() {
+    public ReplaySubject<Grade[]> getGrades() {
         return this.grades;
     }
 

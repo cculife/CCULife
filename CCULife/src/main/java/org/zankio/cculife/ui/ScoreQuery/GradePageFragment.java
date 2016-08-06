@@ -55,6 +55,7 @@ public class GradePageFragment extends Fragment {
         super.onResume();
 
         int index = getArguments().getInt(ARG_GRADE);
+
         gradeDataContext.getGrade(index).subscribe(new Subscriber<Grade>() {
             @Override
             public void onCompleted() { }

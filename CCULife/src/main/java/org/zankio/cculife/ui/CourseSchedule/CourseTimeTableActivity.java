@@ -13,7 +13,7 @@ import org.zankio.cculife.R;
 import org.zankio.cculife.ui.base.BaseFragmentActivity;
 import org.zankio.cculife.ui.base.GetStorage;
 
-import rx.subjects.BehaviorSubject;
+import rx.subjects.ReplaySubject;
 
 public class CourseTimeTableActivity extends BaseFragmentActivity
         implements ActionBar.OnNavigationListener,
@@ -96,7 +96,7 @@ public class CourseTimeTableActivity extends BaseFragmentActivity
 
     ////// TimeTable Data //////
     @Override
-    public BehaviorSubject<TimeTable> getTimeTable() {
+    public ReplaySubject<TimeTable> getTimeTable() {
         TimetableDataFragment dataFragment;
         dataFragment = TimetableDataFragment.getFragment(getSupportFragmentManager());
         dataFragment.init(this);

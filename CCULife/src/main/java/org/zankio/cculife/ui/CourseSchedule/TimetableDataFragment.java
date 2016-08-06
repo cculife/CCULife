@@ -19,7 +19,7 @@ import org.zankio.cculife.ui.base.GetStorage;
 import org.zankio.cculife.utils.SettingUtils;
 
 import rx.Subscriber;
-import rx.subjects.BehaviorSubject;
+import rx.subjects.ReplaySubject;
 
 public class TimetableDataFragment extends Fragment
         implements IGetTimeTableData, GetStorage{
@@ -27,12 +27,18 @@ public class TimetableDataFragment extends Fragment
     public static final String LAST_PAGE = "LAST_PAGE";
     private Kiki kiki;
 
-    private BehaviorSubject<TimeTable> subject = BehaviorSubject.create();
+    private ReplaySubject<TimeTable> subject;
     private Storage storage = new Storage();
 
     public void init(Context context) {
         if (kiki == null) {
-            //kiki = new Kiki(context);
+            UserManager userManager = UserManager.getInstance(context);
+            OfflineMode offlineMode = SettingUtils.loadOffline(context);
+
+            kiki = new Kiki(context);
+            kiki.setOfflineMode(offlineMode).user()
+                    .username(userManager.getUserName())
+                    .password(userManager.getPassword());
         }
     }
 
@@ -40,22 +46,14 @@ public class TimetableDataFragment extends Fragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-
-        Context context = getContext();
-        UserManager userManager = UserManager.getInstance(context);
-        OfflineMode offlineMode = SettingUtils.loadOffline(context);
-
-        kiki = new Kiki(context);
-        kiki.setOfflineMode(offlineMode).user()
-                .username(userManager.getUserName())
-                .password(userManager.getPassword());
     }
 
     @Override
-    public BehaviorSubject<TimeTable> getTimeTable() {
+    public ReplaySubject<TimeTable> getTimeTable() {
         if (this.subject != null) {
             return this.subject;
         }
+        subject = ReplaySubject.createWithSize(1);
 
         kiki.fetch(TimetableSource.request()).subscribe(
                 new Subscriber<Response<TimeTable, SemesterData>>() {

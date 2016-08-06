@@ -19,7 +19,7 @@ import org.zankio.cculife.utils.ExceptionUtils;
 
 import rx.Observable;
 import rx.Subscriber;
-import rx.subjects.BehaviorSubject;
+import rx.subjects.ReplaySubject;
 
 public class ScoreQueryActivity extends BaseFragmentActivity
         implements IGetGradeData {
@@ -80,7 +80,7 @@ public class ScoreQueryActivity extends BaseFragmentActivity
 
     @Override
     public Observable<Grade> getGrade(int i) {
-        BehaviorSubject<Grade> subject = BehaviorSubject.create();
+        ReplaySubject<Grade> subject = ReplaySubject.createWithSize(1);
         getGrade().subscribe(new Subscriber<Grade[]>() {
             @Override
             public void onCompleted() {
@@ -102,7 +102,7 @@ public class ScoreQueryActivity extends BaseFragmentActivity
     }
 
     public Observable<Grade[]> getGrade() {
-        BehaviorSubject<Grade[]> subject =
+        ReplaySubject<Grade[]> subject =
                 ScoreDataFragment
                         .getFragment(getSupportFragmentManager())
                         .getGrades();
@@ -110,7 +110,7 @@ public class ScoreQueryActivity extends BaseFragmentActivity
         if (subject != null)
             return subject;
 
-        subject = BehaviorSubject.create();
+        subject = ReplaySubject.createWithSize(1);
 
         if (scoreQuery == null)
             scoreQuery = new ScoreQuery(this);
@@ -122,7 +122,7 @@ public class ScoreQueryActivity extends BaseFragmentActivity
                 userManager.getPassword()
         ));
 
-        final BehaviorSubject<Grade[]> finalSubject = subject;
+        final ReplaySubject<Grade[]> finalSubject = subject;
         observable.subscribe(new Subscriber<Response<Grade[], AuthData>>() {
             @Override
             public void onCompleted() { finalSubject.onCompleted(); }
