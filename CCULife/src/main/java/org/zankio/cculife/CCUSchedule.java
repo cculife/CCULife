@@ -22,8 +22,8 @@ public class CCUSchedule {
         this.context = context;
     }
 
-    public String[] SCHEDULE_TITLE = {"104學年度"};
-    public String[] SCHEDULE_FILE = {"schedule/104schedule"};
+    public String[] SCHEDULE_TITLE = {"104學年度", "105學年度"};
+    public String[] SCHEDULE_FILE = {"schedule/104schedule", "schedule/105schedule"};
 
     private String getScheduleRawDate(String fileName) {
         InputStream is;
