@@ -35,7 +35,9 @@ public abstract class KikiSource<TArgument, TData> extends HTTPJsoupSource<TArgu
         String session = restorageSession(context);
 
         if (session == null)
-            context.fetch(Authenticate.request(user.username(), user.password()));
+            context.fetch(Authenticate.request(user.username(), user.password()))
+                    .toBlocking()
+                    .single();
 
     }
 }
