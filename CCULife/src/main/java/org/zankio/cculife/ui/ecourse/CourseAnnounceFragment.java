@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
@@ -233,7 +234,7 @@ public class CourseAnnounceFragment
 
             ((TextView)view.findViewById(R.id.Title)).setText(announce.title);
             ((TextView)view.findViewById(R.id.Date)).setText(announce.date);
-            if (announce.isnew) view.setBackgroundColor(inflater.getContext().getResources().getColor(R.color.Unread));
+            if (announce.isnew) view.setBackgroundColor(ContextCompat.getColor(inflater.getContext(), R.color.Unread));
             else view.setBackgroundColor(0);
 
             return view;

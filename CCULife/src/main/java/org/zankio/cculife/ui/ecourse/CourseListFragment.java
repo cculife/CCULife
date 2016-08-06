@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -196,8 +197,10 @@ public class CourseListFragment extends BaseMessageFragment {
             ((TextView)view.findViewById(R.id.unread)).setText(String.format(Locale.US, "%d", course.notice + course.homework + course.exam));
 
             if (ignore_ecourse_warnning) {
-                view.findViewById(R.id.warring).setBackgroundColor( course.warning ? getResources().getColor(R.color.Red_Course_Warring) : 0);
+                int color = ContextCompat.getColor(getContext(), R.color.Red_Course_Warring);
+                view.findViewById(R.id.warring).setBackgroundColor(course.warning ? color : 0);
             }
+
             return view;
         }
     }

@@ -11,6 +11,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -57,8 +58,8 @@ public class CourseFragment extends Fragment {
             throw new ClassCastException(context.toString()
                     + " must implement IGetCourseData");
         }
-        tab_loading_form = getResources().getColor(R.color.tab_loading_from);
-        tab_loading_to = getResources().getColor(R.color.tab_loading_to);
+        tab_loading_form = ContextCompat.getColor(context, R.color.tab_loading_from);
+        tab_loading_to = ContextCompat.getColor(context, R.color.tab_loading_to);
     }
 
     @Override

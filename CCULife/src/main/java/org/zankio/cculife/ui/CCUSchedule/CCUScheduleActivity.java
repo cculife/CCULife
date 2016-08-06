@@ -1,7 +1,7 @@
 package org.zankio.cculife.ui.CCUSchedule;
 
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -164,7 +164,7 @@ public class CCUScheduleActivity extends BaseActivity {
 
             // is today
             if (item.isToday(TODAY_YEAR, TODAY_DAY_OF_YEAR))
-                background = inflater.getContext().getResources().getColor(R.color.Today);
+                background = ContextCompat.getColor(inflater.getContext(), R.color.Today);
 
             // date is same as prev item
             if (position != 0 && item.Date.compareTo(items[position - 1].Date) == 0)

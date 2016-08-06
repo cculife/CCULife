@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -210,7 +211,7 @@ public class CourseScoreFragment extends BaseMessageFragment
             } else {
                 view = convertView;
             }
-            view.setBackgroundColor(inflater.getContext().getResources().getColor(R.color.ScoreCate));
+            view.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.ScoreCate));
             ((TextView)view.findViewById(R.id.Name)).setText(score.name);
             ((TextView)view.findViewById(R.id.Score)).setText(score.score);
             ((TextView)view.findViewById(R.id.Rank)).setText(score.rank);
