@@ -11,6 +11,7 @@ import org.zankio.ccudata.base.source.annotation.Important;
 import org.zankio.ccudata.base.source.annotation.Order;
 import org.zankio.ccudata.base.source.http.annontation.Charset;
 import org.zankio.ccudata.base.source.http.annontation.Method;
+import org.zankio.ccudata.base.utils.FileUtils;
 import org.zankio.ccudata.ecourse.constant.Urls;
 import org.zankio.ccudata.ecourse.model.Course;
 import org.zankio.ccudata.ecourse.model.File;
@@ -76,7 +77,12 @@ public class FileGroupFilesSource extends EcourseSource<FileGroupData, File[]> {
                 if (standFileTemplate) {
                     nodeSize = nodeFile.parent().nextElementSibling();
                     file.name = nodeFile.text();
-                    file.size = nodeSize.text();
+                    try {
+                        file.size = FileUtils.humanReadableByteCount(Long.valueOf(nodeSize.text()), true);
+                    } catch (NumberFormatException e) {
+                        file.size = nodeSize.text();
+                    }
+
                 }
 
                 fileGroupList.add(file);
