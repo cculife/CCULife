@@ -11,11 +11,15 @@ import org.zankio.ccudata.base.source.annotation.Order;
 import org.zankio.ccudata.base.source.http.annontation.Charset;
 import org.zankio.ccudata.base.source.http.annontation.Method;
 import org.zankio.ccudata.base.source.http.annontation.Url;
+import org.zankio.ccudata.base.utils.DateUtils;
 import org.zankio.ccudata.ecourse.annotation.ChangeCourse;
 import org.zankio.ccudata.ecourse.constant.Urls;
 import org.zankio.ccudata.ecourse.model.Course;
 import org.zankio.ccudata.ecourse.model.CourseData;
 import org.zankio.ccudata.ecourse.model.RollCall;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Method("GET")
 @Url(Urls.COURSE_ROLLCALL)
@@ -25,29 +29,48 @@ import org.zankio.ccudata.ecourse.model.RollCall;
 @Order(SourceProperty.Level.MIDDLE)
 @Important(SourceProperty.Level.HIGH)
 @ChangeCourse
-public class RollCallSource extends EcourseSource<CourseData, RollCall[]> {
+public class RollCallSource extends EcourseSource<CourseData, RollCall> {
     public final static String TYPE = "ROLL_CALL";
 
-    public static Request<RollCall[], CourseData> request(Course course) {
-        return new Request<>(TYPE, new CourseData(course), RollCall[].class);
+    public static Request<RollCall, CourseData> request(Course course) {
+        return new Request<>(TYPE, new CourseData(course), RollCall.class);
     }
 
     @Override
-    protected RollCall[] parse(Request<RollCall[], CourseData> request, HttpResponse response, Document document) throws Exception {
+    protected RollCall parse(Request<RollCall, CourseData> request, HttpResponse response, Document document) throws Exception {
         Elements rollcalls, fields;
-        RollCall[] result;
+        RollCall result = new RollCall();
+        int i;
 
         rollcalls = document.select("tr[bgcolor=#E6FFFC], tr[bgcolor=#F0FFEE], tr[bgcolor=#000066]:not(:first-child)");
-        if (rollcalls.size() == 1) return new RollCall[0];
+        if (rollcalls.size() == 1) return result;
 
-        result = new RollCall[rollcalls.size()];
+        result.records = new RollCall.Record[rollcalls.size() - 1];
 
-        for(int i = 0; i < result.length; i++) {
+        for(i = 0; i < result.records.length; i++) {
             fields = rollcalls.get(i).select("td");
 
-            result[i] = new RollCall();
-            result[i].date =  fields.get(0).text();
-            result[i].comment = fields.get(1).text();
+            result.records[i] = result.new Record();
+            result.records[i].date = DateUtils.normalizeDateString("yyyy-MM-dd", fields.get(0).text());
+            result.records[i].comment = fields.get(1).text();
+
+            if (result.records[i].comment.contains("缺席"))
+                result.records[i].absent = true;
+        }
+
+        fields = rollcalls.get(i).select("td");
+        Pattern patternAttend = Pattern.compile("Attendance:\\s*(\\d+)");
+        Pattern patternAbsent = Pattern.compile("缺席:\\s*(\\d+)");
+
+        String statistics = fields.get(1).text();
+        Matcher matcher = patternAbsent.matcher(statistics);
+        if (matcher.find()) {
+            result.absent = Integer.valueOf(matcher.group(1));
+        }
+
+        matcher = patternAttend.matcher(statistics);
+        if (matcher.find()) {
+            result.attend = Integer.valueOf(matcher.group(1));
         }
 
         return result;

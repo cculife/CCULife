@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,8 +29,8 @@ public class CourseRollCallFragment extends BaseMessageFragment implements IGetL
     private RollCallAdapter adapter;
     private Course course;
     private ListView list;
-    private boolean loading;
     private boolean loaded;
+    private View statisticView;
     private CourseFragment.LoadingListener loadedListener;
 
     @Override
@@ -55,6 +56,9 @@ public class CourseRollCallFragment extends BaseMessageFragment implements IGetL
         adapter = new RollCallAdapter();
         list = (ListView) view.findViewById(R.id.list);
         list.setAdapter(adapter);
+        list.setDivider(null);
+
+        statisticView = View.inflate(getContext(), R.layout.item_rollcall, null);
     }
 
     @Override
@@ -70,7 +74,7 @@ public class CourseRollCallFragment extends BaseMessageFragment implements IGetL
             return;
         }
 
-        course.getRollCall().subscribe(new Subscriber<Response<RollCall[], CourseData>>() {
+        course.getRollCall().subscribe(new Subscriber<Response<RollCall, CourseData>>() {
             @Override
             public void onCompleted() {
                 setLoaded(true);
@@ -80,25 +84,35 @@ public class CourseRollCallFragment extends BaseMessageFragment implements IGetL
             public void onError(Throwable e) {
                 e = ExceptionUtils.extraceException(e);
 
-                CourseRollCallFragment.this.loading = false;
                 setLoaded(true);
                 message().show(e.getMessage());
             }
 
             @Override
-            public void onNext(Response<RollCall[], CourseData> courseDataResponse) {
-                CourseRollCallFragment.this.loading = false;
+            public void onNext(Response<RollCall, CourseData> courseDataResponse) {
 
-                RollCall[] rollCalls = courseDataResponse.data();
-                if (rollCalls == null || rollCalls.length == 0) {
+                RollCall rollCall = courseDataResponse.data();
+                if (rollCall == null || rollCall.records == null || rollCall.records.length == 0) {
                     message().show("沒有點名");
                     return;
                 }
 
-                adapter.setRollCall(rollCalls);
+                adapter.setRollCall(rollCall);
+
+                StringBuilder statistic = new StringBuilder();
+                if (rollCall.attend >= 0)
+                    statistic.append("出席: ").append(rollCall.attend);
+
+                if (rollCall.absent >= 0) {
+                    if (statistic.length() > 0) statistic.append("    ");
+                    statistic.append("缺席: ").append(rollCall.absent);
+                }
+                ((TextView)statisticView.findViewById(R.id.Date)).setText("統計");
+                ((TextView)statisticView.findViewById(R.id.Comment)).setText(statistic.toString());
+                //list.removeFooterView(statisticView);
+                list.addFooterView(statisticView);
 
                 message().hide();
-
             }
 
             @Override
@@ -129,25 +143,25 @@ public class CourseRollCallFragment extends BaseMessageFragment implements IGetL
 
     public class RollCallAdapter extends BaseAdapter {
         private LayoutInflater inflater;
-        private RollCall[] rollcalls;
+        private RollCall rollcall;
 
         public RollCallAdapter() {
             this.inflater = LayoutInflater.from(getContext());
         }
 
-        public void setRollCall(RollCall[] rollCall){
-            this.rollcalls = rollCall;
+        public void setRollCall(RollCall rollCall){
+            this.rollcall = rollCall;
             this.notifyDataSetChanged();
         }
 
         @Override
         public int getCount() {
-            return rollcalls == null ? 0 : rollcalls.length;
+            return rollcall == null ? 0 : rollcall.records.length;
         }
 
         @Override
         public Object getItem(int position) {
-            return rollcalls == null ? null : rollcalls[position];
+            return rollcall == null ? null : rollcall.records[position];
         }
 
         @Override
@@ -162,16 +176,19 @@ public class CourseRollCallFragment extends BaseMessageFragment implements IGetL
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            View view;
-            if (convertView == null) view = inflater.inflate(R.layout.item_rollcall, parent, false);
-            else view = convertView;
+            if (convertView == null)
+                convertView = inflater.inflate(R.layout.item_rollcall, parent, false);
 
-            RollCall rollcall = (RollCall) getItem(position);
+            RollCall.Record rollcall = (RollCall.Record) getItem(position);
 
-            ((TextView)view.findViewById(R.id.Date)).setText(rollcall.date);
-            ((TextView)view.findViewById(R.id.Comment)).setText(rollcall.comment);
+            ((TextView)convertView.findViewById(R.id.Date)).setText(rollcall.date);
+            ((TextView)convertView.findViewById(R.id.Comment)).setText(rollcall.comment);
+            if (rollcall.absent)
+                ((TextView)convertView.findViewById(R.id.Comment)).setTextColor(ContextCompat.getColor(getContext(), R.color.textSecond));
+            else
+                ((TextView)convertView.findViewById(R.id.Comment)).setTextColor(ContextCompat.getColor(getContext(), R.color.text));
 
-            return view;
+            return convertView;
         }
     }
 }
