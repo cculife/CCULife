@@ -62,11 +62,15 @@ dependencies {
     androidTestCompile 'com.android.support.test:runner:0.4.1'
 
     compile 'com.android.support:appcompat-v7:24.1.1'
+
+    // html parse library
     compile 'org.jsoup:jsoup:1.7.2'
 
+    // rxjava asnyc library
     compile 'io.reactivex:rxjava:1.1.0'
     compile 'io.reactivex:rxandroid:1.1.0'
 
+    //ok http library
     compile 'com.squareup.okio:okio:1.6.0'
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
 }
