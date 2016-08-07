@@ -19,4 +19,9 @@ public class Storage {
     public void put(String key, Object value) {
         storage.put(key, value);
     }
+
+    @SuppressWarnings("unchecked")
+    public <T>T get(String key) {
+        return (T)storage.get(key);
+    }
 }
