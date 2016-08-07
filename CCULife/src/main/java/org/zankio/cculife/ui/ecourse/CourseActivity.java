@@ -3,15 +3,17 @@ package org.zankio.cculife.ui.ecourse;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 
+import org.zankio.ccudata.base.model.Storage;
 import org.zankio.ccudata.ecourse.Ecourse;
 import org.zankio.ccudata.ecourse.model.Course;
 import org.zankio.cculife.R;
 import org.zankio.cculife.ui.base.BaseFragmentActivity;
+import org.zankio.cculife.ui.base.GetStorage;
 import org.zankio.cculife.ui.base.IGetCourseData;
 
 public class CourseActivity extends BaseFragmentActivity
     implements CourseListFragment.OnCourseSelectedListener,
-        IGetCourseData {
+        IGetCourseData, GetStorage{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,5 +58,10 @@ public class CourseActivity extends BaseFragmentActivity
         transaction.addToBackStack("list");
 
         transaction.commitAllowingStateLoss();
+    }
+
+    @Override
+    public Storage storage() {
+        return CourseDataFragment.getFragment(getSupportFragmentManager()).storage();
     }
 }

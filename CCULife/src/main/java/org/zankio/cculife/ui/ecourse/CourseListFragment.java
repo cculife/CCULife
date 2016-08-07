@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.zankio.ccudata.base.model.Response;
+import org.zankio.ccudata.base.utils.RxJavaUtils;
 import org.zankio.ccudata.ecourse.Ecourse;
 import org.zankio.ccudata.ecourse.model.Course;
 import org.zankio.ccudata.ecourse.model.CourseData;
@@ -27,16 +28,19 @@ import org.zankio.cculife.R;
 import org.zankio.cculife.UserManager;
 import org.zankio.cculife.ui.base.BaseFragmentActivity;
 import org.zankio.cculife.ui.base.BaseMessageFragment;
+import org.zankio.cculife.ui.base.GetStorage;
 import org.zankio.cculife.utils.ExceptionUtils;
 import org.zankio.cculife.utils.SettingUtils;
 
 import java.util.Locale;
 
+import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 
 public class CourseListFragment extends BaseMessageFragment {
 
+    private static final String CACHE_COURSE_LIST = "CACHE_COURSE_LIST";
     public static Ecourse ecourse;
     private CourseAdapter adapter = null;
     private boolean loading;
@@ -87,11 +91,21 @@ public class CourseListFragment extends BaseMessageFragment {
             // TODO: 2016/7/22
             //ecourse.fetch(CustomCourseListSource.request(year, term, new Kiki(getContext()));
         } else {
-            ecourse.fetch(CourseListSource.request()).subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<Response<Course[], CourseData>>() {
-                @Override
-                public void onCompleted() {
+            // TODO: 2016/8/7
 
-                }
+            Observable<Response<Course[], CourseData>> observableCache;
+            observableCache = ((GetStorage)context).storage().<Observable<Response<Course[], CourseData>>>get(CACHE_COURSE_LIST);
+
+            if (observableCache == null) {
+                observableCache = ecourse.fetch(CourseListSource.request())
+                        .subscribeOn(AndroidSchedulers.mainThread())
+                        .compose(RxJavaUtils.cache());
+                ((GetStorage)context).storage().put(CACHE_COURSE_LIST, observableCache);
+            }
+
+            observableCache.subscribe(new Subscriber<Response<Course[], CourseData>>() {
+                @Override
+                public void onCompleted() { }
 
                 @Override
                 public void onError(Throwable e) {

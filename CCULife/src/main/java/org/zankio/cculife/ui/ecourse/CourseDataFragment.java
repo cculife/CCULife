@@ -4,12 +4,15 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
+import org.zankio.ccudata.base.model.Storage;
 import org.zankio.ccudata.ecourse.Ecourse;
 import org.zankio.ccudata.ecourse.model.Course;
+import org.zankio.cculife.ui.base.GetStorage;
 import org.zankio.cculife.ui.base.IGetCourseData;
 
-public class CourseDataFragment extends Fragment implements IGetCourseData, CourseListFragment.OnCourseSelectedListener{
+public class CourseDataFragment extends Fragment implements IGetCourseData, CourseListFragment.OnCourseSelectedListener, GetStorage{
     public static final String TAG_COURSE_DATA_FRAGMENT = "COURSE_DATA_FRAGMENT";
+    private Storage storage = new Storage();
     private Ecourse ecourse;
     private Course course;
 
@@ -53,5 +56,10 @@ public class CourseDataFragment extends Fragment implements IGetCourseData, Cour
             // TODO: 2016/7/22 cancel task
         }
         this.course = course;
+    }
+
+    @Override
+    public Storage storage() {
+        return storage;
     }
 }
