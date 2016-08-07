@@ -43,12 +43,18 @@ dependencies {
     compile 'com.android.support:support-v4:24.1.1'
     compile 'com.android.support:appcompat-v7:24.1.1'
     compile 'com.android.support:support-annotations:24.1.1'
+
+    // html parse library
     compile 'org.jsoup:jsoup:1.7.2'
+
+    // download library
     compile 'com.koushikdutta.ion:ion:2.1.6'
 
+    // rx java async/stream library
     compile 'io.reactivex:rxandroid:1.1.0'
     compile 'io.reactivex:rxjava:1.1.0'
 
+    // ok http library
     compile 'com.squareup.okio:okio:1.6.0'
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
 
