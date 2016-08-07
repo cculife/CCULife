@@ -153,7 +153,7 @@ public class CourseListFragment extends BaseMessageFragment {
             context.onCourseSelected(ecourse, course);
         });
 
-        ((BaseFragmentActivity)getActivity()).setMessageView(R.id.list);
+        ((BaseFragmentActivity)getActivity()).message().content(R.id.list);
 
         fetchCourseList();
 

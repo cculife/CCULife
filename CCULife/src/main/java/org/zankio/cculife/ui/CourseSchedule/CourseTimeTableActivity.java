@@ -46,7 +46,7 @@ public class CourseTimeTableActivity extends BaseFragmentActivity
 
 
         // set message view
-        setMessageView(R.id.container);
+        message().content(R.id.container);
     }
 
     private Context getActionBarThemedContextCompat() {

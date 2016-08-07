@@ -62,13 +62,13 @@ public class CCUScheduleActivity extends BaseActivity {
 
         @Override
         protected void onError(Exception e, String msg) {
-            showMessage(msg);
+            message().show(msg);
         }
 
         @Override
         protected void _onPostExecute(CCUSchedule.Schedule[] result) {
             if (result == null || result.length == 0) {
-                showMessage("沒有日程");
+                message().show("沒有日程");
                 return;
             }
 
@@ -92,7 +92,7 @@ public class CCUScheduleActivity extends BaseActivity {
             }
 
             adapter.setItems(list);
-            hideMessage();
+            message().hide();
 
             scrollToNow(list);
         }

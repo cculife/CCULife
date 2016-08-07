@@ -39,10 +39,10 @@ public class ScoreQueryActivity extends BaseFragmentActivity
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mGradePageAdapter);
 
-        setMessageView(R.id.pager);
+        message().content(R.id.pager);
         setSSOService(new org.zankio.cculife.CCUService.portal.service.ScoreQuery());
 
-        showMessage("讀取中...", true);
+        message().show("讀取中...", true);
         getGrade().subscribe(new Subscriber<Grade[]>() {
             @Override
             public void onCompleted() {
@@ -53,17 +53,17 @@ public class ScoreQueryActivity extends BaseFragmentActivity
             public void onError(Throwable e) {
                 e = ExceptionUtils.extraceException(e);
 
-                showMessage(e.getMessage());
+                message().show(e.getMessage());
             }
 
             @Override
             public void onNext(Grade[] grades) {
                 ScoreQueryActivity.this.grades = grades;
 
-                hideMessage();
+                message().hide();
 
                 if(grades == null || grades.length == 0) {
-                    showMessage("沒有成績");
+                    message().show("沒有成績");
                     return;
                 }
 

@@ -7,10 +7,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.zankio.cculife.CCUService.portal.Portal;
@@ -18,17 +14,19 @@ import org.zankio.cculife.CCUService.portal.service.BasePortal;
 import org.zankio.cculife.R;
 import org.zankio.cculife.override.AsyncTaskWithErrorHanding;
 import org.zankio.cculife.ui.SettingsActivity;
+import org.zankio.cculife.ui.base.helper.Message;
 
 public class BaseFragmentActivity extends AppCompatActivity {
+    private final Message mMessage = new Message(
+            this,
+            R.id.message,
+            R.id.loading,
+            R.id.message_panel,
+            R.id.list
+    );
 
-    protected View MainView;
-    protected View messagePanel;
-    protected TextView messageView;
-    protected ProgressBar messageLoaging;
-    protected ImageView messageIcon;
     protected BasePortal ssoService = null;
     private boolean toolbarInited;
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
@@ -68,70 +66,6 @@ public class BaseFragmentActivity extends AppCompatActivity {
         this.ssoService = Service;
     }
 
-    public void setMessageView(){
-        this.MainView = findViewById(R.id.content);
-        this.messagePanel = findViewById(R.id.message_panel);
-        messageView = (TextView) findViewById(R.id.message);
-        messageLoaging = (ProgressBar) findViewById(R.id.loading);
-        messageIcon = (ImageView) findViewById(R.id.icon);
-    }
-
-    public void setMessageView(int mainview){
-        this.MainView = findViewById(mainview);
-        this.messagePanel = findViewById(R.id.message_panel);
-        messageView = (TextView) findViewById(R.id.message);
-        messageLoaging = (ProgressBar) findViewById(R.id.loading);
-        messageIcon = (ImageView) findViewById(R.id.icon);
-    }
-
-    public void setMessageView(View MainView, View messagePanel){
-
-        this.MainView = MainView;
-        this.messagePanel = messagePanel;
-        if (messagePanel != null) {
-            messageView = (TextView) messagePanel.findViewById(R.id.message);
-            messageLoaging = (ProgressBar) messagePanel.findViewById(R.id.loading);
-            messageIcon = (ImageView) messagePanel.findViewById(R.id.icon);
-        }
-    }
-
-    public void hideMessage() {
-        if (MainView != null) MainView.setVisibility(View.VISIBLE);
-
-        if (messagePanel != null) messagePanel.setVisibility(View.GONE);
-    }
-
-    public void showMessage(String msg) {
-        if (MainView != null && messagePanel != null && messageView != null) {
-            messageLoaging.setVisibility(View.GONE);
-            messageIcon.setVisibility(View.GONE);
-            messageView.setText(msg);
-            messagePanel.setVisibility(View.VISIBLE);
-            MainView.setVisibility(View.GONE);
-        }
-    }
-
-    public void showMessage(String msg, boolean loading) {
-        if (MainView != null && messagePanel != null && messageView != null) {
-            messageLoaging.setVisibility(loading ? View.VISIBLE : View.GONE);
-            messageIcon.setVisibility(loading ? View.GONE : View.VISIBLE);
-            messageView.setText(msg);
-            messagePanel.setVisibility(View.VISIBLE);
-            MainView.setVisibility(View.GONE);
-        }
-    }
-
-    public void showMessage(String msg, int resId) {
-        if (MainView != null && messagePanel != null && messageView != null) {
-            messageLoaging.setVisibility(View.GONE);
-            messageIcon.setVisibility(View.VISIBLE);
-            messageIcon.setImageResource(resId);
-            messageView.setText(msg);
-            messagePanel.setVisibility(View.VISIBLE);
-            MainView.setVisibility(View.GONE);
-        }
-    }
-
     public Toast makeToast(String msg) {
         Toast toast = Toast.makeText(this, msg, Toast.LENGTH_SHORT);
         toast.show();
@@ -152,9 +86,9 @@ public class BaseFragmentActivity extends AppCompatActivity {
     }
 
     public class showInBrowserAsyncTask extends AsyncTaskWithErrorHanding<Void, Void, Void> {
+
         private BasePortal ssoService;
         private Toast toast;
-
         public showInBrowserAsyncTask(BasePortal ssoService) {
             this.ssoService = ssoService;
         }
@@ -194,5 +128,8 @@ public class BaseFragmentActivity extends AppCompatActivity {
         protected void _onPostExecute(Void aVoid) {
             toast.cancel();
         }
+
     }
+
+    public Message message() { return mMessage; }
 }
