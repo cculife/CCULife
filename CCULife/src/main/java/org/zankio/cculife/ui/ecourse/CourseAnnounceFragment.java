@@ -85,6 +85,13 @@ public class CourseAnnounceFragment
 
         course.getAnnounces().subscribe(new Subscriber<Response<Announce[], CourseData>>() {
             @Override
+            public void onStart() {
+                super.onStart();
+                setLoaded(false);
+                message().show("讀取中...", true);
+            }
+
+            @Override
             public void onCompleted() {
                 setLoaded(true);
             }
@@ -105,12 +112,6 @@ public class CourseAnnounceFragment
                 onAnnounceUpdate(courseDataResponse.data());
             }
         });
-
-        if (loading) {
-            loading = true;
-            setLoaded(false);
-            message().show("讀取中...", true);
-        }
     }
 
     @Override
