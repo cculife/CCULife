@@ -73,4 +73,7 @@ dependencies {
     //ok http library
     compile 'com.squareup.okio:okio:1.6.0'
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
+
+    // date parse library
+    compile 'com.joestelmach:natty:0.11'
 }
