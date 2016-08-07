@@ -68,6 +68,12 @@ public class ScoreSource extends EcourseSource<CourseData, ScoreGroup[]> {
             mScore.score = fields.get(2).text();
             mScore.rank = fields.get(3).text();
 
+            if (mScore.score.isEmpty())
+                mScore.score = "-";
+
+            if (mScore.rank.equals("你沒有成績"))
+                mScore.rank = "-";
+
             assert score != null;
             score.add(mScore);
         }
