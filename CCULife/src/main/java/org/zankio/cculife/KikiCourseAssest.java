@@ -19,7 +19,8 @@ public class KikiCourseAssest {
         this.context = context;
     }
 
-    public final static String COURSE_FILE = "courses/10402";
+    //public final static String COURSE_FILE = "courses/10402";
+    public final static String COURSE_FILE = "courses/10501";
 
     private String getAssetRawData(String fileName) {
         InputStream is;
