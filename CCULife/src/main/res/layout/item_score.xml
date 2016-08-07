@@ -1,40 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <TextView
+        tools:text="Name"
         android:id="@+id/Name"
         android:layout_width="0dp"
-        android:layout_height="30dip"
+        android:layout_height="35dip"
         android:layout_gravity="start|center_vertical"
         android:layout_weight="3"
         android:gravity="center_vertical"
+        android:maxLines="1"
+        android:ellipsize="end"
         android:layout_marginLeft="3dp"
         android:layout_marginStart="3dp" />
 
     <TextView
+        tools:text="Percent"
         android:id="@+id/Percent"
         android:layout_width="0dp"
-        android:layout_height="30dip"
+        android:layout_height="35dip"
         android:layout_gravity="center"
         android:layout_weight="1"
         android:gravity="center_vertical|end" />
 
     <TextView
+        tools:text="Score"
         android:id="@+id/Score"
         android:layout_width="0dp"
-        android:layout_height="30dip"
+        android:layout_height="35dip"
         android:layout_gravity="center"
-        android:layout_weight="1"
+        android:layout_weight="1.2"
+        android:maxLength="6"
         android:gravity="center_vertical|end" />
 
     <TextView
+        tools:text="Rank"
         android:id="@+id/Rank"
         android:layout_width="0dp"
-        android:layout_height="30dip"
+        android:layout_height="35dip"
         android:layout_gravity="center"
         android:layout_weight="1.5"
         android:gravity="center_vertical|end" />
