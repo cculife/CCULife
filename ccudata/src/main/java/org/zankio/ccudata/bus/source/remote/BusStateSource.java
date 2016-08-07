@@ -29,7 +29,7 @@ public class BusStateSource extends HTTPJSONSource<BusLineRequest, BusStop[]> {
                     "&goBack=%s" +
                     "&Source=w";
 
-    public BusStop[] parse(String body) {
+/*    public BusStop[] parse(String body) {
         try {
             JSONArray busList = new JSONArray(body);
             BusStop[] result = new BusStop[busList.length()];
@@ -50,7 +50,7 @@ public class BusStateSource extends HTTPJSONSource<BusLineRequest, BusStop[]> {
         }
 
         return new BusStop[0];
-    }
+    }*/
 
     @Override
     public void initHTTPRequest(Request<BusStop[], BusLineRequest> request) {
@@ -80,7 +80,7 @@ public class BusStateSource extends HTTPJSONSource<BusLineRequest, BusStop[]> {
                 result[i].name = row.getString("name");
                 result[i].seq = row.getString("seq");
                 result[i].carNo = row.getString("carNo");
-                result[i].perdiction = row.getString("predictionTime");
+                result[i].perdiction = row.getString("predictionTime").replaceAll("<a[^>]*>([^<]*)</a>", "$1");
             }
 
             return result;
