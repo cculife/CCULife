@@ -247,32 +247,30 @@ public class CourseFileFragment extends BaseMessageFragment
 
         @Override
         public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+            if (convertView == null) convertView = inflater.inflate(R.layout.item_file_group, parent, false);
+
             FileGroup group = (FileGroup) getGroup(groupPosition);
-            View view;
 
-            if (convertView == null) view = inflater.inflate(R.layout.item_file_group, null);
-            else view = convertView;
+            ((TextView) convertView.findViewById(R.id.Name)).setText(group.name);
 
-            ((TextView) view.findViewById(R.id.Name)).setText(group.name);
+            // hide group when only one group
             if (getGroupCount() == 1)
-                view.setLayoutParams(new AbsListView.LayoutParams(1, 1));
+                convertView.setLayoutParams(new AbsListView.LayoutParams(1, 1));
             else
-                view.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            return view;
+                convertView.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+            return convertView;
         }
 
         @Override
         public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
             File file = (File) getChild(groupPosition, childPosition);
-            View view;
+            if (convertView == null) convertView = inflater.inflate(R.layout.item_file, parent, false);
 
-            if (convertView == null) view = inflater.inflate(R.layout.item_file, null);
-            else view = convertView;
+            ((TextView) convertView.findViewById(R.id.Name)).setText(file.name);
+            ((TextView) convertView.findViewById(R.id.Size)).setText(file.size != null ? file.size : "");
 
-            ((TextView) view.findViewById(R.id.Name)).setText(file.name);
-            ((TextView) view.findViewById(R.id.Size)).setText(file.size != null ? file.size : "");
-
-            return view;
+            return convertView;
         }
 
         @Override

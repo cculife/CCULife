@@ -3,7 +3,6 @@ package org.zankio.cculife.ui.ecourse;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -156,26 +155,31 @@ public class CourseHomeworkFragment extends BaseMessageFragment
             }
         }
 
+        // homework is a url
         if (url != null) {
             getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(homework.contentUrl)));
-        } else if (content != null) {
+            return;
+        }
+
+        // homework is text
+        if (content != null) {
             message.setText(Html.fromHtml(content));
             message.setAutoLinkMask(Linkify.WEB_URLS);
             message.setMovementMethod(LinkMovementMethod.getInstance());
             message.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
             message.setPadding(20, 20, 20, 20);
             builder.setView(message);
-
-            //builder.setMessage(Html.fromHtml(announce.getContent()));
             if (homework != null) builder.setTitle(homework.title);
-            builder.setPositiveButton("確定", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
+
+            builder.setPositiveButton("確定", (dialog, which) -> {
+                dialog.dismiss();
             });
+
             final AlertDialog dialog = builder.create();
+
+            // check activity no isFinishing
             if (context instanceof Activity && ((Activity)context).isFinishing()) return;
+
             dialog.show();
         } else {
             Toast.makeText(context, "讀取題目錯誤", Toast.LENGTH_SHORT).show();

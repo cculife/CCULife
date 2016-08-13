@@ -2,6 +2,7 @@ package org.zankio.cculife.ui.CCUSchedule;
 
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -12,7 +13,6 @@ import android.widget.TextView;
 
 import org.zankio.cculife.CCUSchedule;
 import org.zankio.cculife.R;
-import org.zankio.cculife.override.AsyncTaskWithErrorHanding;
 import org.zankio.cculife.ui.base.BaseActivity;
 
 import java.util.Calendar;
@@ -34,7 +34,10 @@ public class CCUScheduleActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ccu_schedule);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null)
+            actionBar.setDisplayHomeAsUpEnabled(true);
 
         adapter = new ScheduleAdapter();
 

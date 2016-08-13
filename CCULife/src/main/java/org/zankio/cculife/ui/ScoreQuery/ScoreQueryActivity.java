@@ -12,6 +12,7 @@ import org.zankio.ccudata.ecourse.model.AuthData;
 import org.zankio.ccudata.sourcequery.ScoreQuery;
 import org.zankio.ccudata.sourcequery.model.Grade;
 import org.zankio.ccudata.sourcequery.source.remote.GradesInquiriesSource;
+import org.zankio.cculife.CCUService.portal.service.ScoreQueryPortal;
 import org.zankio.cculife.R;
 import org.zankio.cculife.UserManager;
 import org.zankio.cculife.ui.base.BaseFragmentActivity;
@@ -33,21 +34,22 @@ public class ScoreQueryActivity extends BaseFragmentActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scorequery);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mGradePageAdapter = new GradePageAdapter(getSupportFragmentManager());
 
+        //initail message view
+        message().content(R.id.pager);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        mGradePageAdapter = new GradePageAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mGradePageAdapter);
 
-        message().content(R.id.pager);
-        setSSOService(new org.zankio.cculife.CCUService.portal.service.ScoreQuery());
+        setSSOService(new ScoreQueryPortal());
 
         message().show("讀取中...", true);
         getGrade().subscribe(new Subscriber<Grade[]>() {
             @Override
-            public void onCompleted() {
-
-            }
+            public void onCompleted() { }
 
             @Override
             public void onError(Throwable e) {
@@ -70,6 +72,7 @@ public class ScoreQueryActivity extends BaseFragmentActivity
                 mGradePageAdapter.notifyDataSetChanged();
             }
         });
+
     }
 
     @Override
