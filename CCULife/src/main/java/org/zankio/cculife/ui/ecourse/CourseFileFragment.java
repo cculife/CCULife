@@ -40,7 +40,6 @@ public class CourseFileFragment extends BaseMessageFragment
     private Course course;
     private FileAdapter adapter;
     private ExpandableListView list;
-    private boolean loading;
     private boolean loaded;
     private IGetCourseData context;
     private CourseFragment.LoadingListener loadedListener;
@@ -86,6 +85,7 @@ public class CourseFileFragment extends BaseMessageFragment
 
         course.getFiles()
                 .subscribe(new Subscriber<Response<FileGroup[], CourseData>>() {
+                    private boolean noData = true;
                     @Override
                     public void onStart() {
                         super.onStart();
@@ -95,6 +95,9 @@ public class CourseFileFragment extends BaseMessageFragment
 
                     @Override
                     public void onCompleted() {
+                        if (noData)
+                            message().show("沒有檔案");
+
                         setLoaded(true);
                     }
 
@@ -102,31 +105,29 @@ public class CourseFileFragment extends BaseMessageFragment
                     public void onError(Throwable e) {
                         e = ExceptionUtils.extraceException(e);
 
-                        CourseFileFragment.this.loading = false;
                         setLoaded(true);
                         message().show(e.getMessage());
                     }
 
                     @Override
                     public void onNext(Response<FileGroup[], CourseData> courseDataResponse) {
-                        CourseFileFragment.this.loading = false;
-                        onFileUpdate(courseDataResponse.data());
+                        FileGroup[] fileGroups = courseDataResponse.data();
+
+                        if (fileGroups == null || fileGroups.length == 0) {
+                            return;
+                        }
+
+                        adapter.setFiles(fileGroups);
+                        if (fileGroups.length == 1) {
+                            list.setGroupIndicator(null);
+                            list.expandGroup(0);
+
+                        }
+
+                        noData = false;
+                        message().hide();
                     }
                 });
-    }
-
-    private void onFileUpdate(FileGroup[] fileGroups) {
-        if (fileGroups == null || fileGroups.length == 0) {
-            message().show("沒有檔案");
-            return;
-        }
-        adapter.setFiles(fileGroups);
-        if (fileGroups.length == 1) {
-            list.setGroupIndicator(null);
-            list.expandGroup(0);
-
-        }
-        message().hide();
     }
 
     @Override

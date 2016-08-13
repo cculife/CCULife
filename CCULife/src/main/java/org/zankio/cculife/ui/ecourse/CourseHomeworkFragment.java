@@ -39,7 +39,6 @@ public class CourseHomeworkFragment extends BaseMessageFragment
         implements AdapterView.OnItemClickListener, IGetLoading {
     private Course course;
     private HomeworkAdapter adapter;
-    private boolean loading;
     private IGetCourseData context;
     private boolean loaded;
     private CourseFragment.LoadingListener loadedListener;
@@ -82,8 +81,12 @@ public class CourseHomeworkFragment extends BaseMessageFragment
 
         course.getHomework()
                 .subscribe(new Subscriber<Response<Homework[], CourseData>>() {
+                    private boolean noData = true;
                     @Override
                     public void onCompleted() {
+                        if (noData)
+                            message().show("沒有作業");
+
                         setLoaded(true);
                     }
 
@@ -91,15 +94,21 @@ public class CourseHomeworkFragment extends BaseMessageFragment
                     public void onError(Throwable e) {
                         e = ExceptionUtils.extraceException(e);
 
-                        CourseHomeworkFragment.this.loading = false;
                         setLoaded(true);
                         message().show(e.getMessage());
                     }
 
                     @Override
                     public void onNext(Response<Homework[], CourseData> courseDataResponse) {
-                        CourseHomeworkFragment.this.loading = false;
-                        onHomewrokUpdate(courseDataResponse.data());
+                        Homework[] homework = courseDataResponse.data();
+
+                        if(homework == null || homework.length == 0) {
+                            return;
+                        }
+
+                        adapter.setHomeworks(homework);
+                        noData = false;
+                        message().hide();
                     }
 
                     @Override
@@ -172,16 +181,6 @@ public class CourseHomeworkFragment extends BaseMessageFragment
             Toast.makeText(context, "讀取題目錯誤", Toast.LENGTH_SHORT).show();
         }
 
-    }
-
-    private void onHomewrokUpdate(Homework[] homework) {
-        if(homework == null || homework.length == 0) {
-            message().show("沒有作業");
-            return;
-        }
-
-        adapter.setHomeworks(homework);
-        message().hide();
     }
 
     @Override

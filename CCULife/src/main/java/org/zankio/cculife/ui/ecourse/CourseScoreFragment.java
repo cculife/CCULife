@@ -34,7 +34,6 @@ public class CourseScoreFragment extends BaseMessageFragment
     private Course course;
     private ScoreAdapter adapter;
     private ExpandableListView list;
-    private boolean loading;
     private boolean loaded;
     private IGetCourseData context;
     private CourseFragment.LoadingListener loadedListener;
@@ -80,8 +79,12 @@ public class CourseScoreFragment extends BaseMessageFragment
 
         course.getScore()
                 .subscribe(new Subscriber<Response<ScoreGroup[], CourseData>>() {
+                    private boolean noData = true;
                     @Override
                     public void onCompleted() {
+                        if (noData)
+                            message().show("沒有成績");
+
                         setLoaded(true);
                     }
 
@@ -89,21 +92,16 @@ public class CourseScoreFragment extends BaseMessageFragment
                     public void onError(Throwable e) {
                         e = ExceptionUtils.extraceException(e);
 
-                        CourseScoreFragment.this.loading = false;
                         setLoaded(true);
                         message().show(e.getMessage());
                     }
 
                     @Override
                     public void onNext(Response<ScoreGroup[], CourseData> courseDataResponse) {
-                        CourseScoreFragment.this.loading = false;
-
                         ScoreGroup[] scoreGroups = courseDataResponse.data();
                         if (scoreGroups == null || scoreGroups.length == 0) {
-                            message().show("沒有成績");
                             return;
                         }
-
 
                         adapter.setScores(scoreGroups);
 
@@ -111,6 +109,7 @@ public class CourseScoreFragment extends BaseMessageFragment
                             list.expandGroup(i);
                         }
 
+                        noData = false;
                         message().hide();
 
                     }

@@ -10,7 +10,6 @@ import android.support.v4.content.ContextCompat;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,7 +36,6 @@ public class CourseAnnounceFragment
         implements AdapterView.OnItemClickListener, IGetLoading {
     private Course course;
     private AnnounceAdapter adapter;
-    private boolean loading;
     private boolean loaded;
     private IGetCourseData context;
     private CourseFragment.LoadingListener loadedListener;
@@ -56,14 +54,13 @@ public class CourseAnnounceFragment
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.e("course", "onCreateView");
         return inflater.inflate(R.layout.fragment_course_announce, container, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        Log.e("course", "onViewCreated");
         adapter = new AnnounceAdapter(getActivity());
+
         ListView list = (ListView) view.findViewById(R.id.list);
         list.setAdapter(adapter);
         list.setOnItemClickListener(this);
@@ -72,18 +69,21 @@ public class CourseAnnounceFragment
     @Override
     public void onResume() {
         super.onResume();
-        Log.e("course", "onResume");
         courseChange(getArguments().getString("id"));
     }
 
     public void courseChange(String id) {
         course = context.getCourse(id);
+
+        // course not in memory
         if (course == null) {
             getFragmentManager().popBackStack("list", FragmentManager.POP_BACK_STACK_INCLUSIVE);
             return;
         }
 
+        // load announce
         course.getAnnounces().subscribe(new Subscriber<Response<Announce[], CourseData>>() {
+            private boolean noData = true;
             @Override
             public void onStart() {
                 super.onStart();
@@ -93,23 +93,31 @@ public class CourseAnnounceFragment
 
             @Override
             public void onCompleted() {
+                if (noData)
+                    message().show("沒有公告");
+
                 setLoaded(true);
             }
 
             @Override
             public void onError(Throwable e) {
                 e = ExceptionUtils.extraceException(e);
-
-                CourseAnnounceFragment.this.loading = false;
-                setLoaded(true);
-
                 message().show(e.getMessage());
+
+                setLoaded(true);
             }
 
             @Override
             public void onNext(Response<Announce[], CourseData> courseDataResponse) {
-                CourseAnnounceFragment.this.loading = false;
-                onAnnounceUpdate(courseDataResponse.data());
+                Announce[] announces = courseDataResponse.data();
+                if(announces == null || announces.length == 0) {
+                    return;
+                }
+
+                adapter.setAnnounces(announces);
+                noData = false;
+
+                message().hide();
             }
         });
     }
@@ -122,9 +130,7 @@ public class CourseAnnounceFragment
         else
             announce.getContent(true).subscribe(new Subscriber<Response<Announce, AnnounceData>>() {
                 @Override
-                public void onCompleted() {
-
-                }
+                public void onCompleted() { }
 
                 @Override
                 public void onError(Throwable e) {
@@ -171,12 +177,6 @@ public class CourseAnnounceFragment
     }
 
     private void onAnnounceUpdate(Announce[] announces) {
-        if(announces == null || announces.length == 0) {
-            message().show("沒有公告");
-            return;
-        }
-        adapter.setAnnounces(announces);
-        message().hide();
     }
 
     @Override

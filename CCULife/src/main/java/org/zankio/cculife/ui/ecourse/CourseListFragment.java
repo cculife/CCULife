@@ -43,7 +43,6 @@ public class CourseListFragment extends BaseMessageFragment {
     private static final String CACHE_COURSE_LIST = "CACHE_COURSE_LIST";
     public static Ecourse ecourse;
     private CourseAdapter adapter = null;
-    private boolean loading;
     private OnCourseSelectedListener context;
 
     @Override
@@ -66,9 +65,7 @@ public class CourseListFragment extends BaseMessageFragment {
 
     public void fetchCourseList() {
         Log.d("CourseListFragment", "fetch Course List");
-        loading = true;
         if (ecourse != null && adapter != null && adapter.getCount() != 0) {
-            loading = false;
             adapter.notifyDataSetChanged();
             return;
         }
@@ -104,27 +101,36 @@ public class CourseListFragment extends BaseMessageFragment {
             }
 
             observableCache.subscribe(new Subscriber<Response<Course[], CourseData>>() {
+                private boolean noData = true;
+
                 @Override
-                public void onCompleted() { }
+                public void onStart() {
+                    super.onStart();
+                    message().show("讀取中...", true);
+                }
+
+                @Override
+                public void onCompleted() {
+                    if (noData)
+                        message().show("沒有課程");
+                }
 
                 @Override
                 public void onError(Throwable e) {
                     e = ExceptionUtils.extraceException(e);
 
-                    CourseListFragment.this.loading = false;
                     message().show(e.getMessage());
                 }
 
                 @Override
                 public void onNext(Response<Course[], CourseData> courseDataResponse) {
                     Course[] courses = courseDataResponse.data();
-                    CourseListFragment.this.loading = false;
                     if(courses == null || courses.length == 0) {
-                        message().show("沒有課程");
                         return;
                     }
 
                     adapter.setCourses(courses);
+                    noData = false;
                     message().hide();
                 }
             });
@@ -157,8 +163,6 @@ public class CourseListFragment extends BaseMessageFragment {
 
         fetchCourseList();
 
-        if (loading)
-            message().show("讀取中...", true);
     }
 
     @Override

@@ -75,8 +75,13 @@ public class CourseRollCallFragment extends BaseMessageFragment implements IGetL
         }
 
         course.getRollCall().subscribe(new Subscriber<Response<RollCall, CourseData>>() {
+            private boolean noData = true;
+
             @Override
             public void onCompleted() {
+                if (noData)
+                    message().show("沒有點名");
+
                 setLoaded(true);
             }
 
@@ -90,10 +95,8 @@ public class CourseRollCallFragment extends BaseMessageFragment implements IGetL
 
             @Override
             public void onNext(Response<RollCall, CourseData> courseDataResponse) {
-
                 RollCall rollCall = courseDataResponse.data();
                 if (rollCall == null || rollCall.records == null || rollCall.records.length == 0) {
-                    message().show("沒有點名");
                     return;
                 }
 
@@ -113,6 +116,7 @@ public class CourseRollCallFragment extends BaseMessageFragment implements IGetL
                 list.addFooterView(statisticView);
                 list.setAdapter(adapter);
 
+                noData = false;
                 message().hide();
             }
 
