@@ -7,7 +7,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 
-public class Utils {
+public class PermissionUtils {
     public static final int REQUEST_CODE_WRITE_EXTERNAL_STORAGE = 0;
     public static boolean checkPermission (Activity activity, String permission, int code) {
         if (ContextCompat.checkSelfPermission(activity, permission)

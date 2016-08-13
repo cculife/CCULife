@@ -22,7 +22,7 @@ import org.zankio.ccudata.ecourse.model.CourseData;
 import org.zankio.ccudata.ecourse.model.File;
 import org.zankio.ccudata.ecourse.model.FileGroup;
 import org.zankio.cculife.R;
-import org.zankio.cculife.Utils;
+import org.zankio.cculife.PermissionUtils;
 import org.zankio.cculife.services.DownloadService;
 import org.zankio.cculife.ui.base.BaseMessageFragment;
 import org.zankio.cculife.ui.base.IGetCourseData;
@@ -136,12 +136,20 @@ public class CourseFileFragment extends BaseMessageFragment
         String filename;
         file = (File) parent.getExpandableListAdapter().getChild(groupPosition, childPosition);
         assert file != null;
-        if (Utils.checkWritePermission(getParentFragment())) {
+
+        // check permission
+        if (PermissionUtils.checkWritePermission(getParentFragment())) {
+
+            // guess file name
             filename = file.name != null ? file.name : URLUtil.guessFileName(file.url, null, null);
+
+            // start download
             DownloadService.downloadFile(getContext(), file.url, filename);
 
             Toast.makeText(getContext(), "下載 : " + filename, Toast.LENGTH_SHORT).show();
         } else {
+
+            // can't get permission
             if (download_list == null) download_list = new ArrayList<>();
             download_list.add(file);
         }
@@ -152,8 +160,10 @@ public class CourseFileFragment extends BaseMessageFragment
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
-            case Utils.REQUEST_CODE_WRITE_EXTERNAL_STORAGE:
+            case PermissionUtils.REQUEST_CODE_WRITE_EXTERNAL_STORAGE:
                 if (download_list == null) return;
+
+                // get write external storage fail
                 if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(getContext(), "沒有儲存權限!!", Toast.LENGTH_SHORT).show();
                     return;
@@ -161,6 +171,7 @@ public class CourseFileFragment extends BaseMessageFragment
 
                 String filename;
 
+                // restart download
                 for (File file : download_list) {
                     filename = file.name != null ? file.name : URLUtil.guessFileName(file.url, null, null);
                     DownloadService.downloadFile(getContext(), file.url, filename);
