@@ -42,7 +42,7 @@ public class EcourseTest extends InstrumentationTestCase {
         Announce[] announcesDB = new DatabaseAnnounceSource(ecourse).fetch(AnnounceSource.request(courses[2]));
         FileGroup[] fileGroups =     courses[2].getFiles()    .toBlocking().last().data();
         Homework[] homeworks   =     courses[2].getHomework() .toBlocking().last().data();
-        RollCall[] rollCalls   =     courses[2].getRollCall() .toBlocking().last().data();
+        RollCall rollCalls   =     courses[2].getRollCall() .toBlocking().last().data();
         ScoreGroup[] scoreGroups =   courses[2].getScore()    .toBlocking().last().data();
         ScoreGroup[] scoreGroupsDB = new DatabaseScoreSource(ecourse).fetch(ScoreSource.request(courses[2]));
     }
