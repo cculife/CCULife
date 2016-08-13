@@ -111,6 +111,7 @@ public class CourseRollCallFragment extends BaseMessageFragment implements IGetL
                 ((TextView)statisticView.findViewById(R.id.Comment)).setText(statistic.toString());
                 //list.removeFooterView(statisticView);
                 list.addFooterView(statisticView);
+                list.setAdapter(adapter);
 
                 message().hide();
             }
