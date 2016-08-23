@@ -1,5 +1,6 @@
 package org.zankio.cculife.ui.CourseSchedule;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -102,10 +103,12 @@ public class TimeTableDaysFragment extends BaseMessageFragment
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Context context = getActivity();
+        Activity context = getActivity();
         if (context != null) {
             subscriber.unsubscribe();
-            ((GetStorage) context).storage().put(TimetableDataFragment.LAST_PAGE, mViewPager.getCurrentItem());
+
+            if (!context.isFinishing())
+                ((GetStorage) context).storage().put(TimetableDataFragment.LAST_PAGE, mViewPager.getCurrentItem());
         }
 
     }
