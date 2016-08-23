@@ -118,22 +118,6 @@ public class CourseHomeworkFragment extends BaseMessageFragment
                 });
     }
 
-    private Subscriber<Response<Homework, HomeworkData>> homeworkContentListener = new Subscriber<Response<Homework, HomeworkData>>() {
-        @Override
-        public void onCompleted() { }
-
-        @Override
-        public void onError(Throwable e) {
-            onHomewrokContentUpdate(e.getMessage(), null);
-        }
-
-        @Override
-        public void onNext(Response<Homework, HomeworkData> response) {
-            onHomewrokContentUpdate(null, response.data());
-        }
-
-    };
-
     private void onHomewrokContentUpdate(String err, Homework homework) {
         Context context = getContext();
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -190,7 +174,21 @@ public class CourseHomeworkFragment extends BaseMessageFragment
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Homework homework = (Homework) parent.getAdapter().getItem(position);
-        homework.getContent().subscribe(homeworkContentListener);
+        homework.getContent().subscribe(new Subscriber<Response<Homework, HomeworkData>>() {
+            @Override
+            public void onCompleted() { }
+
+            @Override
+            public void onError(Throwable e) {
+                onHomewrokContentUpdate(e.getMessage(), null);
+            }
+
+            @Override
+            public void onNext(Response<Homework, HomeworkData> response) {
+                onHomewrokContentUpdate(null, response.data());
+            }
+
+        });
     }
 
     public void setLoaded(boolean loaded) {
