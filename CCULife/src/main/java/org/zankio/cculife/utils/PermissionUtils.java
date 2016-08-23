@@ -1,4 +1,4 @@
-package org.zankio.cculife;
+package org.zankio.cculife.utils;
 
 import android.Manifest;
 import android.app.Activity;
