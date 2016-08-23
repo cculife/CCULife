@@ -13,6 +13,7 @@ import android.webkit.URLUtil;
 import android.widget.AbsListView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,11 +23,12 @@ import org.zankio.ccudata.ecourse.model.CourseData;
 import org.zankio.ccudata.ecourse.model.File;
 import org.zankio.ccudata.ecourse.model.FileGroup;
 import org.zankio.cculife.R;
-import org.zankio.cculife.PermissionUtils;
+import org.zankio.cculife.utils.PermissionUtils;
 import org.zankio.cculife.services.DownloadService;
 import org.zankio.cculife.ui.base.BaseMessageFragment;
 import org.zankio.cculife.ui.base.IGetCourseData;
 import org.zankio.cculife.utils.ExceptionUtils;
+import org.zankio.cculife.utils.UnitUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -267,8 +269,21 @@ public class CourseFileFragment extends BaseMessageFragment
             File file = (File) getChild(groupPosition, childPosition);
             if (convertView == null) convertView = inflater.inflate(R.layout.item_file, parent, false);
 
+            StringBuilder description = new StringBuilder();
+            if (file.date != null)
+                description.append(file.date.substring(0, 10));
+
+            if (file.size != null)
+                if (description.length() != 0) description.append(" / ");
+                description.append(file.size);
+
             ((TextView) convertView.findViewById(R.id.Name)).setText(file.name);
-            ((TextView) convertView.findViewById(R.id.Size)).setText(file.size != null ? file.size : "");
+            ((TextView) convertView.findViewById(R.id.Size)).setText(description);
+
+            if (getGroupCount() == 1)
+                convertView.findViewById(R.id.padding).setLayoutParams(new RelativeLayout.LayoutParams(0, 0));
+            else
+                convertView.findViewById(R.id.padding).setLayoutParams(new RelativeLayout.LayoutParams(UnitUtils.getDp(getContext(), 40), 0));
 
             return convertView;
         }

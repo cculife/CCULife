@@ -50,6 +50,7 @@ public class FileGroupFilesSource extends EcourseSource<FileGroupData, File[]> {
 
         Elements files;
         Element nodeFile, nodeSize;
+        Element nodeDate;
         File file;
 
         String nodeHref;
@@ -76,7 +77,9 @@ public class FileGroupFilesSource extends EcourseSource<FileGroupData, File[]> {
 
                 if (standFileTemplate) {
                     nodeSize = nodeFile.parent().nextElementSibling();
+                    nodeDate = nodeSize.nextElementSibling();
                     file.name = nodeFile.text();
+                    file.date = nodeDate.text();
                     try {
                         file.size = FileUtils.humanReadableByteCount(Long.valueOf(nodeSize.text()), true);
                     } catch (NumberFormatException e) {

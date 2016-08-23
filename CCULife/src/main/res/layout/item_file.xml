@@ -3,32 +3,40 @@
 <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <TextView
         android:id="@+id/Size"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Size"
+        tools:text="Size"
         android:layout_gravity="center"
         android:layout_below="@+id/Name"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:textColor="@color/Gray"
         android:paddingLeft="10dp"
         android:paddingBottom="10dp"
-        android:layout_marginLeft="40dip" />
+        android:layout_toRightOf="@+id/padding"
+        android:layout_toEndOf="@+id/padding"
+        />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="FileName"
+        tools:text="FileName"
         android:id="@+id/Name"
         android:layout_gravity="center"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:paddingLeft="10sp"
+        android:paddingLeft="10dp"
         android:paddingTop="10dp"
-        android:layout_marginLeft="40dip" />
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/padding"
+        android:layout_toEndOf="@+id/padding" />
+
+    <TextView
+        android:layout_width="40dip"
+        android:layout_height="wrap_content"
+        android:id="@+id/padding"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>
