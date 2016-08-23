@@ -8,14 +8,19 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.webkit.MimeTypeMap;
+import android.widget.Toast;
+
+import org.zankio.cculife.R;
 
 import java.io.File;
 
 public class FileOpenService extends IntentService {
-
+    Handler handler;
     public FileOpenService() {
         super("FileOpenService");
+        handler = new Handler();
     }
 
     @TargetApi(Build.VERSION_CODES.FROYO)
@@ -55,8 +60,11 @@ public class FileOpenService extends IntentService {
             intent.setDataAndType(Uri.fromFile(file), type);
             if (intent.resolveActivity(getPackageManager()) != null) {
                 startActivity(intent);
+            } else {
+                handler.post(() -> Toast.makeText(this, R.string.cant_open, Toast.LENGTH_SHORT).show());
             }
         }
+
         mNotifyManager.cancel(TAG, id);
 
     }
