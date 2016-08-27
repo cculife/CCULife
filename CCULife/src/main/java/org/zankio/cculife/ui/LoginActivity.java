@@ -32,11 +32,11 @@ public class LoginActivity extends BaseActivity {
 
     private String mStudentId;
     private String mPassword;
-    private boolean mRemeber;
+    private boolean mRemember;
 
     private EditText mStudentIdView;
     private EditText mPasswordView;
-    private CheckBox mRemeberView;
+    private CheckBox mRememberView;
     private View mLoginFormView;
     private View mLoginStatusView;
     private TextView mLoginStatusMessageView;
@@ -50,7 +50,7 @@ public class LoginActivity extends BaseActivity {
 
         mStudentIdView = (EditText) findViewById(R.id.studentid);
 
-        mRemeberView = (CheckBox) findViewById(R.id.remeber);
+        mRememberView = (CheckBox) findViewById(R.id.remeber);
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -86,7 +86,7 @@ public class LoginActivity extends BaseActivity {
 
         mStudentId = mStudentIdView.getText().toString();
         mPassword = mPasswordView.getText().toString();
-        mRemeber = mRemeberView.isChecked();
+        mRemember = mRememberView.isChecked();
 
         boolean cancel = false;
         View focusView = null;
@@ -142,7 +142,7 @@ public class LoginActivity extends BaseActivity {
                                     DatabaseBaseSource.clearData(LoginActivity.this);
                                     org.zankio.ccudata.kiki.source.local.DatabaseBaseSource.clearData(LoginActivity.this);
                                     UserManager.getInstance(LoginActivity.this)
-                                            .createLoginSession(mStudentId, mPassword, mRemeber);
+                                            .createLoginSession(mStudentId, mPassword, mRemember);
 
                                     setResult(RESULT_OK);
 

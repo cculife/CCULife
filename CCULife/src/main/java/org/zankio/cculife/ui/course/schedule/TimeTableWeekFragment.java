@@ -13,7 +13,7 @@ import android.widget.TextView;
 import org.zankio.ccudata.kiki.model.TimeTable;
 import org.zankio.cculife.R;
 import org.zankio.cculife.ui.base.BaseMessageFragment;
-import org.zankio.cculife.view.LessionView;
+import org.zankio.cculife.view.LessonView;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -68,7 +68,7 @@ public class TimeTableWeekFragment extends BaseMessageFragment {
         week = new LinearLayout[]{
                 null,
                 (LinearLayout) view.findViewById(R.id.weekMonday),
-                (LinearLayout) view.findViewById(R.id.weekTueday),
+                (LinearLayout) view.findViewById(R.id.weekTuesday),
                 (LinearLayout) view.findViewById(R.id.weekWednesday),
                 (LinearLayout) view.findViewById(R.id.weekThursday),
                 (LinearLayout) view.findViewById(R.id.weekFriday),
@@ -122,7 +122,7 @@ public class TimeTableWeekFragment extends BaseMessageFragment {
                 TimeTable.Class tmpClass;
 
                 LinearLayout.LayoutParams layoutParams;
-                LessionView lessionView;
+                LessonView lessonView;
 
                 mClass = day.classList.get(j);
                 if (mClass.userAdd == 1) continue;
@@ -136,13 +136,13 @@ public class TimeTableWeekFragment extends BaseMessageFragment {
                     }
                 }
 
-                lessionView = new LessionView(getContext());
-                lessionView.setClassName(mClass.name);
-                lessionView.setClassRoom(mClass.classroom);
-                lessionView.setClassTeacher(mClass.teacher);
-                lessionView.setStartTime(mClass.start);
-                lessionView.setEndTime(mClass.end);
-                lessionView.setBackgroundColor(mClass.color);
+                lessonView = new LessonView(getContext());
+                lessonView.setClassName(mClass.name);
+                lessonView.setClassRoom(mClass.classroom);
+                lessonView.setClassTeacher(mClass.teacher);
+                lessonView.setStartTime(mClass.start);
+                lessonView.setEndTime(mClass.end);
+                lessonView.setBackgroundColor(mClass.color);
 
                 layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (getTimeDiffInMinute(mClass.start, mClass.end) * minuteToPixel));
 
@@ -151,9 +151,9 @@ public class TimeTableWeekFragment extends BaseMessageFragment {
                 else
                     layoutParams.setMargins(0, (int) (getTimeDiffInMinute(prevClass.end, mClass.start) * minuteToPixel), 0, 0);
 
-                lessionView.setLayoutParams(layoutParams);
+                lessonView.setLayoutParams(layoutParams);
                 //new GregorianCalendar().clear();
-                week[i].addView(lessionView);
+                week[i].addView(lessonView);
             }
         }
 

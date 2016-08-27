@@ -106,8 +106,8 @@ public class TransportActivity extends BaseActivity
 
         if (observable == null) {
             Date date = new Date();
-            SimpleDateFormat formater = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
-            observable = train.fetch(TrainStopStatusSource.request(formater.format(date), code)).cache();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
+            observable = train.fetch(TrainStopStatusSource.request(format.format(date), code)).cache();
             mCache.set(key, observable, CACHE_TIME);
         }
         return observable;
@@ -119,7 +119,7 @@ public class TransportActivity extends BaseActivity
             case R.id.switch_return:
                 Fragment fragment = mPagerHelper.getFragment(mViewPager.getCurrentItem());
                 if (fragment != null) {
-                    ((ISwitchLine) fragment).swtichLine();
+                    ((ISwitchLine) fragment).switchLine();
                 }
                 break;
         }

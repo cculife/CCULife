@@ -16,7 +16,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class LessionView extends View {
+public class LessonView extends View {
+    private final float scale = 1.5f; //getResources().getDisplayMetrics().scaledDensity;
 
     private String mStartTime;
     private String mEndTime;
@@ -55,26 +56,26 @@ public class LessionView extends View {
     private float mEndTimeWidth = 0.0f;
     private float mEndTimeHeight = 0.0f;
 
-    public LessionView(Context context) {
+    public LessonView(Context context) {
         super(context);
         init();
 
     }
 
-    public LessionView(Context context, AttributeSet attrs) {
+    public LessonView(Context context, AttributeSet attrs) {
         super(context, attrs);
         TypedArray a = context.getTheme().obtainStyledAttributes(
                 attrs,
-                R.styleable.LessionView,
+                R.styleable.LessonView,
                 0, 0
         );
 
+        assert a != null;
         try {
-            assert a != null;
-            mClassName = a.getString(R.styleable.LessionView_ClassName);
-            mTextColor = a.getColor(R.styleable.LessionView_TextColor, 0xFF000000);
-            mTimeColor = a.getColor(R.styleable.LessionView_TextColor, 0xAA000000);
-            mBackgroundColor = a.getColor(R.styleable.LessionView_BackgroundColor, 0xFFFFBB33);
+            mClassName = a.getString(R.styleable.LessonView_ClassName);
+            mTextColor = a.getColor(R.styleable.LessonView_TextColor, 0xFF000000);
+            mTimeColor = a.getColor(R.styleable.LessonView_TextColor, 0xAA000000);
+            mBackgroundColor = a.getColor(R.styleable.LessonView_BackgroundColor, 0xFFFFBB33);
         } finally {
             a.recycle();
         }
@@ -90,11 +91,11 @@ public class LessionView extends View {
 
         mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mTextPaint.setColor(mTextColor);
-        mTextPaint.setTextSize(20);
+        mTextPaint.setTextSize(scale * 13);
 
         mTimePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mTimePaint.setColor(mTimeColor);
-        mTimePaint.setTextSize(15);
+        mTimePaint.setTextSize(scale * 10);
         measureTextSize();
 
     }
@@ -156,11 +157,6 @@ public class LessionView extends View {
         mStartTime = simpleDateFormat.format(startTime.getTime());
         measureTextSize();
         invalidate();
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
     @Override

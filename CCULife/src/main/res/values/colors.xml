@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="warrning">#AAFF0000</color>
-    <color name="Red_Course_Warring">@color/warrning</color>
+    <color name="warning">#AAFF0000</color>
+    <color name="Red_Course_Warring">@color/warning</color>
     <color name="DarkBrown">#FF754C24</color>
     <color name="Brown">#77754c24</color>
     <color name="White">#FFF</color>
@@ -14,5 +14,5 @@
     <color name="ScoreCate">@color/CC1</color>
     <color name="Today">@color/CC1</color>
     <color name="Unread">@color/CC1</color>
-    <color name="absent">@color/warrning</color>
+    <color name="absent">@color/warning</color>
 </resources>

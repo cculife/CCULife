@@ -84,7 +84,7 @@
                 <CheckBox
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/remeber_user_pass"
+                    android:text="@string/remember_user_pass"
                     android:id="@+id/remeber"
                     android:layout_gravity="right|center_vertical"
                     android:checked="true" />

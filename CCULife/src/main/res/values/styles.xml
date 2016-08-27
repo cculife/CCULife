@@ -25,9 +25,9 @@
         <item name="colorAccent">@color/accent</item>
         <item name="logo">@drawable/logo</item>
         <item name="toolbarStyle">@style/NewAppBaseTheme.Toolbar</item>
-        <item name="actionOverflowButtonStyle">@style/NewAppBaseTheme.ActionButtom.Overflow</item>
+        <item name="actionOverflowButtonStyle">@style/NewAppBaseTheme.ActionButton.Overflow</item>
     </style>
-    <style name="NewAppBaseTheme.ActionButtom.Overflow" parent="Widget.AppCompat.Light.ActionButton.Overflow">
+    <style name="NewAppBaseTheme.ActionButton.Overflow" parent="Widget.AppCompat.Light.ActionButton.Overflow">
         <item name="android:src">@drawable/ic_more_vert_24dp</item>
     </style>
 

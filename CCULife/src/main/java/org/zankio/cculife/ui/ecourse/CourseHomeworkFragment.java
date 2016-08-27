@@ -118,7 +118,7 @@ public class CourseHomeworkFragment extends BaseMessageFragment
                 });
     }
 
-    private void onHomewrokContentUpdate(String err, Homework homework) {
+    private void onHomeworkContentUpdate(String err, Homework homework) {
         Context context = getContext();
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
@@ -180,12 +180,12 @@ public class CourseHomeworkFragment extends BaseMessageFragment
 
             @Override
             public void onError(Throwable e) {
-                onHomewrokContentUpdate(e.getMessage(), null);
+                onHomeworkContentUpdate(e.getMessage(), null);
             }
 
             @Override
             public void onNext(Response<Homework, HomeworkData> response) {
-                onHomewrokContentUpdate(null, response.data());
+                onHomeworkContentUpdate(null, response.data());
             }
 
         });

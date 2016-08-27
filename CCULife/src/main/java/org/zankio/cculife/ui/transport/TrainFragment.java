@@ -113,7 +113,7 @@ public class TrainFragment extends BaseMessageFragment implements ISwitchLine {
     }
 
     @Override
-    public void swtichLine() {
+    public void switchLine() {
         currentLine = (currentLine + 1) % 2;
         updateTrain();
     }

@@ -35,7 +35,7 @@ public class ScoreQueryActivity extends BaseFragmentActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scorequery);
 
-        //initail message view
+        //initial message view
         message().content(R.id.pager);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

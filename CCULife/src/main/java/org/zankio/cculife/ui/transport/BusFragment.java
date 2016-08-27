@@ -29,7 +29,7 @@ public class BusFragment extends BaseMessageFragment implements ISwitchLine {
 
     private static final int ICON_MID = 1;
     private static final int ICON_FIRST = 2;
-    private static final int ICON_LASTEST = 3;
+    private static final int ICON_LAST = 3;
 
     private IGetBusData context;
     private BusStopAdapter adapter;
@@ -160,7 +160,7 @@ public class BusFragment extends BaseMessageFragment implements ISwitchLine {
     }
 
     @Override
-    public void swtichLine() {
+    public void switchLine() {
         BusLineRequest[] requests = request();
         mCurrentLine = (currentLine() + 1) % requests.length;
         adapter.setBusStops(new BusStop[0]);
@@ -201,7 +201,7 @@ public class BusFragment extends BaseMessageFragment implements ISwitchLine {
             BusStop busStop = busStops[position];
             int icon;
             if (position == 0) icon = ICON_FIRST;
-            else if (position == busStops.length - 1) icon = ICON_LASTEST;
+            else if (position == busStops.length - 1) icon = ICON_LAST;
             else icon = ICON_MID;
 
             ((TextView) convertView.findViewById(R.id.name)).setText(busStop.name);

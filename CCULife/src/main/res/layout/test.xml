@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <org.zankio.cculife.view.LessionView
+    <org.zankio.cculife.view.LessonView
         android:layout_width="69dp"
         android:layout_height="80dp"
         android:id="@+id/content"

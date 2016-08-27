@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentActivity;
 import org.zankio.cculife.ui.dialog.UpdateDialog;
 
 public class UpdateUI extends FragmentActivity{
-    private final static String TAG = "UpdataUI";
+    private final static String TAG = "UpdateUI";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

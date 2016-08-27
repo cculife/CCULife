@@ -54,7 +54,7 @@ public class HomeActivity extends BaseActivity {
         sessionManager = UserManager.getInstance(this);
 
         GridView serviceView = (GridView)findViewById(R.id.gridView);
-        serviceView.setAdapter(new CCUServiceAdaper(ccuServices));
+        serviceView.setAdapter(new CCUServiceAdapter(ccuServices));
         serviceView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -102,11 +102,11 @@ public class HomeActivity extends BaseActivity {
 
     }
 
-    public class CCUServiceAdaper extends BaseAdapter {
+    public class CCUServiceAdapter extends BaseAdapter {
 
         private CCUService[] services;
 
-        public CCUServiceAdaper (CCUService[] services) {
+        public CCUServiceAdapter(CCUService[] services) {
             this.services = services;
         }
 

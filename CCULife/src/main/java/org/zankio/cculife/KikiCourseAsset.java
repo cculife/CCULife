@@ -12,10 +12,10 @@ import java.util.ArrayList;
 
 import static org.zankio.cculife.ui.course.schedule.TimeTableWeekFragment.randomColor;
 
-public class KikiCourseAssest {
+public class KikiCourseAsset {
 
     public final Context context;
-    public KikiCourseAssest(Context context) {
+    public KikiCourseAsset(Context context) {
         this.context = context;
     }
 

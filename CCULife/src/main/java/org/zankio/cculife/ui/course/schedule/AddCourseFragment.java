@@ -20,14 +20,14 @@ import org.zankio.ccudata.base.source.BaseSource;
 import org.zankio.ccudata.kiki.model.Course;
 import org.zankio.ccudata.kiki.model.TimeTable;
 import org.zankio.ccudata.kiki.source.local.DatabaseTimeTableSource;
-import org.zankio.cculife.KikiCourseAssest;
+import org.zankio.cculife.KikiCourseAsset;
 import org.zankio.cculife.R;
 
 
 public class AddCourseFragment extends DialogFragment
         implements View.OnClickListener, AdapterView.OnItemClickListener,
         View.OnKeyListener, TextView.OnEditorActionListener {
-    private KikiCourseAssest assest;
+    private KikiCourseAsset asset;
     private CourseAdapter adapter;
     private EditText keyView;
     private TimeTable timetable;
@@ -35,7 +35,7 @@ public class AddCourseFragment extends DialogFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        assest = new KikiCourseAssest(getContext());
+        asset = new KikiCourseAsset(getContext());
     }
 
     @NonNull
@@ -64,7 +64,7 @@ public class AddCourseFragment extends DialogFragment
     @Override
     public void onClick(View v) {
         String key = keyView.getText().toString();
-        Course[] course = assest.getFindCourse(key);
+        Course[] course = asset.getFindCourse(key);
         adapter.setCourse(course);
         adapter.notifyDataSetChanged();
     }
@@ -77,7 +77,7 @@ public class AddCourseFragment extends DialogFragment
             return;
         }
 
-        KikiCourseAssest.addCourseToTimeTable(timetable, course);
+        KikiCourseAsset.addCourseToTimeTable(timetable, course);
         timetable.sort();
         new DatabaseTimeTableSource(new Repository(getContext()) {
             @Override

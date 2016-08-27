@@ -10,8 +10,8 @@
         </shape>
     </item>
     <item android:gravity="center"
-        android:top="@dimen/bus_stop_icon_verital_margin"
-        android:bottom="@dimen/bus_stop_icon_verital_margin" >
+        android:top="@dimen/bus_stop_icon_vertical_margin"
+        android:bottom="@dimen/bus_stop_icon_vertical_margin" >
         <shape android:shape="oval" >
             <size android:height="@dimen/bus_stop_icon_size" android:width="@dimen/bus_stop_icon_size"/>
             <solid android:color="@color/bus_icon"/>
