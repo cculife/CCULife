@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,6 +22,7 @@ import org.zankio.ccudata.ecourse.Ecourse;
 import org.zankio.ccudata.ecourse.model.Course;
 import org.zankio.ccudata.ecourse.model.CourseData;
 import org.zankio.ccudata.ecourse.source.remote.CourseListSource;
+import org.zankio.ccudata.portal.model.EcoursePortalData;
 import org.zankio.cculife.Debug;
 import org.zankio.cculife.R;
 import org.zankio.cculife.UserManager;
@@ -148,8 +148,8 @@ public class CourseListFragment extends BaseMessageFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((BaseFragmentActivity)getActivity()).setSSOService(new org.zankio.cculife.CCUService.portal.service.Ecourse());
+        ((BaseFragmentActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((BaseFragmentActivity)getActivity()).setSSOService(new EcoursePortalData());
 
         adapter = new CourseAdapter();
         ListView courselist = (ListView)view.findViewById(R.id.list);

@@ -1,7 +1,6 @@
 package org.zankio.cculife.ui.base;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -9,10 +8,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import org.zankio.cculife.CCUService.portal.Portal;
-import org.zankio.cculife.CCUService.portal.service.BasePortal;
+import org.zankio.ccudata.portal.Portal;
+import org.zankio.ccudata.portal.model.PortalData;
 import org.zankio.cculife.R;
-import org.zankio.cculife.override.AsyncTaskWithErrorHanding;
+import org.zankio.cculife.UserManager;
+import org.zankio.cculife.ccu.service.portal.PortalService;
 import org.zankio.cculife.ui.SettingsActivity;
 import org.zankio.cculife.ui.base.helper.Message;
 
@@ -25,7 +25,7 @@ public class BaseFragmentActivity extends AppCompatActivity {
             R.id.list
     );
 
-    protected BasePortal ssoService = null;
+    protected PortalData portalData = null;
     private boolean toolbarInited;
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -40,7 +40,15 @@ public class BaseFragmentActivity extends AppCompatActivity {
                 startActivity(intent);
                 return true;
             case R.id.action_show_in_browser:
-                if (ssoService != null) showInBrowser(ssoService);
+                Portal portal = new Portal();
+
+                UserManager userManager = UserManager.getInstance();
+                portal.user()
+                        .username(userManager.getUserName())
+                        .password(userManager.getPassword());
+
+                if (portalData != null)
+                    PortalService.openPortal(this, portal, portalData);
                 return true;
         }
 
@@ -62,8 +70,8 @@ public class BaseFragmentActivity extends AppCompatActivity {
         toolbarInited = true;
     }
 
-    public void setSSOService (BasePortal Service) {
-        this.ssoService = Service;
+    public void setSSOService (PortalData Service) {
+        this.portalData = Service;
     }
 
     public Toast makeToast(String msg) {
@@ -79,56 +87,6 @@ public class BaseFragmentActivity extends AppCompatActivity {
         toast.show();
 
         return toast;
-    }
-
-    public void showInBrowser(final BasePortal ssoService) {
-        new showInBrowserAsyncTask(ssoService).execute();
-    }
-
-    public class showInBrowserAsyncTask extends AsyncTaskWithErrorHanding<Void, Void, Void> {
-
-        private BasePortal ssoService;
-        private Toast toast;
-        public showInBrowserAsyncTask(BasePortal ssoService) {
-            this.ssoService = ssoService;
-        }
-
-        @Override
-        protected void onError(Exception e, String msg) {
-            toast = makeToast("載入失敗", toast);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            toast = makeToast("載入中...", toast);
-        }
-
-        @Override
-        protected Void _doInBackground(Void... params) throws Exception {
-            Portal portal;
-            String launchURL[];
-
-            portal = new Portal(BaseFragmentActivity.this);
-            //portal.init();
-            launchURL = portal.getSSOPortal(ssoService);
-
-            if (launchURL == null) throw new Exception();
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(launchURL[0])));
-
-            for (int i = 1; i < launchURL.length; i++) {
-                Thread.sleep(1000);
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(launchURL[i])));
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void _onPostExecute(Void aVoid) {
-            toast.cancel();
-        }
-
     }
 
     public Message message() { return mMessage; }

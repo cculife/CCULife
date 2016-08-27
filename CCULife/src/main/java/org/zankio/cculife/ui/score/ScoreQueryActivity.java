@@ -7,12 +7,12 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 
+import org.zankio.ccudata.base.model.AuthData;
 import org.zankio.ccudata.base.model.Response;
-import org.zankio.ccudata.ecourse.model.AuthData;
+import org.zankio.ccudata.portal.model.ScoreQueryPortalData;
 import org.zankio.ccudata.sourcequery.ScoreQuery;
 import org.zankio.ccudata.sourcequery.model.Grade;
 import org.zankio.ccudata.sourcequery.source.remote.GradesInquiriesSource;
-import org.zankio.cculife.CCUService.portal.service.ScoreQueryPortal;
 import org.zankio.cculife.R;
 import org.zankio.cculife.UserManager;
 import org.zankio.cculife.ui.base.BaseFragmentActivity;
@@ -44,7 +44,7 @@ public class ScoreQueryActivity extends BaseFragmentActivity
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mGradePageAdapter);
 
-        setSSOService(new ScoreQueryPortal());
+        setSSOService(new ScoreQueryPortalData());
 
         message().show("讀取中...", true);
         getGrade().subscribe(new Subscriber<Grade[]>() {

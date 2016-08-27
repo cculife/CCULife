@@ -23,7 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.zankio.ccudata.ecourse.model.Course;
-import org.zankio.cculife.CCUService.portal.service.Ecourse;
+import org.zankio.ccudata.portal.model.EcoursePortalData;
 import org.zankio.cculife.R;
 import org.zankio.cculife.ui.base.BaseFragmentActivity;
 import org.zankio.cculife.ui.base.IGetCourseData;
@@ -104,7 +104,7 @@ public class CourseFragment extends Fragment {
         mPagerAdapter = new CoursePagerAdapter(getChildFragmentManager());
         mPagerAdapter.notifyDataSetChanged();
 
-        ((BaseFragmentActivity)getActivity()).setSSOService(new Ecourse().setCourseID(course.courseid));
+        ((BaseFragmentActivity)getActivity()).setSSOService(new EcoursePortalData().setCourseID(course.courseid));
 
         actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
         if (actionBar != null) {
