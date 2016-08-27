@@ -140,7 +140,7 @@ public class TimeTableDaysFragment extends BaseMessageFragment
         @Override
         public Object instantiateItem (final ViewGroup container, int position) {
             final int week = position + 1;
-            View view = inflater.inflate(R.layout.fragment_course_timetable_day, null);
+            View view = inflater.inflate(R.layout.fragment_course_timetable_day, container, false);
 
             adapter[week] = new TimeTableAdapter(getWeekClasses(week));
             list[week] = (ListView) view.findViewById(R.id.list);

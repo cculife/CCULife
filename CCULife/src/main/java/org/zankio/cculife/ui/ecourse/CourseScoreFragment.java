@@ -203,36 +203,31 @@ public class CourseScoreFragment extends BaseMessageFragment
         @Override
         public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
             ScoreGroup score = (ScoreGroup) getGroup(groupPosition);
-            View view;
 
             if (convertView == null) {
-                view = inflater.inflate(R.layout.item_score, null);
-            } else {
-                view = convertView;
+                convertView = inflater.inflate(R.layout.item_score, parent, false);
             }
-            view.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.ScoreCate));
-            ((TextView)view.findViewById(R.id.Name)).setText(score.name);
-            ((TextView)view.findViewById(R.id.Score)).setText(score.score);
-            ((TextView)view.findViewById(R.id.Rank)).setText(score.rank);
-            return view;
+
+            convertView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.ScoreCate));
+            ((TextView)convertView.findViewById(R.id.Name)).setText(score.name);
+            ((TextView)convertView.findViewById(R.id.Score)).setText(score.score);
+            ((TextView)convertView.findViewById(R.id.Rank)).setText(score.rank);
+            return convertView;
         }
 
         @Override
         public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
             Score score = (Score) getChild(groupPosition, childPosition);
 
-            View view;
-
             if (convertView == null) {
-                view = inflater.inflate(R.layout.item_score, null);
-            } else {
-                view = convertView;
+                convertView = inflater.inflate(R.layout.item_score, parent, false);
             }
-            ((TextView)view.findViewById(R.id.Name)).setText(score.name);
-            ((TextView)view.findViewById(R.id.Percent)).setText(score.percent);
-            ((TextView)view.findViewById(R.id.Score)).setText(score.score);
-            ((TextView)view.findViewById(R.id.Rank)).setText(score.rank);
-            return view;
+
+            ((TextView)convertView.findViewById(R.id.Name)).setText(score.name);
+            ((TextView)convertView.findViewById(R.id.Percent)).setText(score.percent);
+            ((TextView)convertView.findViewById(R.id.Score)).setText(score.score);
+            ((TextView)convertView.findViewById(R.id.Rank)).setText(score.rank);
+            return convertView;
         }
 
         @Override

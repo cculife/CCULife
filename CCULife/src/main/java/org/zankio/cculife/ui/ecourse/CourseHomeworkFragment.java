@@ -239,7 +239,7 @@ public class CourseHomeworkFragment extends BaseMessageFragment
         public View getView(int position, View convertView, ViewGroup parent) {
             Homework homework = (Homework) getItem(position);
 
-            View view = convertView == null ? inflater.inflate(R.layout.item_homework, null) : convertView;
+            View view = convertView == null ? inflater.inflate(R.layout.item_homework, parent, false) : convertView;
             ((TextView)view.findViewById(R.id.Title)).setText(homework.title);
             ((TextView)view.findViewById(R.id.Deadline)).setText(homework.deadline);
             ((TextView)view.findViewById(R.id.Score)).setText(homework.score);

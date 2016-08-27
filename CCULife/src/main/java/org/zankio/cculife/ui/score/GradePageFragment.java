@@ -104,13 +104,14 @@ public class GradePageFragment extends Fragment {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             Score score = (Score) getItem(position);
+            if (convertView == null)
+                    convertView = inflater.inflate(R.layout.item_grade_score, parent, false);
 
-            View view = inflater.inflate(R.layout.item_grade_score, null);
-            ((TextView)view.findViewById(R.id.CourseID)).setText(score.coruseID);
-            ((TextView)view.findViewById(R.id.Name)).setText(score.courseName);
-            ((TextView)view.findViewById(R.id.Credit)).setText(score.credit);
-            ((TextView)view.findViewById(R.id.Score)).setText(score.score);
-            return view;
+            ((TextView)convertView.findViewById(R.id.CourseID)).setText(score.coruseID);
+            ((TextView)convertView.findViewById(R.id.Name)).setText(score.courseName);
+            ((TextView)convertView.findViewById(R.id.Credit)).setText(score.credit);
+            ((TextView)convertView.findViewById(R.id.Score)).setText(score.score);
+            return convertView;
         }
     }
 }
