@@ -84,7 +84,7 @@ public class TimeTableWeekFragment extends BaseMessageFragment {
             if(i % 2 == 0) indexNode.setBackgroundColor(0x11000000);
             index.addView(indexNode);
         }
-        subscriber = new Subscriber<TimeTable>() {
+        courseDataContext.getTimeTable().subscribe(new Subscriber<TimeTable>() {
             @Override
             public void onCompleted() {
 
@@ -100,14 +100,7 @@ public class TimeTableWeekFragment extends BaseMessageFragment {
                 TimeTableWeekFragment.this.timeTable = timeTable;
                 updateTimeTable();
             }
-        };
-        courseDataContext.getTimeTable().subscribe();
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        subscriber.unsubscribe();
+        });
     }
 
     public void updateTimeTable() {
