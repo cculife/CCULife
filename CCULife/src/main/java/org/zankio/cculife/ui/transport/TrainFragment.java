@@ -100,8 +100,7 @@ public class TrainFragment extends BaseMessageFragment implements ISwitchLine {
 
                 @Override
                 public void onNext(Response<TrainTimetable, TrainRequest> response) {
-                    TrainTimetable trainTimetable = response.data();
-                    TrainFragment.this.timetable = trainTimetable;
+                    TrainFragment.this.timetable = response.data();
                     adapter.setTimetable(currentLine == 0 ? timetable.up : timetable.down);
                     adapter.notifyDataSetChanged();
                     message().hide();
