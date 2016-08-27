@@ -4,7 +4,7 @@
     android:layout_width="match_parent">
 
     <include
-        layout="@layout/toolbar"
+        layout="@layout/toolbar_spinner"
         android:id="@+id/toolbar" />
 
     <include
