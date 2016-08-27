@@ -84,7 +84,7 @@ public class UserManager {
     }
 
     public HashMap<String, String> getUserDetails(){
-        HashMap<String, String> result = new HashMap<String, String>();
+        HashMap<String, String> result = new HashMap<>();
 
         result.put(KEY_USERNAME, save ? preferences.getString(KEY_USERNAME, null) : UserName);
         result.put(KEY_PASSWORD, save ? preferences.getString(KEY_PASSWORD, null) : Password);

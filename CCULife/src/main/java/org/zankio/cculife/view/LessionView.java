@@ -206,7 +206,7 @@ public class LessionView extends View {
         int nextPos, length;
         String substr;
         float drawHeight, drawWidth = 0;
-        ArrayList<String> result = new ArrayList<String>();
+        ArrayList<String> result = new ArrayList<>();
         length = str.length();
 
         while (length > 0) {

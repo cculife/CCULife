@@ -36,7 +36,7 @@ public class DownloadService extends IntentService {
     public enum State { Downloading, Finished, Error}
     private final static String TAG = "DownloadService";
     private final static String SSL_TEST_URL = "https://ecourse.ccu.edu.tw/robots.txt";
-    static ArrayList<Integer> notifyID = new ArrayList<Integer>();
+    static ArrayList<Integer> notifyID = new ArrayList<>();
     static TrustManagerFactory tmf;
     static int total = 0;
 
