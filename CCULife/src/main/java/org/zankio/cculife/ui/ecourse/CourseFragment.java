@@ -132,7 +132,7 @@ public class CourseFragment extends Fragment {
         }
     };
 
-    private LoadingListener loadedListener = (loaded) -> { setLoading(!loaded); };
+    private LoadingListener loadedListener = (loaded) -> setLoading(!loaded);
 
     private void setLoading(boolean loading) {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
