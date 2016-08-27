@@ -71,42 +71,42 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/weekIndex"
-                android:layout_weight=".3"></LinearLayout>
+                android:layout_weight=".3"/>
 
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/weekMonday"
-                android:layout_weight="1"></LinearLayout>
+                android:layout_weight="1"/>
 
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/weekTueday"
-                android:layout_weight="1"></LinearLayout>
+                android:layout_weight="1"/>
 
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/weekWednesday"
-                android:layout_weight="1"></LinearLayout>
+                android:layout_weight="1"/>
 
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/weekThursday"
-                android:layout_weight="1"></LinearLayout>
+                android:layout_weight="1"/>
 
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/weekFriday"
-                android:layout_weight="1"></LinearLayout>
+                android:layout_weight="1"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
