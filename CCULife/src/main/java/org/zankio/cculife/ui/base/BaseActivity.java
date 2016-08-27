@@ -1,7 +1,8 @@
 package org.zankio.cculife.ui.base;
 
 import android.content.Intent;
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -55,11 +56,14 @@ public abstract class BaseActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Nullable
+    @NonNull
     @Override
     public android.support.v7.app.ActionBar getSupportActionBar() {
-        initToolbar();
-        return super.getSupportActionBar();
+        if (!toolbarInited) initToolbar();
+        ActionBar actionBar = super.getSupportActionBar();
+
+        if (actionBar == null) throw new RuntimeException("initial Toolbar fail");
+        return actionBar;
     }
 
     protected void initToolbar() {

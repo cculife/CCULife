@@ -3,7 +3,6 @@ package org.zankio.cculife.ui.ecourse;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,6 +17,7 @@ import org.zankio.ccudata.ecourse.model.Classmate;
 import org.zankio.ccudata.ecourse.model.Course;
 import org.zankio.ccudata.ecourse.model.CourseData;
 import org.zankio.cculife.R;
+import org.zankio.cculife.ui.base.BaseFragmentActivity;
 import org.zankio.cculife.ui.base.BaseMessageFragment;
 import org.zankio.cculife.ui.base.IGetCourseData;
 
@@ -79,7 +79,7 @@ public class CourseClassmateFragment extends BaseMessageFragment {
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Classmate");
+        ((BaseFragmentActivity) getActivity()).getSupportActionBar().setTitle("Classmate");
         super.onActivityCreated(savedInstanceState);
     }
 
