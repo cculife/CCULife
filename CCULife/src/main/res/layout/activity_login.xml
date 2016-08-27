@@ -71,8 +71,7 @@
                 android:layout_height="0dp"
                 android:hint="@string/prompt_studentid"
                 android:layout_weight="1"
-                android:inputType="numberDecimal"
-                android:numeric="integer" />
+                android:inputType="numberDecimal" />
 
             <EditText
                 android:id="@+id/password"

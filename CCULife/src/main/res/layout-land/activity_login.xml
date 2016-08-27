@@ -71,7 +71,6 @@
                         android:id="@+id/studentid"
                         android:singleLine="false"
                         android:hint="@string/prompt_studentid"
-                        android:numeric="integer"
                         android:inputType="number"/>
 
                 <EditText
