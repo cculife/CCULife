@@ -42,7 +42,7 @@ public class UserManager {
 
     /**
      * 管理帳號密碼資料
-     * @param context
+     * @param context Context
      */
     public UserManager(Context context){
         this.context = context;
@@ -138,7 +138,7 @@ public class UserManager {
 
     /**
      * 設定當登入資訊改變時的Callback
-     * @param onLoginStateChangedListener
+     * @param onLoginStateChangedListener UserManager.onLoginStateChangedListener
      */
     public void setOnLoginStateChangedListener(UserManager.onLoginStateChangedListener onLoginStateChangedListener) {
         this.onLoginStateChangedListener = onLoginStateChangedListener;
