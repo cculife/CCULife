@@ -201,11 +201,6 @@ public class CourseFileFragment extends BaseMessageFragment
 
     public class FileAdapter extends BaseExpandableListAdapter {
         private FileGroup[] filelists;
-        private LayoutInflater inflater;
-
-        public FileAdapter() {
-            this.inflater = LayoutInflater.from(getContext());
-        }
 
         public void setFiles(FileGroup[] filelists) {
             this.filelists = filelists;
@@ -249,6 +244,8 @@ public class CourseFileFragment extends BaseMessageFragment
 
         @Override
         public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+            LayoutInflater inflater = LayoutInflater.from(getContext());
+
             if (convertView == null) convertView = inflater.inflate(R.layout.item_file_group, parent, false);
 
             FileGroup group = (FileGroup) getGroup(groupPosition);
@@ -266,7 +263,9 @@ public class CourseFileFragment extends BaseMessageFragment
 
         @Override
         public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+            LayoutInflater inflater = LayoutInflater.from(getContext());
             File file = (File) getChild(groupPosition, childPosition);
+
             if (convertView == null) convertView = inflater.inflate(R.layout.item_file, parent, false);
 
             StringBuilder description = new StringBuilder();

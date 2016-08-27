@@ -147,12 +147,7 @@ public class CourseRollCallFragment extends BaseMessageFragment implements IGetL
     }
 
     public class RollCallAdapter extends BaseAdapter {
-        private LayoutInflater inflater;
         private RollCall rollcall;
-
-        public RollCallAdapter() {
-            this.inflater = LayoutInflater.from(getContext());
-        }
 
         public void setRollCall(RollCall rollCall){
             this.rollcall = rollCall;
@@ -181,6 +176,7 @@ public class CourseRollCallFragment extends BaseMessageFragment implements IGetL
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            LayoutInflater inflater = LayoutInflater.from(getContext());
             if (convertView == null)
                 convertView = inflater.inflate(R.layout.item_rollcall, parent, false);
 

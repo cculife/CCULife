@@ -25,8 +25,8 @@ import rx.Subscriber;
 
 public class TimeTableWeekFragment extends BaseMessageFragment {
     private LinearLayout[] week;
-    private float minuteToPixel = 1.5f;
-    private static int[] colors = {0x3333B5E5, 0x33AA66CC, 0x3399CC00, 0x33FFBB33, 0x33FF4444};
+    private static final float minuteToPixel = 1.5f;
+    private static final int[] colors = {0x3333B5E5, 0x33AA66CC, 0x3399CC00, 0x33FFBB33, 0x33FF4444};
 
     private TimeTable timeTable;
     private Calendar firstClass;

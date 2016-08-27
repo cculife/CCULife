@@ -207,13 +207,7 @@ public class CourseHomeworkFragment extends BaseMessageFragment
     }
 
     public class HomeworkAdapter extends BaseAdapter {
-
         private Homework[] homeworks;
-        private LayoutInflater inflater;
-
-        public HomeworkAdapter() {
-            this.inflater = LayoutInflater.from(getContext());
-        }
 
         public void setHomeworks(Homework[] homework){
             this.homeworks = homework;
@@ -237,14 +231,17 @@ public class CourseHomeworkFragment extends BaseMessageFragment
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            LayoutInflater inflater = LayoutInflater.from(getContext());
             Homework homework = (Homework) getItem(position);
 
-            View view = convertView == null ? inflater.inflate(R.layout.item_homework, parent, false) : convertView;
-            ((TextView)view.findViewById(R.id.Title)).setText(homework.title);
-            ((TextView)view.findViewById(R.id.Deadline)).setText(homework.deadline);
-            ((TextView)view.findViewById(R.id.Score)).setText(homework.score);
+            if (convertView == null)
+                convertView = inflater.inflate(R.layout.item_homework, parent, false);
 
-            return view;
+            ((TextView)convertView.findViewById(R.id.Title)).setText(homework.title);
+            ((TextView)convertView.findViewById(R.id.Deadline)).setText(homework.deadline);
+            ((TextView)convertView.findViewById(R.id.Score)).setText(homework.score);
+
+            return convertView;
         }
     }
 }

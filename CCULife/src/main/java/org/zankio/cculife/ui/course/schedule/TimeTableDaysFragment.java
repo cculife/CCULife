@@ -114,13 +114,7 @@ public class TimeTableDaysFragment extends BaseMessageFragment
     }
 
     public class SectionsPagerAdapter extends PagerAdapter {
-
-        private LayoutInflater inflater;
         private View old;
-
-        public SectionsPagerAdapter() {
-            inflater = LayoutInflater.from(getActivity());
-        }
 
         @Override
         public int getCount() {
@@ -140,6 +134,7 @@ public class TimeTableDaysFragment extends BaseMessageFragment
         @Override
         public Object instantiateItem (final ViewGroup container, int position) {
             final int week = position + 1;
+            LayoutInflater inflater = LayoutInflater.from(getContext());
             View view = inflater.inflate(R.layout.fragment_course_timetable_day, container, false);
 
             adapter[week] = new TimeTableAdapter(getWeekClasses(week));

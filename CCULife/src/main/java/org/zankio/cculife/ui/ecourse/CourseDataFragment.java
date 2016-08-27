@@ -12,7 +12,7 @@ import org.zankio.cculife.ui.base.IGetCourseData;
 
 public class CourseDataFragment extends Fragment implements IGetCourseData, CourseListFragment.OnCourseSelectedListener, GetStorage{
     public static final String TAG_COURSE_DATA_FRAGMENT = "COURSE_DATA_FRAGMENT";
-    private Storage storage = new Storage();
+    private final Storage storage = new Storage();
     private Ecourse ecourse;
     private Course course;
 

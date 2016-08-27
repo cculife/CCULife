@@ -123,7 +123,7 @@ public class CourseFragment extends Fragment {
         pageChangeListener.onPageSelected(0);
     }
 
-    private ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
+    private final ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
         @Override
         public void onPageSelected(int position) {
             IGetLoading fragment = (IGetLoading) mPagerAdapter.getItem(position);
@@ -132,7 +132,7 @@ public class CourseFragment extends Fragment {
         }
     };
 
-    private LoadingListener loadedListener = (loaded) -> setLoading(!loaded);
+    private final LoadingListener loadedListener = (loaded) -> setLoading(!loaded);
 
     private void setLoading(boolean loading) {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {

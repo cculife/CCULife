@@ -14,7 +14,7 @@ import static org.zankio.cculife.utils.PackageUtils.getVersionName;
 
 public class AboutActivity extends BaseActivity {
 
-    private int debug_mode_click[] = {R.id.dbg_c, R.id.dbg_c2, R.id.dbg_u, R.id.dbg_u, R.id.dbg_c2, R.id.dbg_c};
+    private static final int debug_mode_click[] = {R.id.dbg_c, R.id.dbg_c2, R.id.dbg_u, R.id.dbg_u, R.id.dbg_c2, R.id.dbg_c};
     private int debug_mode_index = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +28,7 @@ public class AboutActivity extends BaseActivity {
         ((TextView)findViewById(R.id.title)).setText("CCULife v" + getVersionName(this));
     }
 
-    public View.OnClickListener dbg_click = new View.OnClickListener() {
+    public final View.OnClickListener dbg_click = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             if (debug_mode_index == debug_mode_click.length || v == null) return;

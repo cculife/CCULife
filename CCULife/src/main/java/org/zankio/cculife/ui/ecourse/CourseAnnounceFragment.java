@@ -59,7 +59,7 @@ public class CourseAnnounceFragment
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        adapter = new AnnounceAdapter(getActivity());
+        adapter = new AnnounceAdapter();
 
         ListView list = (ListView) view.findViewById(R.id.list);
         list.setAdapter(adapter);
@@ -197,11 +197,6 @@ public class CourseAnnounceFragment
     public class AnnounceAdapter extends BaseAdapter {
 
         private Announce[] announces;
-        private LayoutInflater inflater;
-
-        public AnnounceAdapter(Context context) {
-            this.inflater = LayoutInflater.from(context);
-        }
 
         public void setAnnounces(Announce[] announces){
             this.announces = announces;
@@ -225,20 +220,17 @@ public class CourseAnnounceFragment
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            View view;
+            LayoutInflater inflater = LayoutInflater.from(getContext());
 
-            if (convertView == null) view = inflater.inflate(R.layout.item_announce, parent, false);
-            else view = convertView;
-
-            LayoutInflater inflater = getActivity().getLayoutInflater();
+            if (convertView == null) convertView = inflater.inflate(R.layout.item_announce, parent, false);
             Announce announce = (Announce) getItem(position);
 
-            ((TextView)view.findViewById(R.id.Title)).setText(announce.title);
-            ((TextView)view.findViewById(R.id.Date)).setText(announce.date);
-            if (announce.isnew) view.setBackgroundColor(ContextCompat.getColor(inflater.getContext(), R.color.Unread));
-            else view.setBackgroundColor(0);
+            ((TextView)convertView.findViewById(R.id.Title)).setText(announce.title);
+            ((TextView)convertView.findViewById(R.id.Date)).setText(announce.date);
+            if (announce.isnew) convertView.setBackgroundColor(ContextCompat.getColor(inflater.getContext(), R.color.Unread));
+            else convertView.setBackgroundColor(0);
 
-            return view;
+            return convertView;
         }
     }
 }

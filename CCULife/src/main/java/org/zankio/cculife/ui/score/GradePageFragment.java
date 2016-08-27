@@ -73,13 +73,7 @@ public class GradePageFragment extends Fragment {
     }
 
     public class ScoreAdapter extends BaseAdapter {
-
-        private LayoutInflater inflater;
         private Score[] scores;
-
-        public ScoreAdapter() {
-            inflater = LayoutInflater.from(getContext());
-        }
 
         public void setScores(Score[] scores){
             this.scores = scores;
@@ -103,7 +97,9 @@ public class GradePageFragment extends Fragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            LayoutInflater inflater = LayoutInflater.from(getContext());
             Score score = (Score) getItem(position);
+
             if (convertView == null)
                     convertView = inflater.inflate(R.layout.item_grade_score, parent, false);
 

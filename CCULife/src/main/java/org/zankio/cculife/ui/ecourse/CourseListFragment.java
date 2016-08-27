@@ -174,7 +174,7 @@ public class CourseListFragment extends BaseMessageFragment {
     public class CourseAdapter extends BaseAdapter {
 
         Course[] courses = null;
-        private boolean ignore_ecourse_warnning;
+        private final boolean ignore_ecourse_warnning;
         public CourseAdapter() {
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
             this.ignore_ecourse_warnning = preferences.getBoolean("ignore_ecourse_warnning", false);

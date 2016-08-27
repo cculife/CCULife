@@ -17,7 +17,7 @@ import org.zankio.cculife.R;
 import java.io.File;
 
 public class FileOpenService extends IntentService {
-    Handler handler;
+    final Handler handler;
     public FileOpenService() {
         super("FileOpenService");
         handler = new Handler();

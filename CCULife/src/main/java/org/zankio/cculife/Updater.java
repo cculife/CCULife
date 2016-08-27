@@ -33,11 +33,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class Updater {
-    private Context context;
+    private final Context context;
     private Version version;
-    private final String UPDATE_URL = "http://cculife.herokuapp.com/update.html";
-    private final String DOWNLOAD_DIRPATH = Environment.getExternalStorageDirectory().getPath() + "/Android/data/org.zankio.cculife";
-    private final String DOWNLOAD_FULLPATH = Environment.getExternalStorageDirectory().getPath() + "/Android/data/org.zankio.cculife/CCULife.apk";
+    private static final String UPDATE_URL = "http://cculife.herokuapp.com/update.html";
+    private static final String DOWNLOAD_DIRPATH = Environment.getExternalStorageDirectory().getPath() + "/Android/data/org.zankio.cculife";
+    private static final String DOWNLOAD_FULLPATH = Environment.getExternalStorageDirectory().getPath() + "/Android/data/org.zankio.cculife/CCULife.apk";
     public Updater(Context context) {
         this.context = context;
     }

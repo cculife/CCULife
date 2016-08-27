@@ -28,7 +28,7 @@ public class TimetableDataFragment extends Fragment
     private Kiki kiki;
 
     private ReplaySubject<TimeTable> subject;
-    private Storage storage = new Storage();
+    private final Storage storage = new Storage();
 
     public void init(Context context) {
         if (kiki == null) {

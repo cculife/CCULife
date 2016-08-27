@@ -14,7 +14,7 @@ import static org.zankio.cculife.ui.course.schedule.TimeTableWeekFragment.random
 
 public class KikiCourseAssest {
 
-    public Context context;
+    public final Context context;
     public KikiCourseAssest(Context context) {
         this.context = context;
     }

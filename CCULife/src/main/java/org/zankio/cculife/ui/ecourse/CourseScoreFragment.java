@@ -152,12 +152,7 @@ public class CourseScoreFragment extends BaseMessageFragment
     }
 
     public class ScoreAdapter extends BaseExpandableListAdapter {
-        private LayoutInflater inflater;
         private ScoreGroup[] scores;
-
-        public ScoreAdapter() {
-            this.inflater = LayoutInflater.from(getContext());
-        }
 
         public void setScores(ScoreGroup[] scores){
             this.scores = scores;
@@ -202,6 +197,7 @@ public class CourseScoreFragment extends BaseMessageFragment
 
         @Override
         public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+            LayoutInflater inflater = LayoutInflater.from(getContext());
             ScoreGroup score = (ScoreGroup) getGroup(groupPosition);
 
             if (convertView == null) {
@@ -217,6 +213,7 @@ public class CourseScoreFragment extends BaseMessageFragment
 
         @Override
         public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+            LayoutInflater inflater = LayoutInflater.from(getContext());
             Score score = (Score) getChild(groupPosition, childPosition);
 
             if (convertView == null) {

@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentManager;
 import java.util.HashMap;
 
 public class CacheFragment extends Fragment {
-    private HashMap<String, Cache> hashMap;
+    private final HashMap<String, Cache> hashMap;
 
     public CacheFragment() { hashMap = new HashMap<>(); }
 
