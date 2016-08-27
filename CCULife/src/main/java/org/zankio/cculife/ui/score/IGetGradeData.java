@@ -1,4 +1,4 @@
-package org.zankio.cculife.ui.ScoreQuery;
+package org.zankio.cculife.ui.score;
 
 
 import org.zankio.ccudata.sourcequery.model.Grade;

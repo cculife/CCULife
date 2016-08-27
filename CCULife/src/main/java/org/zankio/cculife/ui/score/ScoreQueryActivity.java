@@ -1,4 +1,4 @@
-package org.zankio.cculife.ui.ScoreQuery;
+package org.zankio.cculife.ui.score;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-import static org.zankio.cculife.ui.CourseSchedule.TimeTableWeekFragment.randomColor;
+import static org.zankio.cculife.ui.course.schedule.TimeTableWeekFragment.randomColor;
 
 public class KikiCourseAssest {
 

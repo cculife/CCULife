@@ -1,4 +1,4 @@
-package org.zankio.cculife.ui.CourseSchedule;
+package org.zankio.cculife.ui.course.schedule;
 
 import org.zankio.ccudata.kiki.model.TimeTable;
 

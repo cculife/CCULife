@@ -1,4 +1,4 @@
-package org.zankio.cculife.ui.ScoreQuery;
+package org.zankio.cculife.ui.score;
 
 import android.content.Context;
 import android.os.Bundle;

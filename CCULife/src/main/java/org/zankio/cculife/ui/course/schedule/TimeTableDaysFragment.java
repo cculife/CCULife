@@ -1,4 +1,4 @@
-package org.zankio.cculife.ui.CourseSchedule;
+package org.zankio.cculife.ui.course.schedule;
 
 import android.app.Activity;
 import android.content.Context;

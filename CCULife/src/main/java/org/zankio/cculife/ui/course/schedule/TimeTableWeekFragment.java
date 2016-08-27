@@ -1,4 +1,4 @@
-package org.zankio.cculife.ui.CourseSchedule;
+package org.zankio.cculife.ui.course.schedule;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -17,6 +17,7 @@ import org.zankio.cculife.view.LessionView;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 import java.util.Random;
 
 import rx.Subscriber;
@@ -79,7 +80,7 @@ public class TimeTableWeekFragment extends BaseMessageFragment {
         for (int i = 1; i <= 14; i++) {
             indexNode = new TextView(getContext());
             indexNode.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (60 * minuteToPixel)));
-            indexNode.setText(String.format("%d", i));
+            indexNode.setText(String.format(Locale.US, "%d", i));
             indexNode.setGravity(Gravity.CENTER_HORIZONTAL);
             if(i % 2 == 0) indexNode.setBackgroundColor(0x11000000);
             index.addView(indexNode);

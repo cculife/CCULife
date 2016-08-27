@@ -1,4 +1,4 @@
-package org.zankio.cculife.ui.CCUSchedule;
+package org.zankio.cculife.ui.ccu.calendar;
 
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;

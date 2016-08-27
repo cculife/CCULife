@@ -33,13 +33,13 @@
             android:name=".ui.ecourse.CourseActivity"
             android:label="@string/title_activity_course" />
         <activity
-            android:name=".ui.CourseSchedule.CourseTimeTableActivity"
+            android:name=".ui.course.schedule.CourseTimeTableActivity"
             android:label="@string/title_activity_course_schedule"/>
         <activity
-            android:name=".ui.ScoreQuery.ScoreQueryActivity"
+            android:name=".ui.score.ScoreQueryActivity"
             android:label="@string/title_activity_score"/>
         <activity
-            android:name=".ui.CCUSchedule.CCUScheduleActivity"
+            android:name=".ui.ccu.calendar.CCUScheduleActivity"
             android:label="@string/title_activity_ccuschedule"/>
         <activity
             android:name=".ui.SettingsActivity"
@@ -47,7 +47,7 @@
         <activity
             android:name=".ui.UpdateUI"
             android:label="@string/title_activity_settings"
-            android:theme="@style/AppDialog"></activity>
+            android:theme="@style/AppDialog"/>
         <activity
             android:name=".ui.AboutActivity"
             android:label="@string/title_activity_about">
