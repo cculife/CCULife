@@ -146,6 +146,6 @@ public class UserManager {
 
 
     public interface onLoginStateChangedListener {
-        public void onLoginStateChanged(boolean isLogined);
+        void onLoginStateChanged(boolean isLogined);
     }
 }
