@@ -118,7 +118,7 @@ public class Updater {
                 case DialogInterface.BUTTON_NEGATIVE:
                     if(version != null) {
                         editor.putInt("update_ignore", version.versionCode);
-                        editor.commit();
+                        editor.apply();
                     }
 
                     break;
@@ -164,7 +164,7 @@ public class Updater {
                 preferences = PreferenceManager.getDefaultSharedPreferences(context);
                 editor = preferences.edit();
                 editor.putLong("update_latest_check", System.currentTimeMillis());
-                editor.commit();
+                editor.apply();
             }
         }
     }

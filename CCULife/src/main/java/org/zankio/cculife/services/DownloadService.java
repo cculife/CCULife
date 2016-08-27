@@ -58,14 +58,14 @@ public class DownloadService extends IntentService {
         try {
             Ion.with(this).load(SSL_TEST_URL).asString().get();
             editor.putInt("SSL_MODE", 1);
-            editor.commit();
+            editor.apply();
             return false;
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             if ("javax.net.ssl.SSLException".equals(e.getMessage())) {
                 editor.putInt("SSL_MODE", 2);
-                editor.commit();
+                editor.apply();
                 return false;
             }
             e.printStackTrace();
