@@ -13,7 +13,7 @@ import org.zankio.ccudata.base.source.annotation.Order;
 import org.zankio.ccudata.base.source.http.HTTPJsoupSource;
 import org.zankio.ccudata.base.source.http.annontation.Method;
 import org.zankio.ccudata.base.source.http.annontation.Url;
-import org.zankio.ccudata.ecourse.model.AuthData;
+import org.zankio.ccudata.base.model.AuthData;
 
 @Method("POST")
 @Url("https://kiki.ccu.edu.tw/~ccmisp06/cgi-bin/Query/Query_grade.php")

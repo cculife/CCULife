@@ -3,6 +3,7 @@ package org.zankio.ccudata.kiki.source.remote;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.zankio.ccudata.base.constant.Exceptions;
+import org.zankio.ccudata.base.model.AuthData;
 import org.zankio.ccudata.base.model.HttpResponse;
 import org.zankio.ccudata.base.model.Request;
 import org.zankio.ccudata.base.source.SourceProperty;
@@ -12,7 +13,6 @@ import org.zankio.ccudata.base.source.annotation.Order;
 import org.zankio.ccudata.base.source.http.HTTPJsoupSource;
 import org.zankio.ccudata.base.source.http.annontation.Method;
 import org.zankio.ccudata.base.source.http.annontation.Url;
-import org.zankio.ccudata.kiki.model.AuthData;
 
 @Method("POST")
 @Url("https://kiki.ccu.edu.tw/~ccmisp06/cgi-bin/class_new/bookmark.php")

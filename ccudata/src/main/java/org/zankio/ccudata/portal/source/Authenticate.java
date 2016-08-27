@@ -1,5 +1,6 @@
 package org.zankio.ccudata.portal.source;
 
+import org.zankio.ccudata.base.model.AuthData;
 import org.zankio.ccudata.base.model.HttpResponse;
 import org.zankio.ccudata.base.model.Request;
 import org.zankio.ccudata.base.source.annotation.DataType;
@@ -7,7 +8,6 @@ import org.zankio.ccudata.base.source.http.HTTPStringSource;
 import org.zankio.ccudata.base.source.http.annontation.FollowRedirect;
 import org.zankio.ccudata.base.source.http.annontation.Method;
 import org.zankio.ccudata.base.source.http.annontation.Url;
-import org.zankio.ccudata.portal.model.AuthData;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

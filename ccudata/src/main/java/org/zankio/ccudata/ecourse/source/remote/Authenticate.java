@@ -11,7 +11,7 @@ import org.zankio.ccudata.base.source.http.annontation.FollowRedirect;
 import org.zankio.ccudata.base.source.http.annontation.Method;
 import org.zankio.ccudata.base.source.http.annontation.Url;
 import org.zankio.ccudata.ecourse.constant.Urls;
-import org.zankio.ccudata.ecourse.model.AuthData;
+import org.zankio.ccudata.base.model.AuthData;
 
 @Url(Urls.LOGIN)
 @Method("POST")

@@ -1,4 +1,4 @@
-package org.zankio.ccudata.ecourse.model;
+package org.zankio.ccudata.base.model;
 
 public class AuthData {
     public String username;
