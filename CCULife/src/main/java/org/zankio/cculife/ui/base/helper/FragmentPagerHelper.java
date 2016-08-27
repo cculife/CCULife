@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.view.ViewGroup;
 
 
 public class FragmentPagerHelper {
@@ -33,11 +32,6 @@ public class FragmentPagerHelper {
     public class FragmentPagerAdapter extends android.support.v4.app.FragmentPagerAdapter {
 
         public FragmentPagerAdapter(FragmentManager fm) { super(fm); }
-
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            super.destroyItem(container, position, object);
-        }
 
         @Override
         public Fragment getItem(int position) { return pages[position].getFragment(); }

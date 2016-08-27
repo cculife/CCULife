@@ -176,9 +176,6 @@ public class CourseAnnounceFragment
         dialog.show();
     }
 
-    private void onAnnounceUpdate(Announce[] announces) {
-    }
-
     @Override
     public boolean isLoading() {
         return !this.loaded;

@@ -48,11 +48,6 @@ public class BusFragment extends BaseMessageFragment implements ISwitchLine {
         }
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
     public int currentLine() {
         if (mCurrentLine != -1) return mCurrentLine;
         Integer value = cacheContext.cache().get(KEY_CURRENT_LINE + request()[0].toString(), Integer.class);

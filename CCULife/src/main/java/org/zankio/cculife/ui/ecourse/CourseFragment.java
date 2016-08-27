@@ -216,20 +216,10 @@ public class CourseFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
     public class CoursePagerAdapter extends FragmentPagerAdapter {
 
         public CoursePagerAdapter(FragmentManager fm) {
             super(fm);
-        }
-
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            super.destroyItem(container, position, object);
         }
 
         @Override

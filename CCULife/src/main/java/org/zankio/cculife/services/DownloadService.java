@@ -44,10 +44,6 @@ public class DownloadService extends IntentService {
         super(TAG);
     }
 
-    public void onCreate() {
-        super.onCreate();
-    }
-
     public boolean checkSSL() {
         SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = preference.edit();
