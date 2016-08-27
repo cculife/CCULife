@@ -3,7 +3,6 @@ package org.zankio.cculife.ui;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -14,19 +13,22 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.zankio.ccudata.base.exception.LoginErrorException;
+import org.zankio.ccudata.base.model.AuthData;
+import org.zankio.ccudata.base.model.Response;
 import org.zankio.ccudata.ecourse.Ecourse;
 import org.zankio.ccudata.ecourse.source.local.DatabaseBaseSource;
 import org.zankio.ccudata.ecourse.source.remote.Authenticate;
-import org.zankio.cculife.CCUService.portal.Portal;
+import org.zankio.ccudata.portal.Portal;
 import org.zankio.cculife.R;
 import org.zankio.cculife.UserManager;
-import org.zankio.cculife.override.LoginErrorException;
-import org.zankio.cculife.override.NetworkErrorException;
 import org.zankio.cculife.ui.base.BaseActivity;
+import org.zankio.cculife.utils.ExceptionUtils;
+
+import rx.Observable;
+import rx.subjects.Subject;
 
 public class LoginActivity extends BaseActivity {
-
-    private UserLoginTask mAuthTask = null;
 
     private String mStudentId;
     private String mPassword;
@@ -75,9 +77,9 @@ public class LoginActivity extends BaseActivity {
     }
 
     public void attemptLogin() {
-        if (mAuthTask != null) {
+/*        if (mAuthTask != null) {
             return;
-        }
+        }*/
 
         mStudentIdView.setError(null);
         mPasswordView.setError(null);
@@ -106,8 +108,52 @@ public class LoginActivity extends BaseActivity {
         } else {
             mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
             showProgress(true);
-            mAuthTask = new UserLoginTask();
-            mAuthTask.execute((Void) null);
+
+            Subject
+                    .create((Observable.OnSubscribe<Response<Boolean, AuthData>>) subscriber -> {
+                        Portal portal = new Portal();
+                        Ecourse ecourse = new Ecourse(this);
+
+                        portal
+                                .fetch(org.zankio.ccudata.portal.source.Authenticate.request(mStudentId, mPassword))
+                                .subscribe(
+                                        subscriber::onNext,
+                                        throwable -> {
+                                            Throwable exception = ExceptionUtils.extraceException(throwable);
+                                            if (exception instanceof LoginErrorException) {
+                                                ecourse
+                                                        .fetch(Authenticate.request(mStudentId, mPassword))
+                                                        .subscribe(
+                                                                subscriber::onNext,
+                                                                subscriber::onError,
+                                                                subscriber::onCompleted
+                                                        );
+                                            } else {
+                                                subscriber.onError(throwable);
+                                            }
+                                        }
+                                );
+                    })
+                    .doOnTerminate(() -> showProgress(false))
+                    .subscribe(
+                            response -> {
+                                Boolean success = response.data();
+                                if (success != null && success) {
+                                    DatabaseBaseSource.clearData(LoginActivity.this);
+                                    org.zankio.ccudata.kiki.source.local.DatabaseBaseSource.clearData(LoginActivity.this);
+                                    UserManager.getInstance(LoginActivity.this)
+                                            .createLoginSession(mStudentId, mPassword, mRemeber);
+
+                                    setResult(RESULT_OK);
+
+                                    finish();
+                                }
+                            }, e -> {
+                                Throwable throwable = ExceptionUtils.extraceException(e);
+                                mPasswordView.setError(throwable.getMessage());
+                                mPasswordView.requestFocus();
+                            }
+                    );
         }
     }
 
@@ -143,66 +189,4 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-        public String message = null;
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            Portal portal;
-            Ecourse ecourse = new Ecourse(getApplicationContext());
-            try {
-                portal = new Portal(LoginActivity.this);
-                return portal.getSession(mStudentId, mPassword);
-
-            } catch (NetworkErrorException e) {
-                message = e.getMessage();
-                return false;
-            } catch (LoginErrorException e) {
-                try {
-                    boolean success;
-                    success = ecourse.fetch(Authenticate.request(mStudentId, mPassword)).toBlocking().last().data();
-                    if (success) {
-                        DatabaseBaseSource.clearData(LoginActivity.this);
-                    }
-                    return success;
-                } catch (RuntimeException e1) {
-                    Throwable cause = e.getCause();
-                    if (cause != null && "帳號或密碼錯誤".equals(cause.getMessage())) {
-                        message = e.getMessage();
-                        return false;
-                    }
-                } catch (Exception e1) {
-                    e1.printStackTrace();
-                }
-                message = e.getMessage();
-                return false;
-            } catch (Exception e) {
-                message = "未知錯誤";
-                e.printStackTrace();
-                return false;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-            showProgress(false);
-
-            if (success) {
-                UserManager.getInstance(LoginActivity.this)
-                        .createLoginSession(mStudentId, mPassword, mRemeber);
-                setResult(RESULT_OK);
-
-                finish();
-            } else {
-                mPasswordView.setError(message);
-                mPasswordView.requestFocus();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false);
-        }
-    }
 }

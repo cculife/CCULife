@@ -1,5 +1,6 @@
 package org.zankio.ccudata.portal.source;
 
+import org.zankio.ccudata.base.exception.LoginErrorException;
 import org.zankio.ccudata.base.model.AuthData;
 import org.zankio.ccudata.base.model.HttpResponse;
 import org.zankio.ccudata.base.model.Request;
@@ -55,17 +56,17 @@ public class Authenticate extends HTTPStringSource<AuthData, Boolean> {
                 if (matcher.find()) {
                     if (ERROR_WRONG_USERPASS.equals(matcher.group(1)))
                     {
-                        throw new Exception("帳號或密碼錯誤");
+                        throw new LoginErrorException("帳號或密碼錯誤");
                     } else if(ERROR_AUTOLOGOUT.equals(matcher.group(1))){
-                        throw new Exception("請重試");
+                        throw new LoginErrorException("請重試");
                     } else if(ERROR_WORNG_AUTHCODE.equals(matcher.group(1))) {
-                        throw new Exception("認證碼錯誤!?!?!?");
+                        throw new LoginErrorException("認證碼錯誤!?!?!?");
                     } else {
-                        throw new Exception("未辨識錯誤 : " + matcher.group(1));
+                        throw new LoginErrorException("未辨識錯誤 : " + matcher.group(1));
                     }
                 }
             } else {
-                throw new Exception("學校系統更新 ?");
+                throw new LoginErrorException("學校系統更新 ?");
             }
         }
         return false;
