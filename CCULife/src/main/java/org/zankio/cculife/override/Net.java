@@ -52,7 +52,7 @@ public class Net {
             SSLContext ssl_context = SSLContext.getInstance("TLS");
             ssl_context.init(null, tmf.getTrustManagers(), null);
 
-;
+
             return ssl_context;
         }
         catch (CertificateException | KeyManagementException | KeyStoreException | NoSuchAlgorithmException | IOException ignored) {}
@@ -87,7 +87,7 @@ public class Net {
             SSLContext ssl_context = SSLContext.getInstance("TLS");
             ssl_context.init(null, tmf.getTrustManagers(), null);
 
-;
+
             return ssl_context.getSocketFactory();
         }
         catch (CertificateException | KeyStoreException | KeyManagementException | NoSuchAlgorithmException | IOException ignored) {}

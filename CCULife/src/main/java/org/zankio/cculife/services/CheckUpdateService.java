@@ -47,7 +47,7 @@ public class CheckUpdateService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         try {
-            JsonObject latest = Ion.with(this).load(GITHUB_RELEASE_URL).asJsonObject().get();;
+            JsonObject latest = Ion.with(this).load(GITHUB_RELEASE_URL).asJsonObject().get();
             String tagname = latest.get("tag_name").getAsString().substring(1);
             String description = latest.get("body").getAsString();
             String version = getVersion();

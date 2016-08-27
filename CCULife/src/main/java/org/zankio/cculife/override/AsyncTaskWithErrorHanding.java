@@ -9,7 +9,7 @@ public abstract class AsyncTaskWithErrorHanding<Params, Progress, Result> extend
     protected abstract Result _doInBackground(Params... params) throws Exception;
 
     protected void onError(Exception e, String msg){ }
-    protected void _onPostExecute(Result result) {};
+    protected void _onPostExecute(Result result) {}
 
     @Override
     protected void onPreExecute() {
