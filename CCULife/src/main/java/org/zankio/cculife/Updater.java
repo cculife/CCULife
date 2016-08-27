@@ -1,6 +1,5 @@
 package org.zankio.cculife;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -21,7 +20,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.zankio.cculife.override.AsyncTaskWithErrorHanding;
 import org.zankio.cculife.override.Exceptions;
 import org.zankio.cculife.override.Net;
 import org.zankio.cculife.override.NetworkErrorException;
@@ -78,7 +76,7 @@ public class Updater {
     public void checkUpdate(boolean force) {
         if(!force) {checkUpdate(); return;}
 
-        new UpdateTask().execute();
+        //new UpdateTask().execute();
     }
 
     public Dialog.OnClickListener dialogOnClick = new DialogInterface.OnClickListener() {
@@ -129,7 +127,7 @@ public class Updater {
         }
     };
 
-    private class UpdateTask extends AsyncTaskWithErrorHanding<Void, Void, Version> {
+    /*private class UpdateTask extends AsyncTaskWithErrorHanding<Void, Void, Version> {
 
         @Override
         protected void onError(Exception e, String msg) {
@@ -167,7 +165,7 @@ public class Updater {
                 editor.apply();
             }
         }
-    }
+    }*/
 
     private class DownloadTask extends AsyncTask<String, Integer, String> {
 
