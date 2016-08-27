@@ -14,8 +14,9 @@ import org.zankio.cculife.R;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-public class LessionView extends View {
+import java.util.Locale;
 
+public class LessionView extends View {
 
     private String mStartTime;
     private String mEndTime;
@@ -144,14 +145,14 @@ public class LessionView extends View {
     }
 
     public void setEndTime(Calendar endTime) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm", Locale.US);
         mEndTime = simpleDateFormat.format(endTime.getTime());
         measureTextSize();
         invalidate();
     }
 
     public void setStartTime(Calendar startTime) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm", Locale.US);
         mStartTime = simpleDateFormat.format(startTime.getTime());
         measureTextSize();
         invalidate();
