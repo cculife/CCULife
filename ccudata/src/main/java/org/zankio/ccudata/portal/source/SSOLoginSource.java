@@ -24,6 +24,10 @@ import org.zankio.ccudata.portal.model.PortalData;
 public class SSOLoginSource extends HTTPJsoupSource<PortalData, String> {
     public static final String TYPE = "SSO_LOGIN";
 
+    public static Request<String, PortalData> request(PortalData data) {
+        return new Request<>(TYPE, data, String.class);
+    }
+
     @Override
     public void before(Request<String, PortalData> request) {
         super.before(request);
@@ -51,6 +55,7 @@ public class SSOLoginSource extends HTTPJsoupSource<PortalData, String> {
         PortalData portalData = request.args;
 
         httpParameter(request)
+                .cookies("ccuSSO", context.storage().<String>get(Authenticate.SSO_SESSION_ID))
                 .url(portalData.getSSOPortalURL());
     }
 
