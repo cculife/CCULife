@@ -31,6 +31,7 @@ public class Net {
             InputStream caInput = new BufferedInputStream(context.getAssets().open("ssl.crt"));
             Certificate ca;
 
+            //noinspection TryFinallyCanBeTryWithResources
             try {
                 ca = cf.generateCertificate(caInput);
             } finally {
@@ -66,6 +67,7 @@ public class Net {
             InputStream caInput = new BufferedInputStream(context.getAssets().open("ssl.crt"));
             Certificate ca;
 
+            //noinspection TryFinallyCanBeTryWithResources
             try {
                 ca = cf.generateCertificate(caInput);
             } finally {

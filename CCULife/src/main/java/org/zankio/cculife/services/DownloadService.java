@@ -216,6 +216,7 @@ public class DownloadService extends IntentService {
             InputStream caInput = new BufferedInputStream(this.getAssets().open("ssl.crt"));
             Certificate ca;
 
+            //noinspection TryFinallyCanBeTryWithResources
             try {
                 ca = cf.generateCertificate(caInput);
             } finally {
