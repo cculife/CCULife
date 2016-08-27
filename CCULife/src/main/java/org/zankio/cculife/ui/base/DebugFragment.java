@@ -1,6 +1,5 @@
 package org.zankio.cculife.ui.base;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -25,12 +24,6 @@ public class DebugFragment extends Fragment {
     public void onAttach(Context context) {
         Log.d(TAG, "onAttach(Context)");
         super.onAttach(context);
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        Log.d(TAG, "onAttach(Activity)");
-        super.onAttach(activity);
     }
 
     @Override
@@ -196,9 +189,4 @@ public class DebugFragment extends Fragment {
         super.onViewStateRestored(savedInstanceState);
     }
 
-    @Override
-    public void onInflate(Activity activity, AttributeSet attrs, Bundle savedInstanceState) {
-        Log.d(TAG, "onInflate(Activity)");
-        super.onInflate(activity, attrs, savedInstanceState);
-    }
 }
