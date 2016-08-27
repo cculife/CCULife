@@ -11,7 +11,7 @@ import com.koushikdutta.ion.Ion;
 import org.zankio.cculife.ui.UpdateUI;
 
 public class CheckUpdateService extends IntentService {
-    private static String GITHUB_RELEASE_URL = "https://api.github.com/repos/Zankio/CCULife/releases/latest";
+    private final static String GITHUB_RELEASE_URL = "https://api.github.com/repos/Zankio/CCULife/releases/latest";
 
     public CheckUpdateService() {
         super("CheckUpdateService");
