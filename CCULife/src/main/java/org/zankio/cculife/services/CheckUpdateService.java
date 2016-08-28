@@ -51,7 +51,7 @@ public class CheckUpdateService extends IntentService {
             String tagname = latest.get("tag_name").getAsString().substring(1);
             String description = latest.get("body").getAsString();
             String version = getVersion();
-            if (!tagname.equals(version)) {
+            if (tagname != null && !tagname.equals(version)) {
                 if (hasNewer(version, tagname)) {
                     Intent update = new Intent(this, UpdateUI.class);
                     update.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
