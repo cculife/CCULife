@@ -198,7 +198,7 @@ public class CourseFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
-            case R.id.action_classmate:
+            /*case R.id.action_classmate:
                 Fragment fragment = new CourseClassmateFragment();
                 Bundle data = new Bundle();
                 data.putString("id", course.courseid);
@@ -210,7 +210,7 @@ public class CourseFragment extends Fragment {
                         .addToBackStack(null)
                         .commit();
 
-                return true;
+                return true;*/
         }
 
         return super.onOptionsItemSelected(item);
