@@ -11,7 +11,10 @@
 -->
 
 
-<resources>
+<resources
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="UnusedResources"
+    >
 
     <color name="red_50">#FFEBEE</color>
     <color name="red_100">#FFCDD2</color>
