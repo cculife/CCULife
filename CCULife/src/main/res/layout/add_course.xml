@@ -13,6 +13,27 @@
         android:layout_toStartOf="@+id/search"
         android:layout_above="@+id/list" />
 
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/search"
+        android:src="@drawable/ic_search_24dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/no_result"
+        android:visibility="gone"
+        android:text="@string/no_result"
+        android:textColor="@color/textSecond"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_below="@id/key"
+        android:layout_centerHorizontal="true"/>
+
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -25,13 +46,5 @@
         android:paddingRight="16dp"
         android:paddingStart="16dp"/>
 
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/search"
-        android:src="@drawable/ic_search_24dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

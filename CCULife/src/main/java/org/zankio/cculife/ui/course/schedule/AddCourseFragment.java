@@ -31,6 +31,7 @@ public class AddCourseFragment extends DialogFragment
     private CourseAdapter adapter;
     private EditText keyView;
     private TimeTable timetable;
+    private View noResultView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,6 +53,8 @@ public class AddCourseFragment extends DialogFragment
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
         view.findViewById(R.id.search).setOnClickListener(this);
+
+        noResultView = view.findViewById(R.id.no_result);
         keyView = (EditText) view.findViewById(R.id.key);
         keyView.setOnEditorActionListener(this);
         keyView.setImeActionLabel("搜尋", KeyEvent.KEYCODE_ENTER);
@@ -65,6 +68,12 @@ public class AddCourseFragment extends DialogFragment
     public void onClick(View v) {
         String key = keyView.getText().toString();
         Course[] course = asset.getFindCourse(key);
+
+        if (course.length > 0)
+            noResultView.setVisibility(View.GONE);
+        else
+            noResultView.setVisibility(View.VISIBLE);
+
         adapter.setCourse(course);
         adapter.notifyDataSetChanged();
     }
