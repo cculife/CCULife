@@ -152,7 +152,7 @@ public class TimeTableDaysFragment extends BaseMessageFragment
 
                 new AlertDialog.Builder(getContext())
                         .setTitle("刪除旁聽課程?")
-                        .setPositiveButton(R.string.OK, (dialog, which) -> {
+                        .setPositiveButton(R.string.ok, (dialog, which) -> {
                             timeTable.remove(course);
                             new DatabaseTimeTableSource(new Repository(getContext()) {
                                 @Override
@@ -250,7 +250,8 @@ public class TimeTableDaysFragment extends BaseMessageFragment
             ((TextView)view.findViewById(R.id.name)).setText(course.name);
             ((TextView)view.findViewById(R.id.course_id)).setText(
                     String.format(
-                            "%s / %s-%s / %s",
+                            "%s%s / %s-%s / %s",
+                            course.userAdd == 1 ? "(旁) " : "",
                             course.classroom,
                             simpleDateFormat.format(course.start.getTime()),
                             simpleDateFormat.format(course.end.getTime()),
