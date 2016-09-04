@@ -2,8 +2,6 @@ package org.zankio.cculife.ui;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -24,6 +22,7 @@ import org.zankio.cculife.Debug;
 import org.zankio.cculife.R;
 import org.zankio.cculife.Updater;
 import org.zankio.cculife.UserManager;
+import org.zankio.cculife.utils.PackageUtils;
 
 import java.util.List;
 
@@ -73,7 +72,7 @@ public class SettingsActivity extends PreferenceActivity implements UserManager.
         fakeHeader.setTitle(R.string.pref_header_about);
         getPreferenceScreen().addPreference(fakeHeader);
         addPreferencesFromResource(R.xml.pref_about);
-        findPreference("about_title").setSummary(getVersionName(this));
+        findPreference("about_title").setSummary(PackageUtils.getVersionName(this));
         // findPreference("check_update").setOnPreferenceClickListener(onPreferenceClickListener);
         // bindPreferenceSummaryToValue(findPreference("update_interval"));
 
@@ -215,7 +214,7 @@ public class SettingsActivity extends PreferenceActivity implements UserManager.
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static class AccountPreferenceFragment extends PreferenceFragment implements UserManager.onLoginStateChangedListener{
+    public static class AccountPreferenceFragment extends PreferenceFragment implements UserManager.onLoginStateChangedListener {
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -258,13 +257,14 @@ public class SettingsActivity extends PreferenceActivity implements UserManager.
 
         }
     }
+
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class AboutPreferenceFragment extends PreferenceFragment {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_about);
-            findPreference("about_title").setSummary(getVersionName(this.getActivity()));
+            findPreference("about_title").setSummary(PackageUtils.getVersionName(getActivity()));
             //findPreference("check_update").setOnPreferenceClickListener(onPreferenceClickListener);
             //bindPreferenceSummaryToValue(findPreference("update_interval"));
 
@@ -295,22 +295,4 @@ public class SettingsActivity extends PreferenceActivity implements UserManager.
             addPreferencesFromResource(R.xml.pref_custom);
         }
     }
-
-    private static String getVersionName(Context context) {
-        PackageManager pm = null;
-        PackageInfo pinfo = null;
-
-        try {
-            pm = context.getPackageManager();
-            if(pm != null) {
-                pinfo = pm.getPackageInfo(context.getPackageName(), 0);
-                return "v" + pinfo.versionName;
-            }
-
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
-
 }
