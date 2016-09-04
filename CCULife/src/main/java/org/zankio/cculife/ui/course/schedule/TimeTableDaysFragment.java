@@ -31,6 +31,9 @@ import rx.Subscriber;
 
 public class TimeTableDaysFragment extends BaseMessageFragment
         implements View.OnClickListener {
+
+    public interface OnTimetableUpdate { void onUpdate(); }
+
     private IGetTimeTableData timeTableDataContext;
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private TimeTableAdapter[] adapter;
@@ -39,7 +42,6 @@ public class TimeTableDaysFragment extends BaseMessageFragment
     private ViewPager mViewPager;
     private int lastPage = -1;
     private Subscriber<TimeTable> subscriber;
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -97,7 +99,10 @@ public class TimeTableDaysFragment extends BaseMessageFragment
     @Override
     public void onClick(View v) {
         AddCourseFragment dialog = new AddCourseFragment();
-        dialog.show(getFragmentManager(), "dialog");
+        dialog.show(getFragmentManager(), "add_course_dialog");
+        AddCourseFragment fragment = (AddCourseFragment) getFragmentManager().findFragmentByTag("add_course_dialog");
+        if (fragment == null) fragment = dialog;
+        fragment.setUpdateListener(this::updateTimeTable);
     }
 
     @Override

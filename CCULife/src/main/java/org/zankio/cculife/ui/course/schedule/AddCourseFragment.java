@@ -32,6 +32,7 @@ public class AddCourseFragment extends DialogFragment
     private EditText keyView;
     private TimeTable timetable;
     private View noResultView;
+    private TimeTableDaysFragment.OnTimetableUpdate updateListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,6 +95,7 @@ public class AddCourseFragment extends DialogFragment
                 return new BaseSource[0];
             }
         }).storeTimeTable(timetable, true);
+        updateListener.onUpdate();
         this.dismiss();
     }
 
@@ -113,6 +115,10 @@ public class AddCourseFragment extends DialogFragment
             return true;
         }
         return false;
+    }
+
+    public void setUpdateListener(TimeTableDaysFragment.OnTimetableUpdate updateListener) {
+        this.updateListener = updateListener;
     }
 
     public class CourseAdapter extends BaseAdapter {

@@ -58,7 +58,7 @@ public class TimetableDataFragment extends Fragment
         kiki.fetch(TimetableSource.request()).subscribe(
                 new Subscriber<Response<TimeTable, SemesterData>>() {
                     @Override
-                    public void onCompleted() { subject.onCompleted(); }
+                    public void onCompleted() {  }
 
                     @Override
                     public void onError(Throwable e) { subject.onError(e); }
@@ -68,14 +68,17 @@ public class TimetableDataFragment extends Fragment
                         TimeTable timetable = response.data();
                         subject.onNext(timetable);
                         kiki.fetch(new Request<>(DatabaseTimeTableSource.TYPE_USERADD, null, TimeTable.class))
-                                .subscribe(res -> {
-                                    TimeTable timetableUser = res.data();
-                                    if (timetable == null) return;
-                                    if (timetableUser == null) return;
+                                .subscribe(
+                                        res -> {
+                                            TimeTable timetableUser = res.data();
+                                            if (timetable == null) return;
+                                            if (timetableUser == null) return;
 
-                                    timetable.mergeTimetable(timetableUser);
-                                    subject.onNext(timetable);
-                                });
+                                            timetable.mergeTimetable(timetableUser);
+                                            subject.onNext(timetable);
+                                        },
+                                        subject::onError,
+                                        subject::onCompleted);
                     }
                 });
 
