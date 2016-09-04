@@ -1,10 +1,12 @@
 package org.zankio.cculife;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import org.zankio.ccudata.kiki.model.Course;
 import org.zankio.ccudata.kiki.model.TimeTable;
 import org.zankio.ccudata.kiki.source.remote.TimetableSource;
+import org.zankio.cculife.utils.CourseUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,9 +21,9 @@ public class KikiCourseAsset {
         this.context = context;
     }
 
-    //public final static String COURSE_FILE = "courses/10402";
     public final static String COURSE_FILE = "courses/10501";
 
+    @NonNull
     private String getAssetRawData(String fileName) {
         InputStream is;
         try {
@@ -42,7 +44,11 @@ public class KikiCourseAsset {
 
     public Course[] getFindCourse(String key){
         key = key.toUpperCase();
-        String[] data = getAssetRawData(COURSE_FILE).split("\n");
+        String rawData;
+        rawData = CourseUtils.getCourseList(context);
+        if (rawData == null) rawData = getAssetRawData(COURSE_FILE);
+
+        String[] data = rawData.split("\n");
         ArrayList<Course> result = new ArrayList<>();
 
         for (String line : data) {

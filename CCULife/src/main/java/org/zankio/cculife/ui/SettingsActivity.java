@@ -67,6 +67,7 @@ public class SettingsActivity extends PreferenceActivity implements UserManager.
         fakeHeader.setTitle(R.string.pref_header_custom);
         getPreferenceScreen().addPreference(fakeHeader);
         addPreferencesFromResource(R.xml.pref_custom);
+        //bindPreferenceSummaryToValue(findPreference("update_course_list"));
 
         fakeHeader = new PreferenceCategory(this);
         fakeHeader.setTitle(R.string.pref_header_about);

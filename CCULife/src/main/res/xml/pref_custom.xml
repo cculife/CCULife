@@ -5,4 +5,8 @@
         android:key="ignore_ecourse_warnning"
         android:defaultValue="false" />
 
+    <org.zankio.cculife.ui.UpdateCoursePreference
+        android:title="更新旁聽課程列表"
+        android:key="update_course_list"/>
+
 </PreferenceScreen>

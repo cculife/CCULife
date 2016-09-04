@@ -8,6 +8,7 @@ import org.zankio.ccudata.base.model.OfflineMode;
 import org.zankio.ccudata.base.model.User;
 import org.zankio.ccudata.base.source.BaseSource;
 import org.zankio.ccudata.kiki.source.local.DatabaseTimeTableSource;
+import org.zankio.ccudata.kiki.source.remote.AllCourseSource;
 import org.zankio.ccudata.kiki.source.remote.Authenticate;
 import org.zankio.ccudata.kiki.source.remote.CourseListSource;
 import org.zankio.ccudata.kiki.source.remote.TimetableSource;
@@ -37,6 +38,7 @@ public class Kiki extends Repository {
                 new CourseListSource(),
                 new TimetableSource(),
                 new Authenticate(),
+                new AllCourseSource(),
 
                 new DatabaseTimeTableSource(this),
         };
