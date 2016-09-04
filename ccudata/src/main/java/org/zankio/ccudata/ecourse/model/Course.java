@@ -53,7 +53,8 @@ public class Course {
                         if (ecourse.getOfflineMode().compareTo(OfflineMode.VIEWED) <= 0)
                             syncAnnounceContent(response.data());
                     })
-                    .compose(cache());
+                    .compose(cache())
+                    .doOnError(throwable -> loadingAnnounces = null);
 
         return loadingAnnounces;
     }
@@ -61,7 +62,9 @@ public class Course {
     public Observable<Response<Classmate[], CourseData>> getClassmate() {
         if (loadingClassmate == null)
             loadingClassmate = ecourse.fetch(ClassmateSource.request(this))
-                .compose(cache());
+                    .compose(cache())
+                    .doOnError(throwable -> loadingClassmate = null);
+
 
         return loadingClassmate;
     }
@@ -69,7 +72,8 @@ public class Course {
     public Observable<Response<FileGroup[], CourseData>> getFiles() {
         if (loadingFiles == null)
             loadingFiles = ecourse.fetch(FileGroupSource.request(this))
-                .compose(cache());
+                    .compose(cache())
+                    .doOnError(throwable -> loadingFiles = null);
 
         return loadingFiles;
     }
@@ -77,7 +81,8 @@ public class Course {
     public Observable<Response<Homework[], CourseData>> getHomework() {
         if (loadingHomework == null)
             loadingHomework = ecourse.fetch(HomeworkSource.request(this))
-                .compose(cache());
+                    .compose(cache())
+                    .doOnError(throwable -> loadingHomework = null);
 
         return loadingHomework;
     }
@@ -85,7 +90,8 @@ public class Course {
     public Observable<Response<RollCall, CourseData>> getRollCall() {
         if (loadingRollCall == null)
             loadingRollCall = ecourse.fetch(RollCallSource.request(this))
-                    .compose(cache());
+                    .compose(cache())
+                    .doOnError(throwable -> loadingRollCall = null);
 
         return loadingRollCall;
     }
@@ -93,7 +99,8 @@ public class Course {
     public Observable<Response<ScoreGroup[], CourseData>> getScore() {
         if (loadingScore == null) {
             loadingScore = ecourse.fetch(ScoreSource.request(this))
-                    .compose(cache());
+                    .compose(cache())
+                    .doOnError(throwable -> loadingScore = null);
         }
 
         return loadingScore;
