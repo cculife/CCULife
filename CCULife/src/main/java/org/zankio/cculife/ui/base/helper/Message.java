@@ -9,7 +9,6 @@ import android.widget.TextView;
 public class Message {
     private final Fragment fragment;
     private final Activity activity;
-    private View mainView;
     private final int ID_TEXTVIEW_MESSAGE;
     private final int ID_VIEW_LOADING;
     private final int ID_VIEW_MESSAGE_PANEL;
@@ -54,13 +53,7 @@ public class Message {
             return activity.findViewById(id);
 
         if (fragment != null) {
-            if (mainView == null)
-                mainView = fragment.getView();
-
-            if (mainView == null)
-                return null;
-
-            return mainView.findViewById(id);
+            return fragment.getView().findViewById(id);
         }
         return null;
     }
