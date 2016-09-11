@@ -189,7 +189,9 @@ public class DatabaseScoreSource
                 response -> {
                     Observable.just(response)
                             .subscribeOn(Schedulers.io())
+                            // source not null
                             .filter(res -> res.request().source() != null)
+                            // source not self
                             .filter(res -> !res.request().source().getClass().equals(DatabaseScoreSource.this.getClass()))
                             .subscribe(
                                     res -> {

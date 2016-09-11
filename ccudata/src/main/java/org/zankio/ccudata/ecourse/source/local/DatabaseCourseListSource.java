@@ -130,8 +130,11 @@ public class DatabaseCourseListSource extends DatabaseBaseSource<CourseData, Cou
                 response -> {
                     Observable.just(response)
                             .subscribeOn(Schedulers.io())
+                            // source not null
                             .filter(res -> res.request().source() != null)
+                            // source not self
                             .filter(res -> !res.request().source().getClass().equals(DatabaseCourseListSource.this.getClass()))
+                            // get data
                             .map(Response::data)
                             .ofType(Course[].class)
                             // call store function
