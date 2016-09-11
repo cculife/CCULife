@@ -191,9 +191,13 @@ public class DatabaseScoreSource
                             .subscribeOn(Schedulers.io())
                             .filter(res -> res.request().source() != null)
                             .filter(res -> !res.request().source().getClass().equals(DatabaseScoreSource.this.getClass()))
-                            .subscribe(res -> {
-                                storeScoreGroup((ScoreGroup[]) res.data(), ((CourseData)res.request().args).course);
-                            });
+                            .subscribe(
+                                    res -> {
+                                        storeScoreGroup((ScoreGroup[]) res.data(), ((CourseData)res.request().args).course);
+                                    },
+                                    // TODO: 2016/9/11 check error
+                                    Throwable::printStackTrace
+                            );
                 };
     }
 }

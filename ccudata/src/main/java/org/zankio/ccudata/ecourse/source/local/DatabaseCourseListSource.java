@@ -134,7 +134,9 @@ public class DatabaseCourseListSource extends DatabaseBaseSource<CourseData, Cou
                             .filter(res -> !res.request().source().getClass().equals(DatabaseCourseListSource.this.getClass()))
                             .map(Response::data)
                             .ofType(Course[].class)
-                            .subscribe(this::storeCourse);
+                            // call store function
+                            // TODO: 2016/9/11 check error ?
+                            .subscribe(this::storeCourse, Throwable::printStackTrace);
 
                     /*BaseSource source = response.request().source();
                     Course[] courses = (Course[]) response.data();

@@ -44,7 +44,8 @@ public class AddCourseFragment extends DialogFragment
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         IGetTimeTableData context = (IGetTimeTableData) getActivity();
-        context.getTimeTable().subscribe(timeTable -> this.timetable = timeTable );
+        // TODO: 2016/9/11 check error
+        context.getTimeTable().subscribe(timeTable -> this.timetable = timeTable, Throwable::printStackTrace);
 
         adapter = new CourseAdapter();
 

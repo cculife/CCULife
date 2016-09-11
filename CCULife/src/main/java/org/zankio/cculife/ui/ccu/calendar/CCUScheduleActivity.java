@@ -55,38 +55,42 @@ public class CCUScheduleActivity extends BaseActivity {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .map(CCUSchedule::getScheduleList)
-                .subscribe(result -> {
+                .subscribe(
+                        result -> {
 
-                    // check no result
-                    if (result == null || result.length == 0) {
-                        message().show("沒有日程");
-                        return;
-                    }
+                            // check no result
+                            if (result == null || result.length == 0) {
+                                message().show("沒有日程");
+                                return;
+                            }
 
 
-                    int i, length = 0;
-                    for (i = 0; i < result.length; i++) {
-                        length += result[i].list.length;
-                    }
-                    CCUSchedule.Item[] list = new CCUSchedule.Item[length + result.length];
+                            int i, length = 0;
+                            for (i = 0; i < result.length; i++) {
+                                length += result[i].list.length;
+                            }
+                            CCUSchedule.Item[] list = new CCUSchedule.Item[length + result.length];
 
-                    i = 0;
-                    for (CCUSchedule.Schedule s : result) {
-                        CCUSchedule.Item header = schedule.new Item();
-                        header.Title = s.Name;
-                        header.Date = s.list[0].Date;
-                        list[i++] = header;
+                            i = 0;
+                            for (CCUSchedule.Schedule s : result) {
+                                CCUSchedule.Item header = schedule.new Item();
+                                header.Title = s.Name;
+                                header.Date = s.list[0].Date;
+                                list[i++] = header;
 
-                        for (CCUSchedule.Item item : s.list) {
-                            list[i++] = item;
-                        }
-                    }
+                                for (CCUSchedule.Item item : s.list) {
+                                    list[i++] = item;
+                                }
+                            }
 
-                    adapter.setItems(list);
-                    message().hide();
+                            adapter.setItems(list);
+                            message().hide();
 
-                    scrollToNow(list);
-                });
+                            scrollToNow(list);
+                        },
+                        // TODO: 2016/9/11 check error
+                        Throwable::printStackTrace
+                );
     }
 
     @Override
