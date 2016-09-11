@@ -64,6 +64,7 @@ public class CourseAnnounceFragment
         ListView list = (ListView) view.findViewById(R.id.list);
         list.setAdapter(adapter);
         list.setOnItemClickListener(this);
+
     }
 
     @Override
@@ -82,44 +83,42 @@ public class CourseAnnounceFragment
         }
 
         // load announce
-        course.getAnnounces().subscribe(new Subscriber<Response<Announce[], CourseData>>() {
-            private boolean noData = true;
-            @Override
-            public void onStart() {
-                super.onStart();
-                setLoaded(false);
-                message().show("讀取中...", true);
-            }
+        course.getAnnounces()
+                .doOnTerminate(() -> setLoaded(true))
+                .subscribe(new Subscriber<Response<Announce[], CourseData>>() {
+                    private boolean noData = true;
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                        setLoaded(false);
+                        message().show("讀取中...", true);
+                    }
 
-            @Override
-            public void onCompleted() {
-                if (noData)
-                    message().show("沒有公告");
+                    @Override
+                    public void onCompleted() {
+                        if (noData)
+                            message().show("沒有公告");
+                    }
 
-                setLoaded(true);
-            }
+                    @Override
+                    public void onError(Throwable e) {
+                        e = ExceptionUtils.extraceException(e);
+                        message().show(e.getMessage());
+                    }
 
-            @Override
-            public void onError(Throwable e) {
-                e = ExceptionUtils.extraceException(e);
-                message().show(e.getMessage());
+                    @Override
+                    public void onNext(Response<Announce[], CourseData> courseDataResponse) {
+                        Announce[] announces = courseDataResponse.data();
+                        if(announces == null || announces.length == 0) {
+                            return;
+                        }
 
-                setLoaded(true);
-            }
+                        adapter.setAnnounces(announces);
+                        noData = false;
 
-            @Override
-            public void onNext(Response<Announce[], CourseData> courseDataResponse) {
-                Announce[] announces = courseDataResponse.data();
-                if(announces == null || announces.length == 0) {
-                    return;
-                }
-
-                adapter.setAnnounces(announces);
-                noData = false;
-
-                message().hide();
-            }
-        });
+                        message().hide();
+                    }
+                });
     }
 
     @Override
