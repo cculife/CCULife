@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -71,6 +72,7 @@ public abstract class Repository {
                 .compose(filterResult())
                 .compose(bindListener(request.type))
                 .doOnError(Throwable::printStackTrace)
+                .timeout(60, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
