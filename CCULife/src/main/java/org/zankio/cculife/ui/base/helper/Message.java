@@ -53,7 +53,10 @@ public class Message {
             return activity.findViewById(id);
 
         if (fragment != null) {
-            return fragment.getView().findViewById(id);
+            View view = fragment.getView();
+
+            if (view != null)
+                return view.findViewById(id);
         }
         return null;
     }
