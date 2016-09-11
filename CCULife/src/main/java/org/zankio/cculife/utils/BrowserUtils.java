@@ -64,19 +64,21 @@ public class BrowserUtils {
                     public void onNavigationEvent(int navigationEvent, Bundle extras) {
                         super.onNavigationEvent(navigationEvent, extras);
 
-                        if (navigationEvent == NAVIGATION_FINISHED) {
+                        if (navigationEvent == NAVIGATION_FINISHED && index <= urls.length) {
                             CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder(session);
                             builder.setToolbarColor(ContextCompat.getColor(activity, R.color.accent));
                             CustomTabsIntent customTabsIntent = builder.build();
-                            customTabsIntent.launchUrl(activity, Uri.parse(urls[index++]));
+                                customTabsIntent.launchUrl(activity, Uri.parse(urls[index++]));
                         }
                     }
                 });
 
-                CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder(session);
-                builder.setToolbarColor(ContextCompat.getColor(activity, R.color.accent));
-                CustomTabsIntent customTabsIntent = builder.build();
-                customTabsIntent.launchUrl(activity, Uri.parse(urls[index++]));
+                if (index <= urls.length) {
+                    CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder(session);
+                    builder.setToolbarColor(ContextCompat.getColor(activity, R.color.accent));
+                    CustomTabsIntent customTabsIntent = builder.build();
+                    customTabsIntent.launchUrl(activity, Uri.parse(urls[index++]));
+                }
             }
 
             @Override
