@@ -120,6 +120,8 @@ public class CourseHomeworkFragment extends BaseMessageFragment
 
     private void onHomeworkContentUpdate(String err, Homework homework) {
         Context context = getContext();
+
+        if (context == null) return;
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
         TextView message = new TextView(context);
