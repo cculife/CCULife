@@ -116,7 +116,7 @@ public class DatabaseTimeTableSource extends DatabaseBaseSource<SemesterData, Ti
             TimeTable.Day[] days = timeTable.days;
             for (int i = 0; i < days.length; i++) {
                 TimeTable.Day day = days[i];
-                ArrayList<TimeTable.Class> classList = day.classList;
+                ArrayList<TimeTable.Class> classList = (ArrayList<TimeTable.Class>) day.classList.clone();
                 for (TimeTable.Class mClass : classList) {
                     values.clear();
                     values.put(TIME_COLUMN_COURSEID, mClass.course_id);
