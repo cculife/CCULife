@@ -90,9 +90,11 @@ public class CourseTimeTableActivity extends BaseFragmentActivity
             fragment = new TimeTableWeekFragment();
 
         fragment.setArguments(args);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, fragment)
-                .commit();
+
+        if (!isFinishing())
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.container, fragment)
+                    .commitAllowingStateLoss();
 
     }
 
