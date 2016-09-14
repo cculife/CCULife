@@ -57,6 +57,7 @@ public class TimetableDataFragment extends Fragment
 
         kiki.fetch(TimetableSource.request()).subscribe(
                 new Subscriber<Response<TimeTable, SemesterData>>() {
+                    private int count = 0;
                     @Override
                     public void onCompleted() {  }
 
@@ -78,7 +79,11 @@ public class TimetableDataFragment extends Fragment
                                             subject.onNext(timetable);
                                         },
                                         subject::onError,
-                                        subject::onCompleted);
+                                        () -> {
+                                            count++;
+                                            if (count >= 2)
+                                                subject.onCompleted();
+                                        });
                     }
                 });
 
