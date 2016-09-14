@@ -24,7 +24,10 @@ import org.zankio.cculife.Updater;
 import org.zankio.cculife.UserManager;
 import org.zankio.cculife.utils.PackageUtils;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class SettingsActivity extends PreferenceActivity implements UserManager.onLoginStateChangedListener {
 
@@ -88,6 +91,17 @@ public class SettingsActivity extends PreferenceActivity implements UserManager.
 
         sessionManager.setOnLoginStateChangedListener(this);
         loadAccountsSetting();
+    }
+
+    @Override
+    protected boolean isValidFragment(String fragmentName) {
+        Set<String> fragmentSet = new HashSet<>(Arrays.asList(
+                "org.zankio.cculife.ui.SettingsActivity$AccountPreferenceFragment",
+                "org.zankio.cculife.ui.SettingsActivity$CustomPreferenceFragment",
+                "org.zankio.cculife.ui.SettingsActivity$OfflinePreferenceFragment",
+                "org.zankio.cculife.ui.SettingsActivity$AboutPreferenceFragment"
+        ));
+        return fragmentSet.contains(fragmentName);
     }
 
     private void loadAccountsSetting(){
