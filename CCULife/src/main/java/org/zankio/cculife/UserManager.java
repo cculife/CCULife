@@ -60,7 +60,7 @@ public class UserManager {
      */
     public void createLoginSession(String username, String password, boolean save) {
 
-        if (this.save = save) {
+        if (this.save == save) {
             editor.putString(KEY_USERNAME, username);
             editor.putString(KEY_PASSWORD, password);
             editor.putBoolean(KEY_ISLOGIN, true);
