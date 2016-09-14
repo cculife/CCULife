@@ -97,7 +97,7 @@ public class TimetableDataFragment extends Fragment
     public static TimetableDataFragment getFragment(FragmentManager fragmentManager, boolean raw) {
         TimetableDataFragment fragment;
         fragment = (TimetableDataFragment) fragmentManager.findFragmentByTag(TAG_TIMETABLE_DATA_FRAGMENT);
-        if (!raw && fragment == null) {
+        if (!raw && fragment == null && !fragmentManager.isDestroyed()) {
             fragment = new TimetableDataFragment();
             fragmentManager.beginTransaction().add(fragment, TAG_TIMETABLE_DATA_FRAGMENT).commitAllowingStateLoss();
         }
