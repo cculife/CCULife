@@ -83,6 +83,7 @@ public class AddCourseFragment extends DialogFragment
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Course course = (Course) parent.getAdapter().getItem(position);
+        // TODO: 2016/9/12 add course and timetable is null
         if (timetable == null || timetable.exist(String.format("%s_%s", course.CourseID, course.ClassID))) {
             this.dismiss();
             return;
