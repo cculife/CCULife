@@ -73,7 +73,7 @@ public class HomeActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == ACTIVITY_LOGIN) {
-            if(resultCode == RESULT_OK && loadServices.Activity != null)
+            if(resultCode == RESULT_OK && loadServices != null && loadServices.Activity != null)
                 startActivity(new Intent(HomeActivity.this, loadServices.Activity));
         }
     }
