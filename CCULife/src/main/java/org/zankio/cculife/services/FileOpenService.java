@@ -5,10 +5,10 @@ import android.app.IntentService;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.content.FileProvider;
 import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
@@ -57,7 +57,9 @@ public class FileOpenService extends IntentService {
             intent = new Intent();
             intent.setAction(Intent.ACTION_VIEW);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.setDataAndType(Uri.fromFile(file), type);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            //intent.setDataAndType(Uri.fromFile(file), type);
+            intent.setDataAndType(FileProvider.getUriForFile(this, "org.zankio.cculife.provider", file), type);
             if (intent.resolveActivity(getPackageManager()) != null) {
                 startActivity(intent);
             } else {
