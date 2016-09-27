@@ -45,7 +45,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
                 UserManager userManager = UserManager.getInstance();
                 portal.user()
-                        .username(userManager.getUserName())
+                        .username(userManager.getUsername())
                         .password(userManager.getPassword());
 
                 if (portalData != null)

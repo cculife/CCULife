@@ -121,7 +121,7 @@ public class ScoreQueryActivity extends BaseFragmentActivity
         Observable<Response<Grade[], AuthData>> observable;
         UserManager userManager = UserManager.getInstance(this);
         observable = scoreQuery.fetch(GradesInquiriesSource.request(
-                userManager.getUserName(),
+                userManager.getUsername(),
                 userManager.getPassword()
         ));
 

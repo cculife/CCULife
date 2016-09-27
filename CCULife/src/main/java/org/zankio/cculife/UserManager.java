@@ -11,18 +11,17 @@ import java.util.HashMap;
 public class UserManager {
 
 
-    private final static String KEY_ISLOGIN = "IsLogined";
     private final static String PREF_NAME = "CCULIFE_SECU";
-    public final static String KEY_USERNAME = "UserName";
-    public final static String KEY_PASSWORD = "Password";
+    private final static String KEY_ISLOGIN = "IsLogined";
+    private final static String KEY_USERNAME = "UserName";
+    private final static String KEY_PASSWORD = "Password";
     private static final String KEY_SAVE = "Save";
 
     private SharedPreferences preferences;
-    private SharedPreferences.Editor editor;
     private Context context;
 
-    private String UserName = null;
-    private String Password = null;
+    private String username = null;
+    private String password = null;
     private boolean isLogined = false;
     private boolean save = false;
 
@@ -48,7 +47,8 @@ public class UserManager {
         this.context = context;
         this.preferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         this.save = preferences.getBoolean(KEY_SAVE, false);
-        this.editor = preferences.edit();
+        this.username = preferences.getString(KEY_USERNAME, null);
+        this.password = preferences.getString(KEY_PASSWORD, null);
     }
 
 
@@ -60,34 +60,36 @@ public class UserManager {
      */
     public void createLoginSession(String username, String password, boolean save) {
 
-        if (this.save == save) {
+        if (save) {
+            SharedPreferences.Editor editor = preferences.edit();
             editor.putString(KEY_USERNAME, username);
             editor.putString(KEY_PASSWORD, password);
             editor.putBoolean(KEY_ISLOGIN, true);
             editor.putBoolean(KEY_SAVE, true);
-            editor.commit();
-        } else {
-            UserName = username;
-            Password = password;
-            isLogined = true;
+            editor.apply();
         }
+
+        this.save = save;
+        this.username = username;
+        this.password = password;
+        this.isLogined = true;
 
         if(onLoginStateChangedListener != null) onLoginStateChangedListener.onLoginStateChanged(isLogined());
     }
 
-    public String getUserName() {
-        return save ? preferences.getString(KEY_USERNAME, null) : UserName;
+    public String getUsername() {
+        return username;
     }
 
     public String getPassword() {
-        return save ? preferences.getString(KEY_PASSWORD, null) : Password;
+        return password;
     }
 
     public HashMap<String, String> getUserDetails(){
         HashMap<String, String> result = new HashMap<>();
 
-        result.put(KEY_USERNAME, save ? preferences.getString(KEY_USERNAME, null) : UserName);
-        result.put(KEY_PASSWORD, save ? preferences.getString(KEY_PASSWORD, null) : Password);
+        result.put(KEY_USERNAME, username);
+        result.put(KEY_PASSWORD, password);
 
         return result;
     }
@@ -96,14 +98,18 @@ public class UserManager {
      * 清除儲存的帳號密碼資料
      */
     private void clearSession(){
-        UserName = Password = null;
+        username = null;
+        password = null;
         isLogined = false;
         save = false;
 
+        SharedPreferences.Editor editor;
+        editor = preferences.edit();
         editor.clear();
-        editor.commit();
+        editor.apply();
 
-        if(onLoginStateChangedListener != null) onLoginStateChangedListener.onLoginStateChanged(isLogined());
+        if(onLoginStateChangedListener != null)
+            onLoginStateChangedListener.onLoginStateChanged(isLogined());
     }
 
     /**

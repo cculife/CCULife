@@ -37,7 +37,7 @@ public class TimetableDataFragment extends Fragment
 
             kiki = new Kiki(context);
             kiki.setOfflineMode(offlineMode).user()
-                    .username(userManager.getUserName())
+                    .username(userManager.getUsername())
                     .password(userManager.getPassword());
         }
     }

@@ -127,7 +127,7 @@ public class SettingsActivity extends PreferenceActivity implements UserManager.
         assert user != null;
         assert loginout != null;
         if (isLogined) {
-            String username = sessionManager.getUserName();
+            String username = sessionManager.getUsername();
             user.setSummary(username);
             loginout.setTitle("登出");
         } else {
@@ -261,7 +261,7 @@ public class SettingsActivity extends PreferenceActivity implements UserManager.
             assert loginout != null;
 
             if (isLogined) {
-                String username = sessionManager.getUserName();
+                String username = sessionManager.getUsername();
                 user.setSummary(username);
                 loginout.setTitle("登出");
             } else {

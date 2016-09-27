@@ -76,7 +76,7 @@ public class CourseListFragment extends BaseMessageFragment {
         ecourse = new Ecourse(context);
         ecourse.setOfflineMode(SettingUtils.loadOffline(context))
                .user()
-                   .username(userManager.getUserName())
+                   .username(userManager.getUsername())
                    .password(userManager.getPassword());
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
