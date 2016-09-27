@@ -64,7 +64,7 @@ public class BrowserUtils {
                     public void onNavigationEvent(int navigationEvent, Bundle extras) {
                         super.onNavigationEvent(navigationEvent, extras);
 
-                        if (navigationEvent == NAVIGATION_FINISHED && index <= urls.length) {
+                        if (navigationEvent == NAVIGATION_FINISHED && index < urls.length) {
                             CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder(session);
                             builder.setToolbarColor(ContextCompat.getColor(activity, R.color.accent));
                             CustomTabsIntent customTabsIntent = builder.build();
@@ -73,7 +73,7 @@ public class BrowserUtils {
                     }
                 });
 
-                if (index <= urls.length) {
+                if (index < urls.length) {
                     CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder(session);
                     builder.setToolbarColor(ContextCompat.getColor(activity, R.color.accent));
                     CustomTabsIntent customTabsIntent = builder.build();
