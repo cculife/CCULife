@@ -58,6 +58,7 @@ public class TimetableDataFragment extends Fragment
         kiki.fetch(TimetableSource.request()).subscribe(
                 new Subscriber<Response<TimeTable, SemesterData>>() {
                     private int count = 0;
+                    private TimeTable timetable;
                     @Override
                     public void onCompleted() {  }
 
@@ -66,24 +67,33 @@ public class TimetableDataFragment extends Fragment
 
                     @Override
                     public void onNext(Response<TimeTable, SemesterData> response) {
-                        TimeTable timetable = response.data();
-                        subject.onNext(timetable);
-                        kiki.fetch(new Request<>(DatabaseTimeTableSource.TYPE_USERADD, null, TimeTable.class))
-                                .subscribe(
-                                        res -> {
-                                            TimeTable timetableUser = res.data();
-                                            if (timetable == null) return;
-                                            if (timetableUser == null) return;
+                        if (response.data() != null) {
+                            timetable = response.data();
+                            kiki.fetch(new Request<>(DatabaseTimeTableSource.TYPE_USERADD, null, TimeTable.class))
+                                    .subscribe(
+                                            res -> {
+                                                TimeTable timetableUser = res.data();
+                                                if (timetable == null) return;
+                                                if (timetableUser == null) return;
 
-                                            timetable.mergeTimetable(timetableUser);
-                                            subject.onNext(timetable);
-                                        },
-                                        subject::onError,
-                                        () -> {
-                                            count++;
-                                            if (count >= 2)
-                                                subject.onCompleted();
-                                        });
+                                                timetable.mergeTimetable(timetableUser);
+                                                subject.onNext(timetable);
+                                            },
+                                            subject::onError,
+                                            () -> {
+                                                count++;
+                                                if (count >= 2)
+                                                    subject.onCompleted();
+                                            });
+                        } else {
+                            count ++;
+                            if (count >= 2) {
+                                subject.onCompleted();
+                                return;
+                            }
+                        }
+
+                        subject.onNext(timetable);
                     }
                 });
 
