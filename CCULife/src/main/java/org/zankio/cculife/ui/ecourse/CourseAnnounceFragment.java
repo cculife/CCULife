@@ -150,6 +150,8 @@ public class CourseAnnounceFragment
 
     private void onAnnounceContentUpdate(Announce announce, String message) {
         Context context = getContext();
+        if (context == null) return;
+
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
         TextView messageView = new TextView(getContext());
