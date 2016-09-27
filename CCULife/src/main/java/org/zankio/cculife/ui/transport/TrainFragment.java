@@ -12,7 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.zankio.ccudata.base.model.Response;
-import org.zankio.ccudata.train.model.TrainRequest;
+import org.zankio.ccudata.train.model.TrainStopStatusRequest;
 import org.zankio.ccudata.train.model.TrainTimetable;
 import org.zankio.cculife.R;
 import org.zankio.cculife.ui.base.BaseMessageFragment;
@@ -85,7 +85,7 @@ public class TrainFragment extends BaseMessageFragment implements ISwitchLine {
 
         if (timetable == null) {
             message().show("讀取中...", true);
-            context.getTrainStatus(trainStop).subscribe(new Subscriber<Response<TrainTimetable, TrainRequest>>() {
+            context.getTrainStatus(trainStop).subscribe(new Subscriber<Response<TrainTimetable, TrainStopStatusRequest>>() {
                 @Override
                 public void onCompleted() {
 
@@ -99,7 +99,7 @@ public class TrainFragment extends BaseMessageFragment implements ISwitchLine {
                 }
 
                 @Override
-                public void onNext(Response<TrainTimetable, TrainRequest> response) {
+                public void onNext(Response<TrainTimetable, TrainStopStatusRequest> response) {
                     TrainFragment.this.timetable = response.data();
                     adapter.setTimetable(currentLine == 0 ? timetable.up : timetable.down);
                     adapter.notifyDataSetChanged();

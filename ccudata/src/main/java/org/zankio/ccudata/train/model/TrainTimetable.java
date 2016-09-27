@@ -11,5 +11,6 @@ public class TrainTimetable {
         public String departure;
         public String delay;
         public String to;
+        public String lineType;
     }
 }

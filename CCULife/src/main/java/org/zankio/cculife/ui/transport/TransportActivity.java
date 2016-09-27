@@ -12,7 +12,7 @@ import org.zankio.ccudata.bus.model.BusLineRequest;
 import org.zankio.ccudata.bus.model.BusStop;
 import org.zankio.ccudata.bus.source.remote.BusStateSource;
 import org.zankio.ccudata.train.Train;
-import org.zankio.ccudata.train.model.TrainRequest;
+import org.zankio.ccudata.train.model.TrainStopStatusRequest;
 import org.zankio.ccudata.train.model.TrainTimetable;
 import org.zankio.ccudata.train.source.remote.TrainStopStatusSource;
 import org.zankio.cculife.R;
@@ -99,9 +99,9 @@ public class TransportActivity extends BaseActivity
 
     @SuppressWarnings("unchecked")
     @Override
-    public Observable<Response<TrainTimetable, TrainRequest>> getTrainStatus(String code) {
+    public Observable<Response<TrainTimetable, TrainStopStatusRequest>> getTrainStatus(String code) {
         String key = String.format("%s_%s", KEY_TRAIN_PREFIX, code);
-        Observable<Response<TrainTimetable, TrainRequest>> observable;
+        Observable<Response<TrainTimetable, TrainStopStatusRequest>> observable;
         observable = mCache.get(key, Observable.class);
 
         if (observable == null) {

@@ -8,7 +8,7 @@ import org.zankio.ccudata.base.source.annotation.Important;
 import org.zankio.ccudata.base.source.annotation.Order;
 import org.zankio.ccudata.base.source.http.HTTPStringSource;
 import org.zankio.ccudata.base.source.http.annontation.Method;
-import org.zankio.ccudata.train.model.TrainRequest;
+import org.zankio.ccudata.train.model.TrainStopStatusRequest;
 import org.zankio.ccudata.train.model.TrainTimetable;
 
 import java.util.ArrayList;
@@ -21,24 +21,24 @@ import java.util.regex.Pattern;
 @Order(SourceProperty.Level.MIDDLE)
 @Important(SourceProperty.Level.HIGH)
 @DataType(TrainStopStatusSource.TYPE)
-public class TrainStopStatusSource extends HTTPStringSource<TrainRequest, TrainTimetable>{
+public class TrainStopStatusSource extends HTTPStringSource<TrainStopStatusRequest, TrainTimetable>{
     public final static String TYPE = "TRAIN_STOP_STATE";
     private static final String URL_TRAIN_STATUS = "http://twtraffic.tra.gov.tw/twrail/mobile/StationSearchResult.aspx?searchdate=%s&fromstation=%s";
 
-    public static Request<TrainTimetable, TrainRequest> request(String date, String no) {
-        return new Request<>(TYPE, new TrainRequest(date, no), TrainTimetable.class);
+    public static Request<TrainTimetable, TrainStopStatusRequest> request(String date, String no) {
+        return new Request<>(TYPE, new TrainStopStatusRequest(date, no), TrainTimetable.class);
     }
 
     @Override
-    public void initHTTPRequest(Request<TrainTimetable, TrainRequest> request) {
+    public void initHTTPRequest(Request<TrainTimetable, TrainStopStatusRequest> request) {
         super.initHTTPRequest(request);
-        TrainRequest trainRequest = request.args;
+        TrainStopStatusRequest trainRequest = request.args;
         httpParameter(request)
                 .url(String.format(URL_TRAIN_STATUS, trainRequest.date, trainRequest.no));
     }
 
     @Override
-    protected TrainTimetable parse(Request<TrainTimetable, TrainRequest> request, HttpResponse response, String body) throws Exception {
+    protected TrainTimetable parse(Request<TrainTimetable, TrainStopStatusRequest> request, HttpResponse response, String body) throws Exception {
         // TRSearchResult.push('區間車');
         // TRSearchResult.push('2318');
         // TRSearchResult.push('06:00');
