@@ -112,7 +112,7 @@ public class TimeTableDaysFragment extends BaseMessageFragment
         if (context != null) {
             subscriber.unsubscribe();
 
-            if (!context.isFinishing())
+            if (!context.isFinishing() && !getFragmentManager().isDestroyed())
                 ((GetStorage) context).storage().put(TimetableDataFragment.LAST_PAGE, mViewPager.getCurrentItem());
         }
 
