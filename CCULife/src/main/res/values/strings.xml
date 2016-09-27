@@ -52,12 +52,11 @@
 
     <string name="new_version">新版本</string>
 
-    <string name="bus_cy_ccu">公車 [嘉義 -> 中正]</string>
-    <string name="bus_ccu_cy">公車 [中正 -> 嘉義]</string>
-    <string name="train">火車</string>
-    <string name="cybus">嘉義縣公車</string>
+    <string name="train_minxiong">民雄\n火車站</string>
+    <string name="train_chiayi">嘉義\n火車站</string>
+    <string name="cybus">嘉義縣\n公車</string>
     <string name="solarbus">日統</string>
-    <string name="tcbus">台中客運</string>
+    <string name="tcbus">台中\n客運</string>
 
     <string name="transport">交通</string>
     <string name="timetable">課表</string>
