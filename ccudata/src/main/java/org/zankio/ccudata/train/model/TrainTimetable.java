@@ -6,11 +6,11 @@ public class TrainTimetable {
     public Item[] down;
 
     public class Item {
-        public String type;
-        public String code;
-        public String departure;
-        public String delay;
-        public String to;
-        public String lineType;
+        public String trainType; // TrainClassificationID
+        public String trainNo; // TrainNo
+        public String departure; // ScheduledDepartureTime
+        public String delay; // DelayTime
+        public String to; // EndingStationName.Zh_tw
+        public String lineType; // TripLine
     }
 }

@@ -19,7 +19,7 @@
         tools:text="準點"
         />
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_centerVertical="true"
@@ -27,6 +27,9 @@
         android:layout_toEndOf="@id/train_delay" >
         <TextView
             tools:text="1121"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
             android:layout_gravity="center_vertical|start"
             android:id="@+id/train_code"
             android:layout_width="wrap_content"
@@ -34,20 +37,23 @@
             android:textSize="25sp" />
 
         <TextView
-            android:layout_gravity="top|start"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="2dp"
+            android:layout_marginStart="2dp"
             tools:text="自強"
             android:id="@+id/train_type"
-            android:textColor="@color/Gray" />
+            android:textColor="@color/Gray"
+            />
 
         <TextView
             tools:text="往 民雄"
             android:id="@+id/train_to"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_centerInParent="true"
             android:layout_marginRight="16dp"
             android:layout_marginEnd="16dp"
             android:textSize="25sp"
@@ -55,14 +61,26 @@
 
         <TextView
             tools:text="13:30"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
             android:id="@+id/train_departure"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|end"
             android:layout_marginRight="16dp"
             android:layout_marginEnd="16dp"
             android:textSize="25sp" />
-    </FrameLayout>
+
+        <TextView
+            android:layout_alignLeft="@id/train_to"
+            android:layout_alignStart="@id/train_to"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/line_type"
+            android:layout_gravity="bottom|start"
+            android:textColor="@color/orange_400"
+            tools:text="山線" />
+    </RelativeLayout>
 
 
 </RelativeLayout>

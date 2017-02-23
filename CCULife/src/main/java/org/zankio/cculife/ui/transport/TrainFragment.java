@@ -12,7 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.zankio.ccudata.base.model.Response;
-import org.zankio.ccudata.train.model.TrainStopStatusRequest;
+import org.zankio.ccudata.train.model.TrainRequest;
 import org.zankio.ccudata.train.model.TrainTimetable;
 import org.zankio.cculife.R;
 import org.zankio.cculife.ui.base.BaseMessageFragment;
@@ -45,6 +45,7 @@ public class TrainFragment extends BaseMessageFragment implements ISwitchLine {
         fragment.setArguments(getArgument(trainStop));
         return fragment;
     }
+
 
     public static Bundle getArgument(String trainStop) {
         Bundle arguments = new Bundle();
@@ -85,7 +86,7 @@ public class TrainFragment extends BaseMessageFragment implements ISwitchLine {
 
         if (timetable == null) {
             message().show("讀取中...", true);
-            context.getTrainStatus(trainStop).subscribe(new Subscriber<Response<TrainTimetable, TrainStopStatusRequest>>() {
+            context.getTrainStatus(trainStop).subscribe(new Subscriber<Response<TrainTimetable, TrainRequest>>() {
                 @Override
                 public void onCompleted() {
 
@@ -99,7 +100,7 @@ public class TrainFragment extends BaseMessageFragment implements ISwitchLine {
                 }
 
                 @Override
-                public void onNext(Response<TrainTimetable, TrainStopStatusRequest> response) {
+                public void onNext(Response<TrainTimetable, TrainRequest> response) {
                     TrainFragment.this.timetable = response.data();
                     adapter.setTimetable(currentLine == 0 ? timetable.up : timetable.down);
                     adapter.notifyDataSetChanged();
@@ -150,10 +151,11 @@ public class TrainFragment extends BaseMessageFragment implements ISwitchLine {
             TrainTimetable.Item trainStop = timetable[position];
 
             ((TextView) convertView.findViewById(R.id.train_delay)).setText(trainStop.delay);
-            ((TextView) convertView.findViewById(R.id.train_code)).setText(trainStop.code);
+            ((TextView) convertView.findViewById(R.id.train_code)).setText(trainStop.trainNo);
             ((TextView) convertView.findViewById(R.id.train_to)).setText(trainStop.to);
             ((TextView) convertView.findViewById(R.id.train_departure)).setText(trainStop.departure);
-            ((TextView) convertView.findViewById(R.id.train_type)).setText(trainStop.type);
+            ((TextView) convertView.findViewById(R.id.train_type)).setText(trainStop.trainType);
+            ((TextView) convertView.findViewById(R.id.line_type)).setText(trainStop.lineType);
             return convertView;
         }
     }
