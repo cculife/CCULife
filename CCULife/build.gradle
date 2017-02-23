@@ -40,6 +40,11 @@ tasks.withType(JavaCompile) {
 }
 
 dependencies {
+
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+
     compile 'org.jetbrains:annotations:13.0'
 
     compile 'com.android.support:design:25.2.0'
