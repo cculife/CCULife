@@ -24,9 +24,9 @@ public class TrainStopStatusSourceTest {
             System.out.println(
                     String.format(
                             "%-4s %s\t%s \t%s %s",
-                            train.code,
+                            train.trainNo,
                             train.departure,
-                            train.type,
+                            train.trainType,
                             train.to,
                             train.delay
                     )
@@ -38,9 +38,9 @@ public class TrainStopStatusSourceTest {
             System.out.println(
                     String.format(
                             "%-4s %s\t%s \t%s %s",
-                            train.code,
+                            train.trainNo,
                             train.departure,
-                            train.type,
+                            train.trainType,
                             train.to,
                             train.delay
                     )
