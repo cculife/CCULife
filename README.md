@@ -34,11 +34,11 @@ Just enjoy!
 
 > 班級排名、學期平均、修課紀錄
 
-###Transport
+### Transport
 
 > 即時公車、客運、火車動態
 
-###Coming soon!
+### Coming soon!
 
 >學校WIFI登入好麻煩？
 
