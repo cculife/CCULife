@@ -12,16 +12,19 @@
         android:textSize="20sp"
         android:textIsSelectable="false"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:gravity="center"
         android:text="Course Name"
-        android:layout_toRightOf="@+id/unread" />
+        android:layout_toRightOf="@+id/unread"
+        android:layout_toEndOf="@+id/unread" />
 
     <TextView
         android:layout_width="10dip"
         android:layout_height="60dip"
         android:id="@+id/warring"
         android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="60dip"
@@ -32,5 +35,6 @@
         android:textSize="20sp"
         android:textColor="@color/Gray"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_centerVertical="true" />
 </RelativeLayout>

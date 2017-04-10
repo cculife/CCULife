@@ -16,6 +16,7 @@
         android:id="@+id/list"
         tools:listitem="@android:layout/simple_expandable_list_item_2"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_above="@+id/description"
         android:layout_marginBottom="3dp" />
@@ -26,5 +27,6 @@
         android:textColor="@color/Gray"
         android:id="@+id/description"
         android:layout_alignParentBottom="true"
-        android:layout_alignLeft="@+id/list" />
+        android:layout_alignLeft="@+id/list"
+        android:layout_alignStart="@+id/list" />
 </RelativeLayout>

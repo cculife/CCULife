@@ -14,9 +14,11 @@
         android:src="@drawable/logo_ccu"
         android:layout_gravity="center_horizontal"
         android:layout_alignParentLeft="false"
+        android:layout_alignParentStart="false"
         android:layout_alignParentTop="false"
         android:layout_alignParentBottom="false"
         android:layout_alignParentRight="false"
+        android:layout_alignParentEnd="false"
         android:contentDescription="@string/ccu_logo"
         android:layout_centerHorizontal="true" />
 
@@ -30,7 +32,8 @@
             android:layout_height="50dp"
             android:id="@+id/dbg_c"
             android:layout_alignParentTop="true"
-            android:layout_toLeftOf="@+id/dbg_c2" />
+            android:layout_toLeftOf="@+id/dbg_c2"
+            android:layout_toStartOf="@+id/dbg_c2" />
 
         <TextView
             android:layout_width="50dp"
@@ -43,6 +46,7 @@
             android:layout_height="50dp"
             android:id="@+id/dbg_u"
             android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/dbg_c2" />
+            android:layout_toRightOf="@+id/dbg_c2"
+            android:layout_toEndOf="@+id/dbg_c2" />
     </RelativeLayout>
 </RelativeLayout>

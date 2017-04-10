@@ -63,8 +63,8 @@
             <LinearLayout
                 android:layout_width="250dp"
                 android:layout_height="match_parent"
-                android:layout_gravity="right|center_vertical"
-                android:gravity="center_vertical|right"
+                android:layout_gravity="end|center_vertical"
+                android:gravity="center_vertical|end"
                 android:minWidth="300dp"
                 android:orientation="vertical">
 
@@ -88,7 +88,7 @@
                     android:id="@+id/remeber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="right|center_vertical"
+                    android:layout_gravity="end|center_vertical"
                     android:checked="true"
                     android:text="@string/remember_user_pass" />
 

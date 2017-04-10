@@ -90,7 +90,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/remember_user_pass"
                 android:id="@+id/remeber"
-                android:layout_gravity="right|center_vertical"
+                android:layout_gravity="end|center_vertical"
                 android:checked="true" />
 
             <Button
@@ -101,7 +101,7 @@
                 android:text="@string/action_sign"
                 android:paddingLeft="32dp"
                 android:paddingRight="32dp"
-                android:layout_gravity="right"
+                android:layout_gravity="end"
                 android:layout_weight="1" />
 
         </LinearLayout>
