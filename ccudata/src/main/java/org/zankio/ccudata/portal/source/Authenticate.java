@@ -14,7 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Method("POST")
-@Url("http://portal.ccu.edu.tw/login_check.php")
+@Url("https://portal.ccu.edu.tw/login_check.php")
 @FollowRedirect(false)
 
 @DataType(Authenticate.TYPE)
@@ -45,12 +45,12 @@ public class Authenticate extends HTTPStringSource<AuthData, Boolean> {
         Matcher matcher;
 
         if (location != null) {
-            if(location.startsWith("http://portal.ccu.edu.tw/sso_index.php")) {
+            if(location.startsWith("https://portal.ccu.edu.tw/sso_index.php")) {
                 String cookie = response.cookie("ccuSSO");
                 getContext().storage().put(SSO_SESSION_ID, cookie);
                 return cookie != null;
 
-            } else if(location.startsWith("http://portal.ccu.edu.tw/index.php")) {
+            } else if(location.startsWith("https://portal.ccu.edu.tw/index.php")) {
                 matcher = Pattern.compile("alert\\(\"([^\"]+)\"\\);").matcher(body);
 
                 if (matcher.find()) {

@@ -29,7 +29,7 @@ import java.util.Locale;
 @DataType(PTXTrainStationTimetableSource.TYPE)
 public class PTXTrainStationTimetableSource extends HTTPJSONSource<TrainRequest, TrainTimetable>{
     public final static String TYPE = "TRAIN_STATION_TIMETABLE";
-    private static final String URL_TRAIN_TIMETABLE = "http://ptx.transportdata.tw/MOTC/v2/Rail/TRA/DailyTimetable/Station/%s/%s";
+    private static final String URL_TRAIN_TIMETABLE = "https://ptx.transportdata.tw/MOTC/v2/Rail/TRA/DailyTimetable/Station/%s/%s";
     public static Request<TrainTimetable, TrainRequest> request(String no, String date) {
         return new Request<>(TYPE, new TrainRequest(no, date), TrainTimetable.class);
     }

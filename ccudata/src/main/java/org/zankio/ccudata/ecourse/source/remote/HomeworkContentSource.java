@@ -64,7 +64,7 @@ public class HomeworkContentSource extends EcourseSource<HomeworkData, Homework>
 
         if (location != null) {
             if (!location.startsWith("http")) {
-                homework.contentUrl = "http://ecourse.ccu.edu.tw/php/Testing_Assessment/" + location;
+                homework.contentUrl = "https://ecourse.ccu.edu.tw/php/Testing_Assessment/" + location;
             } else {
                 homework.contentUrl = location;
             }
