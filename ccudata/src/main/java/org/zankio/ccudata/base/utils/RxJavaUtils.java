@@ -7,7 +7,7 @@ import rx.subjects.ReplaySubject;
 public class RxJavaUtils {
     public static <T> Observable.Transformer<T, T> cache() {
         return observable -> {
-            ReplaySubject<T> subject = ReplaySubject.<T>createWithSize(1);
+            ReplaySubject<T> subject = ReplaySubject.createWithSize(1);
             observable.subscribe(new Subscriber<T>() {
                 @Override
                 public void onCompleted() { subject.onCompleted(); }

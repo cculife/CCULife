@@ -91,7 +91,7 @@ public class CourseListFragment extends BaseMessageFragment {
             // TODO: 2016/8/7
 
             Observable<Response<Course[], CourseData>> observableCache;
-            observableCache = ((GetStorage)context).storage().<Observable<Response<Course[], CourseData>>>get(CACHE_COURSE_LIST);
+            observableCache = ((GetStorage)context).storage().get(CACHE_COURSE_LIST);
 
             if (observableCache == null) {
                 observableCache = ecourse.fetch(CourseListSource.request())
