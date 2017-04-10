@@ -111,13 +111,6 @@ public class DatabaseAnnounceSource extends DatabaseBaseSource<CourseData, Annou
                 null
         );
 
-        Cursor cursor = database.query(TABLE_ECOURSE_ANNOUNCE,
-                announceColumns,
-                ANNOUNCE_COLUMN_COURSEID + "=\"" + announce.getCourseID() + "\" AND " +
-                        ANNOUNCE_COLUMN_URL + "=" + DatabaseUtils.sqlEscapeString(removeUrlPHPSESSID(announce.url)),
-                null, null, null, null);
-
-        cursor.moveToFirst();
         return content;
     }
 
