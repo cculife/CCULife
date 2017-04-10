@@ -10,6 +10,7 @@
         android:layout_height="80dp"
         android:src="@drawable/bus_stop_icon"
         android:id="@+id/bus_stop_icon"
+        android:contentDescription="@string/bus_stop"
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"

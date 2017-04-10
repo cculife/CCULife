@@ -17,6 +17,7 @@
         android:layout_alignParentTop="false"
         android:layout_alignParentBottom="false"
         android:layout_alignParentRight="false"
+        android:contentDescription="@string/ccu_logo"
         android:layout_centerHorizontal="true" />
 
     <RelativeLayout

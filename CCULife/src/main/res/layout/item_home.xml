@@ -20,6 +20,7 @@
             android:scaleType="center"
             android:adjustViewBounds="true"
             android:background="@drawable/home_bottom"
+            android:contentDescription="@string/service_icon"
             android:src="@drawable/ecourse"
             />
 

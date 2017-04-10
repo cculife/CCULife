@@ -45,15 +45,16 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-
-                style="@style/LoginFormContainer">
+            style="@style/LoginFormContainer">
 
 
             <ImageView
-                    android:layout_width="210dp"
-                    android:layout_height="250dp"
-                    android:id="@+id/logo" android:src="@drawable/logo_ccu"
-                    android:padding="30dp"/>
+                android:layout_width="210dp"
+                android:layout_height="250dp"
+                android:contentDescription="@string/ccu_logo"
+
+                android:id="@+id/logo" android:src="@drawable/logo_ccu"
+                android:padding="30dp"/>
 
             <LinearLayout
                     android:orientation="vertical"

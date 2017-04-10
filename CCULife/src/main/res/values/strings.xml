@@ -74,5 +74,11 @@
     <string name="update_fail">更新失敗</string>
     <string name="last_update_at">"最後更新於 "</string>
     <string name="no_result">沒有結果</string>
+    <string name="ccu_logo">ccu logo</string>
+    <string name="cculife_icon">cculife icon</string>
+    <string name="search_icon">search icon</string>
+    <string name="bus_stop">bus stop</string>
+    <string name="service_icon">service icon</string>
+    <string name="message_icon">message icon</string>
 
 </resources>

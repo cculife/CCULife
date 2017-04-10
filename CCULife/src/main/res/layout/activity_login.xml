@@ -59,6 +59,7 @@
                 android:layout_height="300dp"
                 android:id="@+id/logo"
                 android:layout_gravity="center"
+                android:contentDescription="@string/ccu_logo"
                 android:src="@drawable/logo_ccu"
                 android:layout_weight="1"
                 android:padding="30dp" />
