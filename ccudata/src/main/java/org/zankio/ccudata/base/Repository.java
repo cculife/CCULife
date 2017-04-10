@@ -33,7 +33,7 @@ public abstract class Repository {
     public interface ResponseTransformer<TData, TArgument>
             extends Observable.Transformer<Response<TData, TArgument>, Response<TData, TArgument>> { }
 
-    public interface GetListener extends Func0<Action1<Response>> {};
+    public interface GetListener extends Func0<Action1<Response>> {}
 
     // Timeout Constant
     private static final int CONNECT_TIMEOUT = 15000;
