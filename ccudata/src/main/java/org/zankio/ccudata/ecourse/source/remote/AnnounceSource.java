@@ -18,6 +18,8 @@ import org.zankio.ccudata.ecourse.model.Announce;
 import org.zankio.ccudata.ecourse.model.Course;
 import org.zankio.ccudata.ecourse.model.CourseData;
 
+@SuppressWarnings("DefaultAnnotationParam")
+
 @Method("GET")
 @Url(Urls.COURSE_ANNOUNCE)
 @Charset("big5")

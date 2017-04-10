@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@SuppressWarnings("DefaultAnnotationParam")
+
 @Method("GET")
 
 @Order(SourceProperty.Level.MIDDLE)

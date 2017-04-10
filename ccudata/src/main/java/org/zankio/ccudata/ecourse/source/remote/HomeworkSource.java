@@ -17,6 +17,9 @@ import org.zankio.ccudata.ecourse.model.Course;
 import org.zankio.ccudata.ecourse.model.CourseData;
 import org.zankio.ccudata.ecourse.model.Homework;
 import org.zankio.ccudata.ecourse.utils.ParseUtils;
+
+@SuppressWarnings("DefaultAnnotationParam")
+
 @Method("GET")
 @Url(Urls.COURSE_HOMEWORK)
 @Charset("big5")

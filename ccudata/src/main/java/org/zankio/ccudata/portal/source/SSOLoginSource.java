@@ -15,6 +15,8 @@ import org.zankio.ccudata.portal.Portal;
 import org.zankio.ccudata.portal.model.PortalData;
 
 
+@SuppressWarnings("DefaultAnnotationParam")
+
 @Method("GET")
 @FollowRedirect(false)
 

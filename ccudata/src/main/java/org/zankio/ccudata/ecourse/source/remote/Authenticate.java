@@ -17,7 +17,7 @@ import org.zankio.ccudata.base.model.AuthData;
 @Method("POST")
 @Charset("big5")
 @Field({ "ver", "C" })
-@FollowRedirect(true)
+@FollowRedirect()
 
 @DataType({Authenticate.TYPE})
 public class Authenticate extends HTTPSource<AuthData, Boolean> {

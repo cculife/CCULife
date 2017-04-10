@@ -23,6 +23,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
+@SuppressWarnings("DefaultAnnotationParam")
+
 @Method("GET")
 @Charset("big5")
 

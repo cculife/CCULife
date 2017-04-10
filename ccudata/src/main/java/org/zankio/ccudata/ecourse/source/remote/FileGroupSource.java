@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@SuppressWarnings("DefaultAnnotationParam")
+
 @Method("GET")
 @Url(Urls.COURSE_FILELIST)
 @Charset("big5")

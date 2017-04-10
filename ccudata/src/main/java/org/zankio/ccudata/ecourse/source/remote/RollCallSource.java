@@ -21,6 +21,8 @@ import org.zankio.ccudata.ecourse.model.RollCall;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@SuppressWarnings("DefaultAnnotationParam")
+
 @Method("GET")
 @Url(Urls.COURSE_ROLLCALL)
 @Charset("big5")

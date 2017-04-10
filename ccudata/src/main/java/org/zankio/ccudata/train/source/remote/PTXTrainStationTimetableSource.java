@@ -22,6 +22,8 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
+@SuppressWarnings("DefaultAnnotationParam")
+
 @Method("GET")
 
 @Order(SourceProperty.Level.MIDDLE)

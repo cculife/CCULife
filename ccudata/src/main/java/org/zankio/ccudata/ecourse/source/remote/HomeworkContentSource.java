@@ -20,6 +20,8 @@ import org.zankio.ccudata.ecourse.model.HomeworkData;
 
 import java.util.Locale;
 
+@SuppressWarnings("DefaultAnnotationParam")
+
 @Method("GET")
 @FollowRedirect(false)
 @Charset("big5")

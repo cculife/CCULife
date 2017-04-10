@@ -17,6 +17,8 @@ import org.zankio.ccudata.ecourse.constant.Urls;
 import org.zankio.ccudata.ecourse.model.Course;
 import org.zankio.ccudata.ecourse.model.CourseData;
 
+@SuppressWarnings("DefaultAnnotationParam")
+
 @Method("GET")
 @Url(Urls.COURSE_LIST)
 @Charset("big5")

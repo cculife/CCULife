@@ -14,6 +14,8 @@ import org.zankio.ccudata.base.source.http.annontation.Url;
 import org.zankio.ccudata.kiki.model.Course;
 import org.zankio.ccudata.kiki.model.SemesterData;
 
+@SuppressWarnings("DefaultAnnotationParam")
+
 @Method("GET")
 @Url("https://kiki.ccu.edu.tw/~ccmisp06/cgi-bin/class_new/Selected_View00.cgi")
 

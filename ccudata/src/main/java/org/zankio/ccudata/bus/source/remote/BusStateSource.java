@@ -15,6 +15,8 @@ import org.zankio.ccudata.base.source.http.annontation.Method;
 import org.zankio.ccudata.bus.model.BusLineRequest;
 import org.zankio.ccudata.bus.model.BusStop;
 
+@SuppressWarnings("DefaultAnnotationParam")
+
 @Method("GET")
 
 @DataType(BusStateSource.TYPE)

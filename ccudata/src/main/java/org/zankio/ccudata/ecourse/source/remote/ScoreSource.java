@@ -20,6 +20,8 @@ import org.zankio.ccudata.ecourse.model.ScoreGroup;
 
 import java.util.ArrayList;
 
+@SuppressWarnings("DefaultAnnotationParam")
+
 @Method("GET")
 @Url(Urls.COURSE_SCORE)
 @Charset("big5")

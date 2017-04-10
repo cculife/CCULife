@@ -18,6 +18,8 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Random;
 
+@SuppressWarnings("DefaultAnnotationParam")
+
 @Method("GET")
 @Url("https://kiki.ccu.edu.tw/~ccmisp06/cgi-bin/class_new/Selected_View00.cgi")
 
