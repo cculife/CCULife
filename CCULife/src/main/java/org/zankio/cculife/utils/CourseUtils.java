@@ -10,7 +10,6 @@ import org.zankio.ccudata.kiki.source.remote.AllCourseSource;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.GregorianCalendar;
@@ -56,8 +55,6 @@ public class CourseUtils {
             byte[] buffer = new byte[length];
             fileInputStream.read(buffer);
             return new String(buffer);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -127,8 +124,6 @@ public class CourseUtils {
                             preferences.putLong("update_course_list", new GregorianCalendar().getTimeInMillis());
                             preferences.apply();
 
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
