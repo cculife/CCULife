@@ -80,5 +80,6 @@
     <string name="bus_stop">bus stop</string>
     <string name="service_icon">service icon</string>
     <string name="message_icon">message icon</string>
+    <string name="course_search_hint">名稱/教師/教室</string>
 
 </resources>
