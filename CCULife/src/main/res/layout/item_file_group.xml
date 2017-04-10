@@ -14,7 +14,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginStart="20dp"
         android:paddingLeft="10dp"
-        android:paddingStart="10dp"
+        android:paddingRight="10dp"
         android:minHeight="56dp"
         android:gravity="center_vertical"
         android:text="FileName"
