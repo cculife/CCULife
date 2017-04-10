@@ -4,7 +4,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.1'
-        classpath 'me.tatarka:gradle-retrolambda:3.2.5'
+        classpath 'me.tatarka:gradle-retrolambda:3.6.0'
         classpath 'com.google.gms:google-services:3.0.0'
     }
 }
@@ -15,6 +15,7 @@ apply plugin: 'com.google.gms.google-services'
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 android {
@@ -56,36 +57,34 @@ dependencies {
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
     testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
 
-    compile 'org.jetbrains:annotations:13.0'
-
-    compile 'com.android.support:design:25.2.0'
-    compile 'com.android.support:support-v4:25.2.0'
-    compile 'com.android.support:appcompat-v7:25.2.0'
-    compile 'com.android.support:support-annotations:25.2.0'
+    compile 'com.android.support:design:25.3.1'
+    compile 'com.android.support:support-v4:25.3.1'
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:support-annotations:25.3.1'
 
     // html parse library
-    compile 'org.jsoup:jsoup:1.7.2'
+    compile 'org.jsoup:jsoup:1.10.2'
 
     // download library
-    compile 'com.koushikdutta.ion:ion:2.1.6'
+    compile 'com.koushikdutta.ion:ion:2.1.9'
 
     // rx java async/stream library
-    compile 'io.reactivex:rxandroid:1.1.0'
-    compile 'io.reactivex:rxjava:1.1.0'
+    compile 'io.reactivex:rxandroid:1.2.1'
+    compile 'io.reactivex:rxjava:1.2.9'
 
     // ok http library
-    compile 'com.squareup.okio:okio:1.6.0'
-    compile 'com.squareup.okhttp3:okhttp:3.2.0'
+    compile 'com.squareup.okio:okio:1.11.0'
+    compile 'com.squareup.okhttp3:okhttp:3.6.0'
 
     // chrome custom tab
-    compile 'com.android.support:customtabs:25.2.0'
+    compile 'com.android.support:customtabs:25.3.1'
 
     compile 'com.google.firebase:firebase-core:9.4.0'
     compile 'com.google.firebase:firebase-crash:9.4.0'
 
     testCompile 'junit:junit:4.12'
 
-    androidTestCompile 'com.android.support:support-annotations:25.2.0'
+    androidTestCompile 'com.android.support:support-annotations:25.3.1'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
     androidTestCompile 'com.android.support.test:runner:0.5'
     compile project(path: ':ccudata')

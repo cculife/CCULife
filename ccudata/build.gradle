@@ -4,7 +4,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.1'
-        classpath 'me.tatarka:gradle-retrolambda:3.2.5'
+        classpath 'me.tatarka:gradle-retrolambda:3.6.0'
     }
 }
 
@@ -67,23 +67,23 @@ configurations {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    testCompile 'org.json:json:20140107'
+    testCompile 'org.json:json:20160810'
     androidTestCompile 'com.android.support.test:runner:0.5'
 
-    compile 'com.android.support:appcompat-v7:25.2.0'
+    compile 'com.android.support:appcompat-v7:25.3.1'
 
     // html parse library
-    compile 'org.jsoup:jsoup:1.7.2'
+    compile 'org.jsoup:jsoup:1.10.2'
 
     // rxjava asnyc library
-    compile 'io.reactivex:rxjava:1.1.0'
-    compile 'io.reactivex:rxandroid:1.1.0'
+    compile 'io.reactivex:rxjava:1.2.9'
+    compile 'io.reactivex:rxandroid:1.2.1'
 
     //ok http library
-    compile 'com.squareup.okio:okio:1.6.0'
-    compile 'com.squareup.okhttp3:okhttp:3.2.0'
+    compile 'com.squareup.okio:okio:1.11.0'
+    compile 'com.squareup.okhttp3:okhttp:3.6.0'
 
     // date parse library
-    compile 'com.joestelmach:natty:0.11'
+    compile 'com.joestelmach:natty:0.13'
 
 }
