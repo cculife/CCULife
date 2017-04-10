@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     tools:context=".ui.AboutActivity"
     android:orientation="vertical"
-    android:background="#FFE5E5E5">
+    android:background="#FFE5E5E5"
+    tools:ignore="Overdraw">
 
     <include
         layout="@layout/toolbar"
