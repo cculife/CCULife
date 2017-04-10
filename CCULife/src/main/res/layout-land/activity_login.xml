@@ -1,12 +1,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.LoginActivity"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    tools:context=".ui.LoginActivity">
 
     <include
-        layout="@layout/toolbar"
-        android:id="@+id/toolbar" />
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -14,25 +14,29 @@
         android:layout_below="@id/toolbar">
 
         <!-- Login progress -->
-        <LinearLayout android:id="@+id/login_status"
-            android:visibility="gone"
+        <LinearLayout
+            android:id="@+id/login_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center_horizontal"
-            android:orientation="vertical">
-            <ProgressBar style="?android:attr/progressBarStyleLarge"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ProgressBar
+                style="?android:attr/progressBarStyleLarge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"/>
+                android:layout_marginBottom="8dp" />
+
             <TextView
                 android:id="@+id/login_status_message"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:fontFamily="sans-serif-light"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:text="@string/login_progress_signing_in" />
+                android:fontFamily="sans-serif-light"
+                android:text="@string/login_progress_signing_in"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
 
     </FrameLayout>
@@ -40,61 +44,59 @@
     <!-- Login form -->
     <ScrollView
         android:id="@+id/login_form"
-        android:layout_below="@id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar">
 
-        <LinearLayout
-            style="@style/LoginFormContainer">
+        <LinearLayout style="@style/LoginFormContainer">
 
 
             <ImageView
+                android:id="@+id/logo"
                 android:layout_width="210dp"
                 android:layout_height="250dp"
-                android:contentDescription="@string/ccu_logo"
 
-                android:id="@+id/logo" android:src="@drawable/logo_ccu"
-                android:padding="30dp"/>
+                android:contentDescription="@string/ccu_logo"
+                android:padding="30dp"
+                android:src="@drawable/logo_ccu" />
 
             <LinearLayout
-                    android:orientation="vertical"
+                android:layout_width="250dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="right|center_vertical"
+                android:gravity="center_vertical|right"
+                android:minWidth="300dp"
+                android:orientation="vertical">
+
+
+                <EditText
+                    android:id="@+id/studentid"
                     android:layout_width="250dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="right|center_vertical"
-                    android:minWidth="300dp"
-                    android:gravity="center_vertical|right">
-
-
+                    android:layout_height="wrap_content"
+                    android:hint="@string/prompt_studentid"
+                    android:inputType="number" />
 
                 <EditText
-                        android:layout_width="250dp"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/studentid"
-                        android:singleLine="false"
-                        android:hint="@string/prompt_studentid"
-                        android:inputType="number"/>
-
-                <EditText
-                        android:layout_width="250dp"
-                        android:layout_height="wrap_content"
-                        android:inputType="textPassword"
-                        android:ems="10"
-                        android:id="@+id/password"
-                        android:hint="@string/prompt_password"/>
+                    android:id="@+id/password"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="@string/prompt_password"
+                    android:inputType="textPassword" />
 
                 <CheckBox
+                    android:id="@+id/remeber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/remember_user_pass"
-                    android:id="@+id/remeber"
                     android:layout_gravity="right|center_vertical"
-                    android:checked="true" />
+                    android:checked="true"
+                    android:text="@string/remember_user_pass" />
 
                 <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/action_sign"
-                        android:id="@+id/sign_in_button"/>
+                    android:id="@+id/sign_in_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/action_sign" />
 
             </LinearLayout>
 

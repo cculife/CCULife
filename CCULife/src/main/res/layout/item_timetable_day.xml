@@ -26,11 +26,11 @@
         android:paddingLeft="3dp"
         android:paddingRight="3dp"
         android:scrollHorizontally="true"
-        android:singleLine="true"
         android:ellipsize="marquee"
         android:marqueeRepeatLimit="1"
         android:text="ClassInfo"
         android:textColor="@color/Gray"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:maxLines="1" />
 
 </RelativeLayout>
