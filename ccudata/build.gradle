@@ -1,6 +1,6 @@
 buildscript {
     repositories {
-        mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.1'
@@ -56,6 +56,10 @@ android {
     }
 }
 
+configurations {
+    all*.exclude group: 'commons-logging', module: 'commons-logging'
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
@@ -77,4 +81,5 @@ dependencies {
 
     // date parse library
     compile 'com.joestelmach:natty:0.11'
+
 }
