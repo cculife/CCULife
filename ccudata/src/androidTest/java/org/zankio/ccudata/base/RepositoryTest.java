@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.internal.ArrayComparisonFailure;
 import org.junit.runner.RunWith;
 import org.zankio.ccudata.base.model.Request;
+import org.zankio.ccudata.base.model.Response;
 import org.zankio.ccudata.base.source.BaseSource;
 import org.zankio.ccudata.base.source.SourceProperty;
 
@@ -254,7 +255,7 @@ public class RepositoryTest {
                     System.out.println("error");
                     error[0] = throwable;
                 })
-                .map(response -> response.data())
+                .map(Response::data)
                 .doOnNext(s -> System.out.println("output : " + s))
                 .toList()
                 .toBlocking()
