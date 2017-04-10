@@ -133,7 +133,7 @@ public abstract class Repository {
             Log.d("Repository", "executeSource");
             return requestObservable
                     .map(request -> {
-                        Log.d("Repository executeSource", "Before " + request.source().getClass().getName());
+                        Log.d("Repo executeSource", "Before " + request.source().getClass().getName());
                         try {
                             request.source().before(request);
                         } catch (Exception e) {
@@ -150,24 +150,24 @@ public abstract class Repository {
                         }
 
                         try {
-                            Log.d("Repository executeSource", "Execute source: " + request.source());
+                            Log.d("Repo executeSource", "Execute source: " + request.source());
                             return Observable.just(
                                     new Response<>(request.target.cast(request.source().fetch(request)), request)
                             );
                         } catch (ClassCastException e) {
-                            Log.d("Repository executeSource", "Class NotMetch");
+                            Log.d("Repo executeSource", "Class NotMetch");
                             return Observable.just(
                                     new Response<>(new Exception("Result class not match", e), request)
                             );
                         } catch (Exception e) {
-                            Log.d("Repository executeSource", "Exception");
+                            Log.d("Repo executeSource", "Exception");
                             return Observable.just(
                                     new Response<>(e, request)
                             );
                         }
                     })
                     .map(response -> {
-                        Log.d("Repository executeSource", "After " + response.request().source().getClass().getName());
+                        Log.d("Repo executeSource", "After " + response.request().source().getClass().getName());
                         Request<TData, TArgument> request = response.request();
                         if (request != null && request.exception() == null)
                             try {
