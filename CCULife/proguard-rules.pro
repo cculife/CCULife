@@ -19,6 +19,11 @@
 
 # retrolambda
 -dontwarn java.lang.invoke.*
--keep public class org.zankio.ccudata.** {
-    public protected *;
-}
+-dontwarn rx.internal.util.**
+#-dontwarn javax.jcr.**
+-dontwarn org.slf4j.**
+-dontwarn net.fortuna.ical4j.model.**
+-dontwarn okio.**
+-dontwarn edu.emory.mathcs.backport.java.util.concurrent.helpers.**
+-dontwarn org.antlr.runtime.tree.**
+-dontnote **
