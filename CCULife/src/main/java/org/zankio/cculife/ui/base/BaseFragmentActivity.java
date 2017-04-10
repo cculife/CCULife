@@ -16,7 +16,7 @@ import org.zankio.cculife.ccu.service.portal.PortalService;
 import org.zankio.cculife.ui.SettingsActivity;
 import org.zankio.cculife.ui.base.helper.Message;
 
-public class BaseFragmentActivity extends AppCompatActivity {
+public abstract class BaseFragmentActivity extends AppCompatActivity {
     private final Message mMessage = new Message(
             this,
             R.id.message,
