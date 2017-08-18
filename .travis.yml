@@ -1,0 +1,18 @@
+language: android
+android:
+  components:
+    - tools
+    - platform-tools
+    - tools
+
+    - build-tools-25.0.3
+    - android-25
+    - extra-android-support
+
+before_install:
+    - cp -f .ci/extras/google-services.json CCULife/
+
+script:
+  - echo "Building app"
+  - ./gradlew assembleRelease
+
