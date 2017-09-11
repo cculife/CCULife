@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.zankio.ccudata.base.model.AuthData;
 import org.zankio.ccudata.base.model.Response;
 import org.zankio.ccudata.portal.model.ScoreQueryPortalData;
@@ -60,6 +61,7 @@ public class ScoreQueryActivity extends BaseFragmentActivity
 
             @Override
             public void onNext(Grade[] grades) {
+                ArrayUtils.reverse(grades);
                 ScoreQueryActivity.this.grades = grades;
 
                 message().hide();
