@@ -61,7 +61,7 @@ public class RepositoryTest {
         }
 
         @Override
-        public T fetch(Request request) throws Exception {
+        public T fetch(Request<T, Void> request) throws Exception {
             delay();
             if (exception != null) throw exception;
             return result;
