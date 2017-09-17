@@ -6,9 +6,9 @@ import org.zankio.ccudata.base.model.HttpResponse;
 import org.zankio.ccudata.base.model.Request;
 import org.zankio.ccudata.base.source.annotation.DataType;
 import org.zankio.ccudata.base.source.http.HTTPStringSource;
-import org.zankio.ccudata.base.source.http.annontation.FollowRedirect;
-import org.zankio.ccudata.base.source.http.annontation.Method;
-import org.zankio.ccudata.base.source.http.annontation.Url;
+import org.zankio.ccudata.base.source.http.annotation.FollowRedirect;
+import org.zankio.ccudata.base.source.http.annotation.Method;
+import org.zankio.ccudata.base.source.http.annotation.Url;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

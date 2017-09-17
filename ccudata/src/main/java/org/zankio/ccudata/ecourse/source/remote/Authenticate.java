@@ -5,11 +5,11 @@ import org.zankio.ccudata.base.model.HttpResponse;
 import org.zankio.ccudata.base.model.Request;
 import org.zankio.ccudata.base.source.annotation.DataType;
 import org.zankio.ccudata.base.source.http.HTTPSource;
-import org.zankio.ccudata.base.source.http.annontation.Charset;
-import org.zankio.ccudata.base.source.http.annontation.Field;
-import org.zankio.ccudata.base.source.http.annontation.FollowRedirect;
-import org.zankio.ccudata.base.source.http.annontation.Method;
-import org.zankio.ccudata.base.source.http.annontation.Url;
+import org.zankio.ccudata.base.source.http.annotation.Charset;
+import org.zankio.ccudata.base.source.http.annotation.Field;
+import org.zankio.ccudata.base.source.http.annotation.FollowRedirect;
+import org.zankio.ccudata.base.source.http.annotation.Method;
+import org.zankio.ccudata.base.source.http.annotation.Url;
 import org.zankio.ccudata.ecourse.constant.Urls;
 import org.zankio.ccudata.base.model.AuthData;
 

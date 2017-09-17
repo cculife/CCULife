@@ -5,7 +5,7 @@ import org.zankio.ccudata.base.model.HttpResponse;
 import org.zankio.ccudata.base.model.OkHttpResponse;
 import org.zankio.ccudata.base.model.Request;
 import org.zankio.ccudata.base.source.FetchParseSource;
-import org.zankio.ccudata.base.source.http.annontation.Charset;
+import org.zankio.ccudata.base.source.http.annotation.Charset;
 
 import java.io.IOException;
 import java.util.List;

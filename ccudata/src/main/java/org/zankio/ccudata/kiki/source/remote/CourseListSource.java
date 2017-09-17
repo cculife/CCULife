@@ -9,8 +9,8 @@ import org.zankio.ccudata.base.source.annotation.DataType;
 import org.zankio.ccudata.base.source.annotation.Important;
 import org.zankio.ccudata.base.source.annotation.Order;
 import org.zankio.ccudata.base.source.http.HTTPParameter;
-import org.zankio.ccudata.base.source.http.annontation.Method;
-import org.zankio.ccudata.base.source.http.annontation.Url;
+import org.zankio.ccudata.base.source.http.annotation.Method;
+import org.zankio.ccudata.base.source.http.annotation.Url;
 import org.zankio.ccudata.kiki.model.Course;
 import org.zankio.ccudata.kiki.model.SemesterData;
 

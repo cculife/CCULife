@@ -7,7 +7,7 @@ import org.zankio.ccudata.base.source.annotation.DataType;
 import org.zankio.ccudata.base.source.annotation.Important;
 import org.zankio.ccudata.base.source.annotation.Order;
 import org.zankio.ccudata.base.source.http.HTTPStringSource;
-import org.zankio.ccudata.base.source.http.annontation.Method;
+import org.zankio.ccudata.base.source.http.annotation.Method;
 import org.zankio.ccudata.train.model.TrainRequest;
 import org.zankio.ccudata.train.model.TrainTimetable;
 

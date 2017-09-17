@@ -4,8 +4,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.zankio.ccudata.base.model.HttpResponse;
 import org.zankio.ccudata.base.model.Request;
-import org.zankio.ccudata.base.source.http.annontation.QueryString;
-import org.zankio.ccudata.base.source.http.annontation.Url;
+import org.zankio.ccudata.base.source.http.annotation.QueryString;
+import org.zankio.ccudata.base.source.http.annotation.Url;
 
 public class HTTPStringSourceTest {
 

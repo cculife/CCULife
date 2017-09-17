@@ -1,6 +1,4 @@
-package org.zankio.ccudata.base.source.http.annontation;
-
-import android.support.annotation.NonNull;
+package org.zankio.ccudata.base.source.http.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -9,6 +7,6 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Cookie {
-    @NonNull String[] value() default {};
+public @interface Header {
+    String[] value() default {};
 }

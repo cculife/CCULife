@@ -12,8 +12,8 @@ import org.zankio.ccudata.base.source.annotation.Important;
 import org.zankio.ccudata.base.source.annotation.Order;
 import org.zankio.ccudata.base.source.http.HTTPJsoupSource;
 import org.zankio.ccudata.base.source.http.HTTPParameter;
-import org.zankio.ccudata.base.source.http.annontation.Method;
-import org.zankio.ccudata.base.source.http.annontation.Url;
+import org.zankio.ccudata.base.source.http.annotation.Method;
+import org.zankio.ccudata.base.source.http.annotation.Url;
 
 import java.util.Locale;
 

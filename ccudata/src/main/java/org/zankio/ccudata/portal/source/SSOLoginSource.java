@@ -9,8 +9,8 @@ import org.zankio.ccudata.base.source.annotation.DataType;
 import org.zankio.ccudata.base.source.annotation.Important;
 import org.zankio.ccudata.base.source.annotation.Order;
 import org.zankio.ccudata.base.source.http.HTTPJsoupSource;
-import org.zankio.ccudata.base.source.http.annontation.FollowRedirect;
-import org.zankio.ccudata.base.source.http.annontation.Method;
+import org.zankio.ccudata.base.source.http.annotation.FollowRedirect;
+import org.zankio.ccudata.base.source.http.annotation.Method;
 import org.zankio.ccudata.portal.Portal;
 import org.zankio.ccudata.portal.model.PortalData;
 

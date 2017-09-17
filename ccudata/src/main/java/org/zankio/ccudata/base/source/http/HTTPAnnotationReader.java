@@ -2,13 +2,13 @@ package org.zankio.ccudata.base.source.http;
 
 import android.support.annotation.NonNull;
 
-import org.zankio.ccudata.base.source.http.annontation.Cookie;
-import org.zankio.ccudata.base.source.http.annontation.Field;
-import org.zankio.ccudata.base.source.http.annontation.FollowRedirect;
-import org.zankio.ccudata.base.source.http.annontation.Header;
-import org.zankio.ccudata.base.source.http.annontation.Method;
-import org.zankio.ccudata.base.source.http.annontation.QueryString;
-import org.zankio.ccudata.base.source.http.annontation.Url;
+import org.zankio.ccudata.base.source.http.annotation.Cookie;
+import org.zankio.ccudata.base.source.http.annotation.Field;
+import org.zankio.ccudata.base.source.http.annotation.FollowRedirect;
+import org.zankio.ccudata.base.source.http.annotation.Header;
+import org.zankio.ccudata.base.source.http.annotation.Method;
+import org.zankio.ccudata.base.source.http.annotation.QueryString;
+import org.zankio.ccudata.base.source.http.annotation.Url;
 
 import static org.zankio.ccudata.base.utils.AnnotationUtils.getAnnotationValue;
 
