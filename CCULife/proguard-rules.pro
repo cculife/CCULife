@@ -19,14 +19,31 @@
 
 # retrolambda
 -dontwarn java.lang.invoke.*
--dontwarn rx.internal.util.**
+-dontwarn **$$Lambda$*
+
+# jsoup
+-keeppackagenames org.jsoup.nodes
+
 #-dontwarn javax.jcr.**
 -dontwarn org.slf4j.**
 -dontwarn net.fortuna.ical4j.model.**
--dontwarn okio.**
 -dontwarn edu.emory.mathcs.backport.java.util.concurrent.helpers.**
 -dontwarn org.antlr.runtime.tree.**
 -dontnote **
+
+# OK HTTP
+-dontwarn okhttp3.**
+-dontwarn okio.**
+-dontwarn javax.annotation.**
+
+-keepattributes Exceptions
+-keepattributes *Annotation*
+-keepattributes InnerClasses
+-keepattributes Signature
+
+-keep class org.zankio.ccudata.base.source.annotation.** { *; }
+-keep class org.zankio.ccudata.base.source.http.annotation.** { *; }
+
 #  rxjava
 -keep class rx.schedulers.Schedulers {
     public static <methods>;
