@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="org.zankio.cculife"
-    android:versionCode="25"
-    android:versionName="2.0.3">
+    android:versionCode="26"
+    android:versionName="2.0.7">
 
     <uses-feature
         android:name="android.hardware.touchscreen"
