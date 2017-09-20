@@ -17,7 +17,10 @@ import java.security.cert.CertificateFactory;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
+
 public class Net {
     public final static int CONNECT_TIMEOUT = 10000;
 
@@ -53,15 +56,13 @@ public class Net {
             SSLContext ssl_context = SSLContext.getInstance("TLS");
             ssl_context.init(null, tmf.getTrustManagers(), null);
 
-
             return ssl_context;
         }
         catch (CertificateException | KeyManagementException | KeyStoreException | NoSuchAlgorithmException | IOException ignored) {}
 
         return null;
     }
-
-    public static SSLSocketFactory generateSSLSocketFactory(Context context) {
+    public static TrustManager[] generateTrustManagers(Context context) {
         try {
             CertificateFactory cf = CertificateFactory.getInstance("X.509");
             InputStream caInput = new BufferedInputStream(context.getAssets().open("ssl.crt"));
@@ -85,14 +86,27 @@ public class Net {
             TrustManagerFactory tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
             tmf.init(keyStore);
 
+            return tmf.getTrustManagers();
+        } catch (KeyStoreException | CertificateException | NoSuchAlgorithmException | IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static SSLSocketFactory generateSSLSocketFactory(Context context) {
+        return generateSSLSocketFactory(generateTrustManagers(context));
+    }
+
+
+    public static SSLSocketFactory generateSSLSocketFactory(TrustManager[] trustManagers) {
+        try {
             // Create an SSLContext that uses our TrustManager
             SSLContext ssl_context = SSLContext.getInstance("TLS");
-            ssl_context.init(null, tmf.getTrustManagers(), null);
-
+            ssl_context.init(null, trustManagers, null);
 
             return ssl_context.getSocketFactory();
         }
-        catch (CertificateException | KeyStoreException | KeyManagementException | NoSuchAlgorithmException | IOException ignored) {}
+        catch (KeyManagementException | NoSuchAlgorithmException ignored) {}
 
         return null;
     }

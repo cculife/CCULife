@@ -12,6 +12,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
 import okhttp3.FormBody;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
@@ -21,6 +25,8 @@ import static org.zankio.ccudata.base.utils.AnnotationUtils.getAnnotationValue;
 public abstract class HTTPSource<TArgument, TData> extends FetchParseSource<TArgument, TData, HttpResponse> {
     private static final String HTTP_PARAMETERS = "HTTP_PARAMETERS";
     public static final String HTTP_ERROR_CONNECT_FAIL = "無法連線";
+    public static SSLSocketFactory sslSocketFactory = null;
+    public static X509TrustManager trustManager = null;
 
     @Override
     protected HttpResponse fetch(Request<TData, TArgument> request, boolean inner) throws Exception {
@@ -42,14 +48,18 @@ public abstract class HTTPSource<TArgument, TData> extends FetchParseSource<TArg
     }
 
     public OkHttpClient makeClient(HTTPParameter parameter, CookieJar cookieJar) {
-        return new OkHttpClient.Builder()
+        OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(10, TimeUnit.SECONDS)
                 .writeTimeout(10, TimeUnit.SECONDS)
                 .followRedirects(parameter.followRedirect())
                 .followSslRedirects(parameter.followRedirect())
-                .cookieJar(cookieJar)
-                .build();
+                .cookieJar(cookieJar);
+
+        if (HTTPSource.sslSocketFactory != null && HTTPSource.trustManager != null)
+            builder.sslSocketFactory(HTTPSource.sslSocketFactory, HTTPSource.trustManager);
+
+        return builder.build();
     }
 
     private okhttp3.Request makeRequest(HTTPParameter parameter) {
