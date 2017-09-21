@@ -118,20 +118,14 @@ public class LoginActivity extends BaseActivity {
                                 .fetch(org.zankio.ccudata.portal.source.Authenticate.request(mStudentId, mPassword))
                                 .subscribe(
                                         subscriber::onNext,
-                                        throwable -> {
-                                            Throwable exception = ExceptionUtils.extraceException(throwable);
-                                            if (exception instanceof LoginErrorException) {
+                                        throwable ->
                                                 ecourse
-                                                        .fetch(Authenticate.request(mStudentId, mPassword))
-                                                        .subscribe(
-                                                                subscriber::onNext,
-                                                                subscriber::onError,
-                                                                subscriber::onCompleted
-                                                        );
-                                            } else {
-                                                subscriber.onError(throwable);
-                                            }
-                                        }
+                                                    .fetch(Authenticate.request(mStudentId, mPassword))
+                                                    .subscribe(
+                                                            subscriber::onNext,
+                                                            subscriber::onError,
+                                                            subscriber::onCompleted
+                                                    )
                                 );
                     })
                     .doOnTerminate(() -> showProgress(false))
