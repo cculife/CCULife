@@ -8,6 +8,7 @@ import org.zankio.ccudata.base.source.FetchParseSource;
 import org.zankio.ccudata.base.source.http.annotation.Charset;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -25,8 +26,8 @@ import static org.zankio.ccudata.base.utils.AnnotationUtils.getAnnotationValue;
 public abstract class HTTPSource<TArgument, TData> extends FetchParseSource<TArgument, TData, HttpResponse> {
     private static final String HTTP_PARAMETERS = "HTTP_PARAMETERS";
     public static final String HTTP_ERROR_CONNECT_FAIL = "無法連線";
-    public static SSLSocketFactory sslSocketFactory = null;
-    public static X509TrustManager trustManager = null;
+    public static Map<String, SSLSocketFactory> sslSocketFactory = new HashMap<>();
+    public static Map<String, X509TrustManager> trustManager = new HashMap<>();
 
     @Override
     protected HttpResponse fetch(Request<TData, TArgument> request, boolean inner) throws Exception {
@@ -34,9 +35,10 @@ public abstract class HTTPSource<TArgument, TData> extends FetchParseSource<TArg
         HTTPParameter parameter = httpParameter(request);
 
         CookieJar cookieJar = new CookieJar();
-        OkHttpClient client = makeClient(parameter, cookieJar);
 
         okhttp3.Request httpRequest = makeRequest(parameter);
+        OkHttpClient client = makeClient(parameter, httpRequest, cookieJar);
+
         try {
             return new OkHttpResponse(
                     client.newCall(httpRequest).execute(),
@@ -47,7 +49,7 @@ public abstract class HTTPSource<TArgument, TData> extends FetchParseSource<TArg
         }
     }
 
-    public OkHttpClient makeClient(HTTPParameter parameter, CookieJar cookieJar) {
+    public OkHttpClient makeClient(HTTPParameter parameter, okhttp3.Request httpRequest, CookieJar cookieJar) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(10, TimeUnit.SECONDS)
@@ -56,8 +58,9 @@ public abstract class HTTPSource<TArgument, TData> extends FetchParseSource<TArg
                 .followSslRedirects(parameter.followRedirect())
                 .cookieJar(cookieJar);
 
-        if (HTTPSource.sslSocketFactory != null && HTTPSource.trustManager != null)
-            builder.sslSocketFactory(HTTPSource.sslSocketFactory, HTTPSource.trustManager);
+        String host = httpRequest.url().host();
+        if (HTTPSource.sslSocketFactory.get(host) != null && HTTPSource.trustManager.get(host) != null)
+            builder.sslSocketFactory(HTTPSource.sslSocketFactory.get(host), HTTPSource.trustManager.get(host));
 
         return builder.build();
     }

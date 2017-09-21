@@ -7,6 +7,7 @@ import org.jsoup.Connection;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.GeneralSecurityException;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -14,7 +15,10 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
+import java.util.Arrays;
+import java.util.Collection;
 
+import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
@@ -31,7 +35,7 @@ public class Net {
     public static SSLContext generateSSLContext(Context context) {
         try {
             CertificateFactory cf = CertificateFactory.getInstance("X.509");
-            InputStream caInput = new BufferedInputStream(context.getAssets().open("ssl.crt"));
+            InputStream caInput = new BufferedInputStream(context.getAssets().open("ecourse_ssl.crt"));
             Certificate ca;
 
             //noinspection TryFinallyCanBeTryWithResources
@@ -62,52 +66,68 @@ public class Net {
 
         return null;
     }
-    public static TrustManager[] generateTrustManagers(Context context) {
+    public static X509TrustManager generateTrustManagers(Context context, String filename) {
         try {
-            CertificateFactory cf = CertificateFactory.getInstance("X.509");
-            InputStream caInput = new BufferedInputStream(context.getAssets().open("ssl.crt"));
-            Certificate ca;
-
-            //noinspection TryFinallyCanBeTryWithResources
-            try {
-                ca = cf.generateCertificate(caInput);
-            } finally {
-                caInput.close();
+            InputStream caInput = new BufferedInputStream(context.getAssets().open(filename));
+            CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+            Collection<? extends Certificate> certificates = certificateFactory.generateCertificates(caInput);
+            if (certificates.isEmpty()) {
+                throw new IllegalArgumentException("expected non-empty set of trusted certificates");
             }
 
-            // Create a KeyStore containing our trusted CAs
-            String keyStoreType = KeyStore.getDefaultType();
-            KeyStore keyStore = KeyStore.getInstance(keyStoreType);
-            keyStore.load(null, null);
-            keyStore.setCertificateEntry("ca", ca);
+            // Put the certificates a key store.
+            char[] password = "password".toCharArray(); // Any password will work.
+            KeyStore keyStore = newEmptyKeyStore(password);
+            int index = 0;
+            for (Certificate certificate : certificates) {
+                String certificateAlias = Integer.toString(index++);
+                keyStore.setCertificateEntry(certificateAlias, certificate);
+            }
 
-            // Create a TrustManager that trusts the CAs in our KeyStore
-            String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
-            TrustManagerFactory tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
-            tmf.init(keyStore);
-
-            return tmf.getTrustManagers();
-        } catch (KeyStoreException | CertificateException | NoSuchAlgorithmException | IOException e) {
+            // Use it to build an X509 trust manager.
+            KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(
+                    KeyManagerFactory.getDefaultAlgorithm());
+            keyManagerFactory.init(keyStore, password);
+            TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(
+                    TrustManagerFactory.getDefaultAlgorithm());
+            trustManagerFactory.init(keyStore);
+            TrustManager[] trustManagers = trustManagerFactory.getTrustManagers();
+            if (trustManagers.length != 1 || !(trustManagers[0] instanceof X509TrustManager)) {
+                throw new IllegalStateException("Unexpected default trust managers:"
+                        + Arrays.toString(trustManagers));
+            }
+            return (X509TrustManager) trustManagers[0];
+        } catch (IOException | GeneralSecurityException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public static SSLSocketFactory generateSSLSocketFactory(Context context) {
-        return generateSSLSocketFactory(generateTrustManagers(context));
+    private static KeyStore newEmptyKeyStore(char[] password) throws GeneralSecurityException {
+        try {
+            KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            InputStream in = null; // By convention, 'null' creates an empty key store.
+            keyStore.load(in, password);
+            return keyStore;
+        } catch (IOException e) {
+            throw new AssertionError(e);
+        }
+    }
+
+    public static SSLSocketFactory generateSSLSocketFactory(Context context, String filename) {
+        return generateSSLSocketFactory(generateTrustManagers(context, filename));
     }
 
 
-    public static SSLSocketFactory generateSSLSocketFactory(TrustManager[] trustManagers) {
+    public static SSLSocketFactory generateSSLSocketFactory(X509TrustManager trustManager) {
         try {
-            // Create an SSLContext that uses our TrustManager
-            SSLContext ssl_context = SSLContext.getInstance("TLS");
-            ssl_context.init(null, trustManagers, null);
-
-            return ssl_context.getSocketFactory();
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(null, new TrustManager[] { trustManager }, null);
+            return sslContext.getSocketFactory();
+        } catch (GeneralSecurityException e) {
+            e.printStackTrace();
+            //throw new RuntimeException(e);
         }
-        catch (KeyManagementException | NoSuchAlgorithmException ignored) {}
-
         return null;
     }
 }

@@ -209,7 +209,7 @@ public class DownloadService extends IntentService {
         try {
 
             CertificateFactory cf = CertificateFactory.getInstance("X.509");
-            InputStream caInput = new BufferedInputStream(this.getAssets().open("ssl.crt"));
+            InputStream caInput = new BufferedInputStream(this.getAssets().open("ecourse_ssl.crt"));
             Certificate ca;
 
             //noinspection TryFinallyCanBeTryWithResources

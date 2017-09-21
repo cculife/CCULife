@@ -7,7 +7,6 @@ import com.squareup.leakcanary.LeakCanary;
 import org.zankio.ccudata.base.source.http.HTTPSource;
 import org.zankio.cculife.override.Net;
 
-import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 
@@ -22,10 +21,8 @@ public class CCULifeApplication extends Application {
         }
         LeakCanary.install(this);
 
-        TrustManager[] trustManagers = Net.generateTrustManagers(this);
-        if (trustManagers != null && trustManagers.length > 0
-                && trustManagers[0] instanceof X509TrustManager)
-        HTTPSource.trustManager = (X509TrustManager) trustManagers[0];
-        HTTPSource.sslSocketFactory = Net.generateSSLSocketFactory(trustManagers);
+        X509TrustManager trustManager = Net.generateTrustManagers(this, "ecourse_ssl.crt");
+        HTTPSource.trustManager.put("ecourse.ccu.edu.tw", trustManager);
+        HTTPSource.sslSocketFactory.put("ecourse.ccu.edu.tw", Net.generateSSLSocketFactory(trustManager));
     }
 }
