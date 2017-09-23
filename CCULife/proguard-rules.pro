@@ -43,6 +43,7 @@
 
 -keep class org.zankio.ccudata.base.source.annotation.** { *; }
 -keep class org.zankio.ccudata.base.source.http.annotation.** { *; }
+-keep class org.zankio.ccudata.ecourse.annotation.** { *; }
 
 #  rxjava
 -keep class rx.schedulers.Schedulers {
