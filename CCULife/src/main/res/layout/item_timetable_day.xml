@@ -31,6 +31,8 @@
         android:text="ClassInfo"
         android:textColor="@color/Gray"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:maxLines="1" />
+
+        android:maxLines="1"
+        android:singleLine="true"/>
 
 </RelativeLayout>
