@@ -119,7 +119,7 @@ public class TimeTableDaysFragment extends BaseMessageFragment
     }
 
     public class SectionsPagerAdapter extends PagerAdapter {
-        private View old;
+        private View old = null;
 
         @Override
         public int getCount() {
