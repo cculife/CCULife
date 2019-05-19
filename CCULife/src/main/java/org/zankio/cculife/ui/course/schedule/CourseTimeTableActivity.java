@@ -2,8 +2,8 @@ package org.zankio.cculife.ui.course.schedule;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
+import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.ActionBar;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;

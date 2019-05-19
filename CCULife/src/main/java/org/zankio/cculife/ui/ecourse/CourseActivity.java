@@ -1,7 +1,7 @@
 package org.zankio.cculife.ui.ecourse;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
+import androidx.fragment.app.FragmentTransaction;
 
 import org.zankio.ccudata.base.model.Storage;
 import org.zankio.ccudata.ecourse.Ecourse;

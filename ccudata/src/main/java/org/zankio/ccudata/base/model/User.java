@@ -1,6 +1,6 @@
 package org.zankio.ccudata.base.model;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.zankio.ccudata.base.Repository;
 

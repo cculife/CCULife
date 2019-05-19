@@ -47,7 +47,7 @@
         android:id="@+id/login_form"
         android:layout_below="@id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_gravity="center">
 
         <LinearLayout
@@ -68,20 +68,19 @@
                 android:id="@+id/studentid"
                 android:maxLines="1"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:hint="@string/prompt_studentid"
-                android:layout_weight="1"
                 android:inputType="numberDecimal" />
 
             <EditText
                 android:id="@+id/password"
                 android:maxLines="1"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:hint="@string/prompt_password"
                 android:inputType="textPassword"
                 android:imeActionLabel="@string/action_sign"
-                android:imeActionId="@+id/login"
+                android:imeActionId="@integer/login"
                 android:imeOptions="actionUnspecified"
                 android:layout_weight="1" />
 
@@ -96,13 +95,12 @@
             <Button
                 android:id="@+id/sign_in_button"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="@string/action_sign"
                 android:paddingLeft="32dp"
                 android:paddingRight="32dp"
-                android:layout_gravity="end"
-                android:layout_weight="1" />
+                android:layout_gravity="end" />
 
         </LinearLayout>
 

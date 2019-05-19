@@ -1,6 +1,6 @@
 package org.zankio.ccudata.base.source.http;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.zankio.ccudata.base.source.http.annotation.Cookie;
 import org.zankio.ccudata.base.source.http.annotation.Field;

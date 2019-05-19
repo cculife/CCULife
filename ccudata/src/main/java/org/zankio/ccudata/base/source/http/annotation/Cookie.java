@@ -1,6 +1,6 @@
 package org.zankio.ccudata.base.source.http.annotation;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

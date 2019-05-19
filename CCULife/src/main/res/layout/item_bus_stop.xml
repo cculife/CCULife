@@ -37,7 +37,7 @@
             android:focusable="true"
             android:layout_marginBottom="5dp"
             android:textSize="22sp"
-            android:maxLines="1" />
+            android:singleLine="true" />
 
         <TextView
             android:layout_gravity="bottom|start"

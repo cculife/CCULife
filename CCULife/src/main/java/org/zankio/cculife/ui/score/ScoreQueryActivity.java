@@ -1,13 +1,12 @@
 package org.zankio.cculife.ui.score;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 import android.view.Menu;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.zankio.ccudata.base.model.AuthData;
 import org.zankio.ccudata.base.model.Response;
 import org.zankio.ccudata.portal.model.ScoreQueryPortalData;
@@ -18,6 +17,10 @@ import org.zankio.cculife.R;
 import org.zankio.cculife.UserManager;
 import org.zankio.cculife.ui.base.BaseFragmentActivity;
 import org.zankio.cculife.utils.ExceptionUtils;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -61,8 +64,10 @@ public class ScoreQueryActivity extends BaseFragmentActivity
 
             @Override
             public void onNext(Grade[] grades) {
-                ArrayUtils.reverse(grades);
-                ScoreQueryActivity.this.grades = grades;
+
+                List<Grade> gradeList = Arrays.asList(grades);
+                Collections.reverse(Arrays.asList(grades));
+                ScoreQueryActivity.this.grades = gradeList.toArray(new Grade[0]);
 
                 message().hide();
 

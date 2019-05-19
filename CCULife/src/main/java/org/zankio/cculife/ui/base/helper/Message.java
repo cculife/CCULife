@@ -1,8 +1,8 @@
 package org.zankio.cculife.ui.base.helper;
 
 import android.app.Activity;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import android.view.View;
 import android.widget.TextView;
 

@@ -1,7 +1,7 @@
 package org.zankio.cculife;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.zankio.ccudata.kiki.model.Course;
 import org.zankio.ccudata.kiki.model.TimeTable;
