@@ -38,13 +38,6 @@ Just enjoy!
 
 > 即時公車、客運、火車動態
 
-### Coming soon!
-
->學校WIFI登入好麻煩？
-
->沒關係！
-自動登入WIFI、更多的功能即將推出
-
 ## Release Notes
 
 ### v2.0
@@ -61,67 +54,20 @@ Set 15, 2016
 * (修正) 設定無法開啟 (v2.0.1)
 * (修正) 部份閃退問題 (v2.0.1)
 
-### v1.3.7.1
+## Contributors
 
-Oct 20,2014
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/iverJisty"><img src="https://avatars1.githubusercontent.com/u/4309210?v=4" width="32px;" alt="iverJisty"/><br /><sub><b>iverJisty</b></sub></a><br /><a href="https://github.com/Zankio/CCULife/commits?author=iverJisty" title="Code">💻</a></td>
+    <td align="center"><a href="http://DanSnow.github.io"><img src="https://avatars1.githubusercontent.com/u/5575082?v=4" width="32px;" alt="DanSnow"/><br /><sub><b>DanSnow</b></sub></a><br /><a href="https://github.com/Zankio/CCULife/commits?author=DanSnow" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/wl00887404"><img src="https://avatars3.githubusercontent.com/u/11714950?v=4" width="32px;" alt="wl00887404"/><br /><sub><b>wl00887404</b></sub></a><br /><a href="#eventOrganizing-wl00887404" title="Event Organizing">📋</a></td>
+    <td align="center"><a href="https://github.com/Civon"><img src="https://avatars1.githubusercontent.com/u/24861096?v=4" width="32px;" alt="Chunyao Chan"/><br /><sub><b>Chunyao Chan</b></sub></a><br /><a href="#eventOrganizing-Civon" title="Event Organizing">📋</a></td>
+  </tr>
+</table>
 
-* (新增) Ecourse 授課教材分類
-* (新增) Ecourse 公告連結偵測
-* (新增) TimeTable 顯示授課教師
-* (修正) Ecourse 部分檔名亂碼
-* (修正) Ecourse 離線公告依照日期排序
-* (新增) 103學年度行事曆(v1.3.1)
-* (新增) Ecourse 作業瀏覽(v1.3.3)
-* (修正) 部分課表時間顯示錯誤(v1.3.3)
-* (修正) Ecourse 網址更改(v1.3.4)
-* (修正) 部分課表時間顯示錯誤(v1.3.4)
-* (新增) 104學年度行事曆(v1.3.5)
-* (修正) ecourse , kiki 新增https(v1.3.6)
-* (修正) kiki 沒有課表時不會覆蓋離線課表(v1.3.6)
-* (修正) ecourse 授課教材下載(v1.3.7.1)
-* (修正) kiki 離線課表(v1.3.7.1)
-
-
-### v1.2.1
-
-Feb 19, 2014
-
-* (新增) 課表 離線瀏覽
-* (新增) 一周課表 課堂開始與結束時間
-* (修正) 一周課表 課程名稱超出範圍
-* (修正) 嘗試修正未啟用單一入口則無法登入
-
-### v1.1.3
-
-Feb 16, 2014
-
-* (新增) Ecourse 離線瀏覽
-* (新增) 隱藏預警標示
-* (修正) 顯示當學期課表
-* (修正) Ecourse 部分顯示不正常
-* (修正) Ecourse 退出再進入讀不到資料 - v1.1.1
-* (修正) 無法取得課表 - v1.1.2
-* (修正) 課表學期判讀錯誤 - v1.1.3
-* (修正) 旋轉螢幕導致強制結束 - v1.1.3
-
-### v1.0
-
-Nov 11, 2013
-
-* Ecourse
-	* 檢視公告
-	* 成績查詢
-	* 授課檔案下載
-* Timetable - 課表
-	* 每日課表
-		* 教室查詢
-		* 時間查詢
-	* 每周課表
-* Score - 每學期成績查詢
-	* 成績
-	* 排名
-	* 平均
-* Schedule - 學校行事曆
-	* 年度大事
-	* 期中考周
-	* 阿哩不達
+<!-- markdownlint-enable -->
+<!-- prettier-ignore-end -->
+<!-- ALL-CONTRIBUTORS-LIST:END -->
