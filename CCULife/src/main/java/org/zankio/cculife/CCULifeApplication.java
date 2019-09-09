@@ -27,5 +27,9 @@ public class CCULifeApplication extends Application {
         X509TrustManager trustManager = Net.generateTrustManagers(this, "ecourse_ssl.crt");
         HTTPSource.trustManager.put("ecourse.ccu.edu.tw", trustManager);
         HTTPSource.sslSocketFactory.put("ecourse.ccu.edu.tw", Net.generateSSLSocketFactory(trustManager));
+
+        trustManager = Net.generateTrustManagers(this, "taiwanbus.crt");
+        HTTPSource.trustManager.put("www.taiwanbus.tw", trustManager);
+        HTTPSource.sslSocketFactory.put("www.taiwanbus.tw", Net.generateSSLSocketFactory(trustManager));
     }
 }
