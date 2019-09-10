@@ -65,6 +65,7 @@ Set 15, 2016
     <td align="center"><a href="http://DanSnow.github.io"><img src="https://avatars1.githubusercontent.com/u/5575082?v=4" width="32px;" alt="DanSnow"/><br /><sub><b>DanSnow</b></sub></a><br /><a href="https://github.com/Zankio/CCULife/commits?author=DanSnow" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/wl00887404"><img src="https://avatars3.githubusercontent.com/u/11714950?v=4" width="32px;" alt="wl00887404"/><br /><sub><b>wl00887404</b></sub></a><br /><a href="#eventOrganizing-wl00887404" title="Event Organizing">📋</a></td>
     <td align="center"><a href="https://github.com/Civon"><img src="https://avatars1.githubusercontent.com/u/24861096?v=4" width="32px;" alt="Chunyao Chan"/><br /><sub><b>Chunyao Chan</b></sub></a><br /><a href="#eventOrganizing-Civon" title="Event Organizing">📋</a></td>
+    <td align="center"><a href="https://github.com/AzzurraCox"><img src="https://avatars2.githubusercontent.com/u/39265378?v=4" width="32px;" alt="AzzurraCox"/><br /><sub><b>AzzurraCox</b></sub></a><br /><a href="#maintenance-AzzurraCox" title="Maintenance">🚧</a></td>
   </tr>
 </table>
 
