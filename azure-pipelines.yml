@@ -10,11 +10,17 @@ pool:
   vmImage: 'macos-latest'
 
 steps:
+- task: DownloadSecureFile@1
+  name: googleService
+  inputs:
+    secureFile: '.google-services.json'
+    
 - task: CopyFiles@2
   inputs:
-    SourceFolder: '.ci/extras'
-    Contents: 'google-services.json'
-    TargetFolder: 'CCULife/'
+    SourceFolder: '$(Agent.TempDirectory)'
+    Contents: '.google-services.json'
+    TargetFolder: 'CCULife\''
+    
 - task: Gradle@2
   inputs:
     workingDirectory: ''
