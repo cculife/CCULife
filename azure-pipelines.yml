@@ -25,7 +25,7 @@ steps:
   inputs:
     workingDirectory: ''
     gradleWrapperFile: 'gradlew'
-    gradleOptions: '-Xmx4096m -XX:MaxPermSize=1024m'
+    gradleOptions: '-Xmx4096m -XX:+HeapDumpOnOutOfMemoryError '
     publishJUnitResults: false
     testResultsFiles: '**/TEST-*.xml'
     tasks: 'assembleDebug'
